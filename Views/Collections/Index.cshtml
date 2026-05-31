@@ -1,0 +1,69 @@
+﻿@model IEnumerable<SistemaGestionVentas.Models.Collections>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.collection_date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.collection_amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.collection_balance)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.collection_note)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.collection_active)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cards.card_payday)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Users.user_name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.collection_date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.collection_amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.collection_balance)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.collection_note)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.collection_active)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Cards.card_payday)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Users.user_name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.collection_id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.collection_id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.collection_id })
+        </td>
+    </tr>
+}
+
+</table>

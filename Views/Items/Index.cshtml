@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SistemaGestionVentas.Models.Items>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.item_name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.item_url)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.item_description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.item_active)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.album_name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.item_name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.item_url)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.item_description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.item_active)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Albums.album_name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.item_id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.item_id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.item_id })
+        </td>
+    </tr>
+}
+
+</table>

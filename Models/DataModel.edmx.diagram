@@ -22,11 +22,7 @@
         <AssociationConnector Association="SistemaGestionVentasDBModel.FK_Cards_Items" />
         <AssociationConnector Association="SistemaGestionVentasDBModel.FK_Cards_Users" />
         <AssociationConnector Association="SistemaGestionVentasDBModel.FK_Collections_Cards" />
-        <AssociationConnector Association="SistemaGestionVentasDBModel.FK_Cards_Frequencies" />
-        <AssociationConnector Association="SistemaGestionVentasDBModel.FK_Cards_Items" />
-        <AssociationConnector Association="SistemaGestionVentasDBModel.FK_Cards_Users" />
-        <AssociationConnector Association="SistemaGestionVentasDBModel.FK_Collections_Cards" />
-      </Diagram>
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

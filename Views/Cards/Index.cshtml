@@ -21,6 +21,9 @@
             @Html.DisplayNameFor(model => model.card_item)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.card_item_price)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.card_state)
         </th>
         <th>
@@ -39,37 +42,40 @@
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.card_payday)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.card_payment_amount)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.card_item)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.card_state)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.card_active)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Frequencies.frequency_description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Items.item_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Users.user_name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.card_id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.card_id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.card_id })
-        </td>
-    </tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.card_payday)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.card_payment_amount)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.card_item)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.card_item_price)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.card_state)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.card_active)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Frequencies.frequency_description)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Items.item_name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Users.user_name)
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.card_id }) |
+        @Html.ActionLink("Details", "Details", new { id = item.card_id }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.card_id })
+    </td>
+</tr>
 }
 
 </table>

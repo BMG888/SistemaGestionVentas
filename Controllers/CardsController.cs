@@ -50,7 +50,7 @@ namespace SistemaGestionVentas.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "card_id,card_payday,card_payment_amount,card_item,card_state,card_active,user_id,frequency_id,item_id")] Cards cards)
+        public ActionResult Create([Bind(Include = "card_id,card_payday,card_payment_amount,card_item, card_item_price,card_state,card_active,user_id,frequency_id,item_id")] Cards cards)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace SistemaGestionVentas.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "card_id,card_payday,card_payment_amount,card_item,card_state,card_active,user_id,frequency_id,item_id")] Cards cards)
+        public ActionResult Edit([Bind(Include = "card_id,card_payday,card_payment_amount,card_item, card_item_price,card_state,card_active,user_id,frequency_id,item_id")] Cards cards)
         {
             if (ModelState.IsValid)
             {

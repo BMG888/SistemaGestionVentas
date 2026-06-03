@@ -33,6 +33,7 @@
           <Property Name="card_payday" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="card_payment_amount" Type="int" Nullable="false" />
           <Property Name="card_item" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="card_item_price" Type="int" Nullable="false" />
           <Property Name="card_state" Type="bit" Nullable="false" />
           <Property Name="card_active" Type="bit" Nullable="false" />
           <Property Name="user_id" Type="int" Nullable="false" />
@@ -446,6 +447,7 @@
           <NavigationProperty Name="Items" Relationship="SistemaGestionVentasDBModel.FK_Cards_Items" FromRole="Cards" ToRole="Items" />
           <NavigationProperty Name="Users" Relationship="SistemaGestionVentasDBModel.FK_Cards_Users" FromRole="Cards" ToRole="Users" />
           <NavigationProperty Name="Collections" Relationship="SistemaGestionVentasDBModel.FK_Collections_Cards" FromRole="Cards" ToRole="Collections" />
+          <Property Name="card_item_price" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="FK_Cards_Frequencies">
           <End Type="SistemaGestionVentasDBModel.Frequencies" Role="Frequencies" Multiplicity="1" />
@@ -594,6 +596,7 @@
           <EntitySetMapping Name="Cards">
             <EntityTypeMapping TypeName="SistemaGestionVentasDBModel.Cards">
               <MappingFragment StoreEntitySet="Cards">
+                <ScalarProperty Name="card_item_price" ColumnName="card_item_price" />
                 <ScalarProperty Name="item_id" ColumnName="item_id" />
                 <ScalarProperty Name="frequency_id" ColumnName="frequency_id" />
                 <ScalarProperty Name="user_id" ColumnName="user_id" />

@@ -29,6 +29,7 @@ namespace SistemaGestionVentas.Models
         public int user_id { get; set; }
         public int frequency_id { get; set; }
         public Nullable<int> item_id { get; set; }
+        public int card_item_price { get; set; }
     
         public virtual Frequencies Frequencies { get; set; }
         public virtual Items Items { get; set; }

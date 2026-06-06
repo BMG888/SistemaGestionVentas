@@ -1,154 +1,115 @@
 ﻿@model SistemaGestionVentas.Models.Users
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Información";
 }
 
-<h2>Details</h2>
+<h2>Información</h2>
 
 <div>
-    <h4>Users</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.user_name)
-        </dt>
+        <dt>Nombre</dt>
+        <dd>@Html.DisplayFor(model => model.user_name)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.user_name)
-        </dd>
+        <dt>Apellido</dt>
+        <dd>@Html.DisplayFor(model => model.user_lastname)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.user_lastname)
-        </dt>
+        @if (Convert.ToInt32(Session["RoleId"]) != 3)
+        {
+            <dt>Apodo</dt>
+            <dd>@Html.DisplayFor(model => model.user_nickname)</dd>
+        }
 
-        <dd>
-            @Html.DisplayFor(model => model.user_lastname)
-        </dd>
+        <dt>Número de teléfono</dt>
+        <dd>@Html.DisplayFor(model => model.user_phone)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.user_nickname)
-        </dt>
+        <dt>Dirección</dt>
+        <dd>@(Model.Addresses.FirstOrDefault() != null? Model.Addresses.FirstOrDefault().address_name: "")</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.user_nickname)
-        </dd>
+        <dt>Latitud</dt>
+        <dd>@(Model.Addresses.FirstOrDefault() != null? Model.Addresses.FirstOrDefault().address_latitude.ToString() : "")</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.user_phone)
-        </dt>
+        <dt>Longitud</dt>
+        <dd>@(Model.Addresses.FirstOrDefault() != null? Model.Addresses.FirstOrDefault().address_longitude.ToString() : "")</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.user_phone)
-        </dd>
+        <dt>Dirección exacta</dt>
+        <dd>@(Model.Addresses.FirstOrDefault() != null? Model.Addresses.FirstOrDefault().address_description: "")</dd>
 
-        <dt>
-            Dirección
-        </dt>
+        <dt>Correo electrónico</dt>
+        <dd>@Html.DisplayFor(model => model.user_email)</dd>
 
-        <dd>
-            @(Model.Addresses.FirstOrDefault() != null? Model.Addresses.FirstOrDefault().address_name: "")
-        </dd>
+        @if (Convert.ToInt32(Session["RoleId"]) != 3)
+        {
+            <dt>Estado</dt>
+            <dd>@(Model.user_active ? "Activo" : "Inactivo")</dd>
 
-        <dt>
-            Latitud
-        </dt>
-
-        <dd>
-            @(Model.Addresses.FirstOrDefault() != null? Model.Addresses.FirstOrDefault().address_latitude.ToString() : "")
-        </dd>
-
-        <dt>
-            Longitud
-        </dt>
-
-        <dd>
-            @(Model.Addresses.FirstOrDefault() != null? Model.Addresses.FirstOrDefault().address_longitude.ToString() : "")
-        </dd>
-
-        <dt>
-            Dirección exacta
-        </dt>
-
-        <dd>
-            @(Model.Addresses.FirstOrDefault() != null? Model.Addresses.FirstOrDefault().address_description: "")
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.user_email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.user_email)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.user_password)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.user_password)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.user_active)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.user_active)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Roles.role_description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Roles.role_description)
-        </dd>
-
+            <dt>Tipo de usuario</dt>
+            <dd>@Html.DisplayFor(model => model.Roles.role_description)</dd>
+        }
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.user_id })
+    @{ 
+        int roleId = Convert.ToInt32(Session["RoleId"]);
+        bool canEdit = roleId != 3 && !(roleId == 2 && Model.role_id == 1); 
+    }
+    @if (canEdit)
+    {
+        @Html.ActionLink("Editar", "Edit", new { id = Model.user_id })
+    }
 </p>
 
 <h3>Tarjetas del usuario</h3>
-<p>
-    @Html.ActionLink("Agregar Tarjeta", "Create", "Cards")
-</p>
+@if (Convert.ToInt32(Session["RoleId"]) != 3)
+{
+    <p>
+        @Html.ActionLink("Agregar Tarjeta", "Create", "Cards")
+    </p>
+}
 <table class="table">
     <tr>
         <th>Día de pago</th>
         <th>Monto</th>
+        <th>Periodicidad</th>
         <th>Artículo</th>
         <th>Precio del artículo</th>
         <th>Estado</th>
         <th>Activo</th>
-        <th>Periodicidad</th>
         <th>Item registrado</th>
         <th></th>
     </tr>
 
     @foreach (var card in Model.Cards)
     {
-<tr>
-    <td>@card.card_payday</td>
-    <td>@card.card_payment_amount</td>
-    <td>@card.card_item</td>
-    <td>@card.card_item_price</td>
-    <td>@card.card_state</td>
-    <td>@card.card_active</td>
-    <td>@card.Frequencies.frequency_description</td>
-    <td>@card.item_id</td>
+        <tr>
+            <td>@card.card_payday</td>
+            <td>@card.card_payment_amount</td>
+            <td>@card.Frequencies.frequency_description</td>
+            <td>@card.card_item</td>
+            <td>@card.card_item_price</td>
+            <td>@card.card_state</td>
+            <td>@card.card_active</td>
+            <td>@card.item_id</td>
 
-    <td>
-        @Html.ActionLink("Editar", "Edit", "Cards", new { id = card.card_id }, null) |
-        @Html.ActionLink("Detalles", "Details", "Cards", new { id = card.card_id }, null) |
-        @Html.ActionLink("Eliminar", "Delete", "Cards", new { id = card.card_id }, null)
-    </td>
-</tr>}
+            <td>
+                @if (Convert.ToInt32(Session["RoleId"]) != 3)
+                {
+                    @Html.ActionLink("Editar", "Edit", "Cards", new { id = card.card_id }, null) @: |
+                }
+                @Html.ActionLink("Detalles", "Details", "Cards", new { id = card.card_id }, null) |
+                @if (Convert.ToInt32(Session["RoleId"]) != 3)
+                {
+                    @Html.ActionLink("Desactivar", "Delete", "Cards", new { id = card.card_id }, null)
+                }
+            </td>
+        </tr>
+    }
 
 </table>
 <p>
-    @Html.ActionLink("Back to List", "Index")
+    @if (Convert.ToInt32(Session["RoleId"]) != 3)
+    {
+        @Html.ActionLink("Atrás", "Index")
+    }
 </p>

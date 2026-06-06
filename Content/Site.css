@@ -22,3 +22,24 @@ select,
 textarea {
     max-width: 280px;
 }
+
+/*sweetalert*/
+.swal2-title {
+    font-size: clamp(1.4rem, 2vw, 2rem) !important;
+}
+
+.swal2-html-container {
+    font-size: clamp(1rem, 1.5vw, 1.3rem) !important;
+    line-height: 1.6 !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+}
+
+.swal2-popup {
+    width: 80% !important;
+    max-width: 450px !important;
+}
+
+.swal2-confirm, .swal2-cancel {
+    font-size: 1.1rem !important;
+}

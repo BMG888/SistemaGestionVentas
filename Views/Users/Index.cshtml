@@ -1,75 +1,71 @@
 ﻿@model IEnumerable<SistemaGestionVentas.Models.Users>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Usuarios";
 }
 
-<h2>Index</h2>
+<h2>Usuarios</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Crear usuario", "Create")
 </p>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.user_name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.user_lastname)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.user_nickname)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.user_phone)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.user_email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.user_password)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.user_active)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Roles.role_description)
-        </th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Apodo</th>
+        <th>Activo</th>
+        <th>Tipo de usuario</th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.user_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.user_lastname)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.user_nickname)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.user_phone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.user_email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.user_password)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.user_active)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Roles.role_description)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.user_id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.user_id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.user_id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.user_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.user_lastname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.user_nickname)
+            </td>
+            <td>
+                @(item.user_active ? "Activo" : "Inactivo")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Roles.role_description)
+            </td>
+            <td>
+                @{
+                    int roleId = Convert.ToInt32(Session["RoleId"]);
+                    int currentUserId = Convert.ToInt32(Session["UserId"]);
+                    bool canEdit = !(roleId == 2 && item.role_id == 1);
+                    bool canDeactivate = item.user_id != currentUserId && !(roleId == 2 && item.role_id == 1); }
+
+                @if (canEdit)
+                {
+                    @Html.ActionLink("Editar", "Edit", new { id = item.user_id })
+                    @: |
+                }
+                @Html.ActionLink("Ver más", "Details", new { id = item.user_id })
+                @if (item.user_active)
+                {
+                    if (canDeactivate)
+                    {
+                        @: |
+                        @Html.ActionLink("Desactivar", "Delete", new { id = item.user_id }) }
+                }
+                else
+                {
+                    if (roleId == 1)
+                    {
+                        @: |
+                        @Html.ActionLink("Reactivar", "Reactivate", new { id = item.user_id })}
+                }
+            </td>
+        </tr>
+    }
 
 </table>

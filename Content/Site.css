@@ -43,3 +43,8 @@ textarea {
 .swal2-confirm, .swal2-cancel {
     font-size: 1.1rem !important;
 }
+
+/*Contadores*/
+.character-counter {
+    display: block;
+}

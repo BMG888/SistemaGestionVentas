@@ -1,4 +1,5 @@
-﻿@model IEnumerable<SistemaGestionVentas.Models.Users>
+﻿@model PagedList.IPagedList<SistemaGestionVentas.Models.Users>
+@using PagedList.Mvc
 
 @{
     ViewBag.Title = "Usuarios";
@@ -9,6 +10,51 @@
 <p>
     @Html.ActionLink("Crear usuario", "Create")
 </p>
+
+@using (Html.BeginForm("Index", "Users", FormMethod.Get))
+{
+    <div class="row">
+
+        <div class="col-md-2">
+            <label>Nombre</label>
+            <input type="text" name="user_name" value="@Request["user_name"]" class="form-control" />
+        </div>
+
+        <div class="col-md-2">
+            <label>Apellido</label>
+            <input type="text" name="user_lastname" value="@Request["user_lastname"]" class="form-control" />
+        </div>
+
+        <div class="col-md-2">
+            <label>Apodo</label>
+            <input type="text" name="user_nickname" value="@Request["user_nickname"]" class="form-control" />
+        </div>
+
+        <div class="col-md-2">
+            <label>Estado</label>
+            <select name="user_active" class="form-control">
+                <option value="">Todos</option>
+                <option value="true" @(Request["user_active"] == "true" ? "selected" : "")>Activo</option>
+                <option value="false" @(Request["user_active"] == "false" ? "selected" : "")>Inactivo</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label>Rol</label>
+            @Html.DropDownList("role_id", (SelectList)ViewBag.role_id, "Todos", new { @class = "form-control" })
+        </div>
+
+        <div class="col-md-2">
+            <label>&nbsp;</label>
+            <div>
+                <input type="submit" value="Buscar" class="btn btn-primary" />
+                <a href="@Url.Action("Index")" class="btn btn-default">Limpiar</a>
+            </div>
+        </div>
+    </div>
+    <hr />
+}
+
 <table class="table">
     <tr>
         <th>Nombre</th>
@@ -69,3 +115,13 @@
     }
 
 </table>
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new
+        {
+            page,
+            user_name = Request["user_name"],
+            user_lastname = Request["user_lastname"],
+            user_nickname = Request["user_nickname"],
+            user_active = Request["user_active"],
+            role_id = Request["role_id"]
+        }))

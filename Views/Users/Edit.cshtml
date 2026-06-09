@@ -20,7 +20,7 @@
             @Html.Label("Nombre", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.user_name, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "edit_user_name" } })
-                <small id="edit_user_name_counter">100 caracteres restantes</small>
+                <small id="edit_user_name_counter" class="text-muted character-counter">100 caracteres restantes</small>
                 @Html.ValidationMessageFor(model => model.user_name, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -29,7 +29,7 @@
             @Html.Label("Apellido", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.user_lastname, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "edit_user_lastname" } })
-                <small id="edit_user_lastname_counter">100 caracteres restantes</small>
+                <small id="edit_user_lastname_counter" class="text-muted character-counter">100 caracteres restantes</small>
                 @Html.ValidationMessageFor(model => model.user_lastname, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -38,7 +38,7 @@
             @Html.Label("Apodo", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.user_nickname, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "edit_user_nickname" } })
-                <small id="edit_user_nickname_counter">100 caracteres restantes</small>
+                <small id="edit_user_nickname_counter" class="text-muted character-counter">100 caracteres restantes</small>
                 @Html.ValidationMessageFor(model => model.user_nickname, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -47,7 +47,7 @@
             @Html.Label("Número telefónico", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.user_phone, new { htmlAttributes = new { @class = "form-control", maxlength = "20", id = "edit_user_phone" } })
-                <small id="edit_user_phone_counter">20 caracteres restantes</small>
+                <small id="edit_user_phone_counter" class="text-muted character-counter">20 caracteres restantes</small>
                 @Html.ValidationMessageFor(model => model.user_phone, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -84,7 +84,7 @@
             @Html.Label("Correo eléctronico", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.user_email, new { htmlAttributes = new { @class = "form-control", maxlength = "150", id = "edit_user_email" } })
-                <small id="edit_user_email_counter">150 caracteres restantes</small>
+                <small id="edit_user_email_counter" class="text-muted character-counter">150 caracteres restantes</small>
                 @Html.ValidationMessageFor(model => model.user_email, "", new { @class = "text-danger" })
             </div>
         </div>

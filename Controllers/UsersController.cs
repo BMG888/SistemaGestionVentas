@@ -11,21 +11,17 @@ using SistemaGestionVentas.Filters;
 using SistemaGestionVentas.Helpers;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using PagedList;
 
 namespace SistemaGestionVentas.Controllers
 {
     [SessionAuthorize]
     public class UsersController : Controller
     {
-        private SistemaGestionVentasDBEntities db = new SistemaGestionVentasDBEntities();
-
-        private void LoadRoles(int? selectedRole = null)
-        {
-            ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", selectedRole);
-        }
+        private SistemaGestionVentasDBEntities db = new SistemaGestionVentasDBEntities();        
 
         // GET: Users
-        public ActionResult Index()
+        public ActionResult Index(string user_name, string user_lastname, string user_nickname, bool? user_active, int? role_id, int? page)
         {
             int roleId = Convert.ToInt32(Session["RoleId"]);
 
@@ -33,12 +29,45 @@ namespace SistemaGestionVentas.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            var users = db.Users.Include(u => u.Roles);
+
+            var users = db.Users.Include(u => u.Roles).AsQueryable();
+
             if (roleId == 2)
             {
                 users = users.Where(u => u.user_active);
             }
-            return View(users.ToList());
+
+            if (!string.IsNullOrWhiteSpace(user_name))
+            {
+                users = users.Where(u => u.user_name.Contains(user_name));
+            }
+
+            if (!string.IsNullOrWhiteSpace(user_lastname))
+            {
+                users = users.Where(u => u.user_lastname.Contains(user_lastname));
+            }
+
+            if (!string.IsNullOrWhiteSpace(user_nickname))
+            {
+                users = users.Where(u => u.user_nickname.Contains(user_nickname));
+            }
+
+            if (user_active.HasValue)
+            {
+                users = users.Where(u => u.user_active == user_active.Value);
+            }
+
+            if (role_id.HasValue)
+            {
+                users = users.Where(u => u.role_id == role_id.Value);
+            }
+
+            ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description");
+
+            int pageSize = 10;
+            int pageNumber = page ?? 1;
+
+            return View(users.OrderBy(u => u.user_name).ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Users/Details/5

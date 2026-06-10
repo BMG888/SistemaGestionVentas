@@ -50,9 +50,9 @@
     </dl>
 </div>
 <p>
-    @{ 
+    @{
         int roleId = Convert.ToInt32(Session["RoleId"]);
-        bool canEdit = roleId != 3 && !(roleId == 2 && Model.role_id == 1); 
+        bool canEdit = roleId != 3 && !(roleId == 2 && Model.role_id == 1);
     }
     @if (canEdit)
     {
@@ -61,22 +61,24 @@
 </p>
 
 <h3>Tarjetas del usuario</h3>
-@if (Convert.ToInt32(Session["RoleId"]) != 3)
+@{
+    int currentUserId = Convert.ToInt32(Session["UserId"]);
+    bool canManageCards = roleId != 3 && currentUserId != Model.user_id;
+}
+@if (canManageCards)
 {
     <p>
-        @Html.ActionLink("Agregar Tarjeta", "Create", "Cards")
+        @Html.ActionLink("Registrar tarjeta", "Create", "Cards", new { userId = Model.user_id }, null)
     </p>
 }
 <table class="table">
     <tr>
         <th>Día de pago</th>
-        <th>Monto</th>
         <th>Periodicidad</th>
         <th>Artículo</th>
         <th>Precio del artículo</th>
         <th>Estado</th>
         <th>Activo</th>
-        <th>Item registrado</th>
         <th></th>
     </tr>
 
@@ -84,22 +86,21 @@
     {
         <tr>
             <td>@card.card_payday</td>
-            <td>@card.card_payment_amount</td>
             <td>@card.Frequencies.frequency_description</td>
             <td>@card.card_item</td>
             <td>@card.card_item_price</td>
             <td>@card.card_state</td>
             <td>@card.card_active</td>
-            <td>@card.item_id</td>
 
             <td>
-                @if (Convert.ToInt32(Session["RoleId"]) != 3)
+                @if (canManageCards)
                 {
                     @Html.ActionLink("Editar", "Edit", "Cards", new { id = card.card_id }, null) @: |
                 }
-                @Html.ActionLink("Detalles", "Details", "Cards", new { id = card.card_id }, null) |
-                @if (Convert.ToInt32(Session["RoleId"]) != 3)
+                @Html.ActionLink("Detalles", "Details", "Cards", new { id = card.card_id }, null)
+                @if (canManageCards)
                 {
+                    @: |
                     @Html.ActionLink("Desactivar", "Delete", "Cards", new { id = card.card_id }, null)
                 }
             </td>

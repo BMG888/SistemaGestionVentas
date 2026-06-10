@@ -13,12 +13,14 @@
         <label>Correo electrónico</label>
         @Html.TextBoxFor(model => model.user_email, new { @class = "form-control", maxlength = "150", id = "login_email" })
         <small id="login_email_counter" class="text-muted character-counter">150 caracteres restantes</small>
+        @Html.ValidationMessageFor(model => model.user_email, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
         <label>Contraseña</label>
         @Html.PasswordFor(model => model.user_password, new { @class = "form-control", maxlength = "20", id = "login_password" })
         <small id="login_password_counter" class="text-muted character-counter">20 caracteres restantes</small>
+        @Html.ValidationMessageFor(model => model.user_password, "", new { @class = "text-danger" })
     </div>
 
     <br />

@@ -7,9 +7,12 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using SistemaGestionVentas.Models;
+using SistemaGestionVentas.Filters;
+using PagedList;
 
 namespace SistemaGestionVentas.Controllers
 {
+    [SessionAuthorize]
     public class CardsController : Controller
     {
         private SistemaGestionVentasDBEntities db = new SistemaGestionVentasDBEntities();
@@ -37,11 +40,34 @@ namespace SistemaGestionVentas.Controllers
         }
 
         // GET: Cards/Create
-        public ActionResult Create()
+        public ActionResult Create(int userId)
         {
-            ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description");
-            ViewBag.item_id = new SelectList(db.Items, "item_id", "item_name");
-            ViewBag.user_id = new SelectList(db.Users, "user_id", "user_name");
+            int roleId = Convert.ToInt32(Session["RoleId"]);
+
+            if (roleId == 3)
+            {
+                TempData["Error"] = "Acceso denegado.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            Users user = db.Users.FirstOrDefault(u => u.user_id == userId);
+
+            if (user == null)
+            {
+                TempData["Error"] = "Usuario no encontrado.";
+                return RedirectToAction("Index", "Users");
+            }
+
+            int currentUserId = Convert.ToInt32(Session["UserId"]);
+
+            if (currentUserId == userId)
+            {
+                TempData["Error"] = "No puede registrar tarjetas en su propia cuenta.";
+                return RedirectToAction("Details", "Users", new { id = userId });
+            }
+
+            ViewBag.UserId = userId;
+            ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description");            
             return View();
         }
 
@@ -50,19 +76,64 @@ namespace SistemaGestionVentas.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "card_id,card_payday,card_payment_amount,card_item, card_item_price,card_state,card_active,user_id,frequency_id,item_id")] Cards cards)
+        public ActionResult Create([Bind(Include = "card_id,card_payday,card_payment_amount,card_item, card_item_price,frequency_id,item_id")] Cards cards, int userId)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                db.Cards.Add(cards);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                ViewBag.UserId = userId;
+                ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description", cards.frequency_id);
+                return View(cards);
+            }
+            
+            if (!db.Frequencies.Any(f => f.frequency_id == cards.frequency_id))
+            {
+                ModelState.AddModelError("frequency_id", "La frecuencia seleccionada no existe.");
+                ViewBag.UserId = userId;
+                ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description", cards.frequency_id);
+                return View(cards);
             }
 
-            ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description", cards.frequency_id);
-            ViewBag.item_id = new SelectList(db.Items, "item_id", "item_name", cards.item_id);
-            ViewBag.user_id = new SelectList(db.Users, "user_id", "user_name", cards.user_id);
-            return View(cards);
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+
+                if (roleId == 3)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                Users user = db.Users.FirstOrDefault(u => u.user_id == userId);
+                if (user == null)
+                {
+                    TempData["Error"] = "Usuario no encontrado.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                int currentUserId = Convert.ToInt32(Session["UserId"]);
+                if (currentUserId == userId)
+                {
+                    TempData["Error"] = "No puede registrar tarjetas en su propia cuenta.";
+                    return RedirectToAction("Details", "Users", new { id = userId });
+                }
+
+                cards.user_id = userId;
+                cards.card_active = true;
+                cards.card_state = true;
+
+                db.Cards.Add(cards);
+                db.SaveChanges();
+
+                TempData["Success"] = "Tarjeta registrada correctamente.";
+                return RedirectToAction("Details", "Users", new { id = userId });
+            }
+            catch
+            {
+                TempData["Error"] = "No se pudo registrar la tarjeta.";
+                ViewBag.UserId = userId;
+                ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description", cards.frequency_id);
+                return View(cards);
+            }
         }
 
         // GET: Cards/Edit/5

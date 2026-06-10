@@ -156,6 +156,7 @@
     <Compile Include="Models\Cards.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CardsMetadata.cs" />
     <Compile Include="Models\Collections.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
@@ -269,7 +270,6 @@
     <Content Include="Views\Cards\Delete.cshtml" />
     <Content Include="Views\Cards\Details.cshtml" />
     <Content Include="Views\Cards\Edit.cshtml" />
-    <Content Include="Views\Cards\Index.cshtml" />
     <Content Include="Views\Addresses\Create.cshtml" />
     <Content Include="Views\Addresses\Delete.cshtml" />
     <Content Include="Views\Addresses\Details.cshtml" />

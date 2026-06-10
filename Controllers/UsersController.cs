@@ -18,7 +18,7 @@ namespace SistemaGestionVentas.Controllers
     [SessionAuthorize]
     public class UsersController : Controller
     {
-        private SistemaGestionVentasDBEntities db = new SistemaGestionVentasDBEntities();        
+        private SistemaGestionVentasDBEntities db = new SistemaGestionVentasDBEntities();
 
         // GET: Users
         public ActionResult Index(string user_name, string user_lastname, string user_nickname, bool? user_active, int? role_id, int? page)
@@ -121,47 +121,15 @@ namespace SistemaGestionVentas.Controllers
             int actorRole = Convert.ToInt32(Session["RoleId"]);
 
             if (ModelState.IsValid)
-            {
-                if (
-                    string.IsNullOrWhiteSpace(users.user_name) ||
-                    string.IsNullOrWhiteSpace(users.user_lastname) ||
-                    string.IsNullOrWhiteSpace(users.user_nickname) ||
-                    string.IsNullOrWhiteSpace(users.user_phone) ||
-                    string.IsNullOrWhiteSpace(users.user_email) ||
-                    string.IsNullOrWhiteSpace(users.user_password) ||
-                    string.IsNullOrWhiteSpace(Request["address_name"]) ||
-                    string.IsNullOrWhiteSpace(Request["address_latitude"]) ||
-                    string.IsNullOrWhiteSpace(Request["address_longitude"]) ||
-                    string.IsNullOrWhiteSpace(Request["address_description"]))
-                {
-                ViewBag.Error = "Todos los campos son obligatorios.";
-                if (actorRole == 1)
-                {
-                    ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
-                }
-                return View(users);
-                }
+            {                
                 try
                 {
-                    string email = users.user_email?.Trim(); // elimina los espacios en blanco
-                    try
-                    {
-                        var mail = new System.Net.Mail.MailAddress(users.user_email); // analiza si el correo tiene un formato válido
-                    }
-                    catch
-                    {
-                        ViewBag.Error = "El correo electrónico no es válido.";
-                        if (actorRole == 1)
-                        {
-                            ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
-                        }
-                        return View(users);
-                    }
+                    string email = users.user_email?.Trim(); // elimina los espacios en blanco                    
                     bool emailExists = db.Users.Any(u => u.user_email.ToLower() == email.ToLower()); // busca si existe el correo, comparándolo en minúsculas
 
                     if (emailExists)
                     {
-                        ViewBag.Error = "Este correo ya está en uso.";
+                        ModelState.AddModelError("user_email", "Este correo ya está en uso.");
                         if (actorRole == 1)
                         {
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
@@ -171,7 +139,7 @@ namespace SistemaGestionVentas.Controllers
 
                     if (users.user_password.Length < 8)
                     {
-                        ViewBag.Error = "La contraseña debe tener mínimo 8 caracteres.";
+                        ModelState.AddModelError("user_password", "La contraseña debe tener mínimo 8 caracteres.");                        
                         if (actorRole == 1)
                         {
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
@@ -181,7 +149,7 @@ namespace SistemaGestionVentas.Controllers
 
                     if (!Regex.IsMatch(users.user_password, "[A-Z]"))
                     {
-                        ViewBag.Error = "La contraseña debe contener al menos una letra mayúscula.";
+                        ModelState.AddModelError("user_password", "La contraseña debe contener al menos una letra mayúscula.");                        
                         if (actorRole == 1)
                         {
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
@@ -191,7 +159,7 @@ namespace SistemaGestionVentas.Controllers
 
                     if (!Regex.IsMatch(users.user_password, "[a-z]"))
                     {
-                        ViewBag.Error = "La contraseña debe contener al menos una letra minúscula.";
+                        ModelState.AddModelError("user_password", "La contraseña debe contener al menos una letra minúscula.");                        
                         if (actorRole == 1)
                         {
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
@@ -201,7 +169,7 @@ namespace SistemaGestionVentas.Controllers
 
                     if (!Regex.IsMatch(users.user_password, "[0-9]"))
                     {
-                        ViewBag.Error = "La contraseña debe contener al menos un número.";
+                        ModelState.AddModelError("user_password", "La contraseña debe contener al menos un número.");                        
                         if (actorRole == 1)
                         {
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
@@ -211,7 +179,7 @@ namespace SistemaGestionVentas.Controllers
 
                     if (!Regex.IsMatch(users.user_password, @"[\W_]"))
                     {
-                        ViewBag.Error = "La contraseña debe contener al menos un símbolo.";
+                        ModelState.AddModelError("user_password", "La contraseña debe contener al menos un símbolo.");                       
                         if (actorRole == 1)
                         {
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
@@ -317,43 +285,22 @@ namespace SistemaGestionVentas.Controllers
             {
                 TempData["Error"] = "Acceso denegado.";
                 return RedirectToAction("Details", new { id = Convert.ToInt32(Session["UserId"]) });
-            }
-
-            if (
-                string.IsNullOrWhiteSpace(users.user_name) ||
-                string.IsNullOrWhiteSpace(users.user_lastname) ||
-                string.IsNullOrWhiteSpace(users.user_nickname) ||
-                string.IsNullOrWhiteSpace(users.user_phone) ||
-                string.IsNullOrWhiteSpace(users.user_email) ||
-                string.IsNullOrWhiteSpace(Request["address_name"]) ||
-                string.IsNullOrWhiteSpace(Request["address_latitude"]) ||
-                string.IsNullOrWhiteSpace(Request["address_longitude"]) ||
-                string.IsNullOrWhiteSpace(Request["address_description"]))
-            {
-                ViewBag.Error = "Todos los campos son obligatorios.";
-
-                if (roleId == 1)
-                {
-                    ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
-                }
-                return View(users);
-            }
-
-            string email = users.user_email.Trim();
-
-            bool emailExists = db.Users.Any(u => u.user_email.ToLower() == email.ToLower() && u.user_id != users.user_id);
-
-            if (emailExists)
-            {
-                ViewBag.Error = "Este correo ya está en uso.";
-                if (roleId == 1)
-                {
-                    ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
-                }
-                return View(users);
-            }
+            }            
+            
             if (ModelState.IsValid)
             {
+                string email = users.user_email?.Trim();
+                bool emailExists = db.Users.Any(u => u.user_email.ToLower() == email.ToLower() && u.user_id != users.user_id);
+
+                if (emailExists)
+                {
+                    ModelState.AddModelError("user_email", "Este correo ya está en uso.");
+                    if (roleId == 1)
+                    {
+                        ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
+                    }
+                    return View(users);
+                }
                 try
                 {
                     Users originalUser = db.Users.FirstOrDefault(u => u.user_id == users.user_id);

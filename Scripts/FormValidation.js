@@ -38,6 +38,12 @@
     const editUserEmail = document.getElementById("edit_user_email");
     const editUserEmailCounter = document.getElementById("edit_user_email_counter");    
 
+    // cards
+    const cardPayday = document.getElementById("card_payday");
+    const cardPaydayCounter = document.getElementById("card_payday_counter");
+    const cardItem = document.getElementById("card_item");
+    const cardItemCounter = document.getElementById("card_item_counter");
+
     function initializeCounter(input, counter, maxLength) {
 
         if (!input || !counter) {
@@ -150,4 +156,15 @@
         150
     );
 
+    initializeCounter(
+        cardPayday,
+        cardPaydayCounter,
+        50
+    );
+
+    initializeCounter(
+        cardItem,
+        cardItemCounter,
+        100
+    );
 });

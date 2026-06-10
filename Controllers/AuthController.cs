@@ -25,6 +25,10 @@ namespace SistemaGestionVentas.Controllers
         [ValidateAntiForgeryToken] // protege contra ataques Cross Site Request Forgery generando un token oculto para que el servidor lo valide
         public ActionResult Login(LoginViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             try
             {
                 var user = db.Users.FirstOrDefault(u => u.user_email == model.user_email); // se crea una variable a partir del email digitado por el usuario con el de la base de datos comparando que sean iguales
@@ -35,7 +39,7 @@ namespace SistemaGestionVentas.Controllers
                     return View(model);
                 }
 
-                if (!user.user_active) // si no esta activo
+                if (!user.user_active)
                 {
                     ViewBag.Error = "Usuario no disponible.";
                     return View(model);
@@ -43,20 +47,20 @@ namespace SistemaGestionVentas.Controllers
 
                 string hashedPassword = PasswordHelper.HashPassword(model.user_password);
 
-                if (user.user_password != hashedPassword) // si no es la contraseña correcta
+                if (user.user_password != hashedPassword)
                 {
                     ViewBag.Error = "Credenciales inválidas.";
                     return View(model);
                 }
-                // de ser correcto guarda los siguientes datos:
+                
                 Session["UserId"] = user.user_id;
                 Session["UserName"] = user.user_name;
                 Session["RoleId"] = user.role_id;
-                return RedirectToAction("Index", "Home"); // redirecciona a la página inicial
+                return RedirectToAction("Index", "Home");
             }
             catch
             {
-                ViewBag.Error = "No se pudo iniciar sesión."; // si hay un error y no es el mismo email u otro problema, muestra este error
+                ViewBag.Error = "No se pudo iniciar sesión.";
                 return View(model);
             }
         }
@@ -71,14 +75,14 @@ namespace SistemaGestionVentas.Controllers
             }
             catch
             {
-                TempData["Error"] = "No se pudo cerrar la sesión."; // error que se muestra en caso de problemas mientras se redirecciona
+                TempData["Error"] = "No se pudo cerrar la sesión."; 
                 return RedirectToAction("Index", "Home");
             }
         }
 
         public ActionResult ChangePassword()
         {
-            if (Session["UserId"] == null) // si no hay sesión iniciada
+            if (Session["UserId"] == null) 
             {
                 return RedirectToAction("Login");
             }
@@ -89,6 +93,10 @@ namespace SistemaGestionVentas.Controllers
         [ValidateAntiForgeryToken] // protege contra ataques Cross Site Request Forgery generando un token oculto para que el servidor lo valide
         public ActionResult ChangePassword(ChangePasswordViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             try
             {
                 if (Session["UserId"] == null)
@@ -109,44 +117,43 @@ namespace SistemaGestionVentas.Controllers
 
                 if (user.user_password != currentHash)
                 {
-                    ViewBag.Error = "Credenciales inválidas.";
+                    ModelState.AddModelError("current_password", "La contraseña actual es incorrecta.");
                     return View(model);
                 }
 
                 if (model.new_password != model.confirm_password)
                 {
-                    ViewBag.Error = "Las contraseñas no coinciden.";
-
+                    ModelState.AddModelError("confirm_password", "Las contraseñas no coinciden.");
                     return View(model);
                 }
 
                 if (model.new_password.Length < 8)
                 {
-                    ViewBag.Error = "La contraseña debe tener mínimo 8 caracteres.";
+                    ModelState.AddModelError("new_password", "La contraseña debe tener mínimo 8 caracteres.");                    
                     return View(model);
                 }
 
                 if (!Regex.IsMatch(model.new_password, "[A-Z]")) // regex busca patrones dentro de un texto
                 {
-                    ViewBag.Error = "La contraseña debe contener al menos una letra mayúscula.";
+                    ModelState.AddModelError("new_password", "La contraseña debe contener al menos una letra mayúscula.");                    
                     return View(model);
                 }
 
                 if (!Regex.IsMatch(model.new_password, "[a-z]"))
                 {
-                    ViewBag.Error = "La contraseña debe contener al menos una letra minúscula.";
+                    ModelState.AddModelError("new_password", "La contraseña debe contener al menos una letra minúscula.");                    
                     return View(model);
                 }
 
                 if (!Regex.IsMatch(model.new_password, "[0-9]"))
                 {
-                    ViewBag.Error = "La contraseña debe contener al menos un número.";
+                    ModelState.AddModelError("new_password", "La contraseña debe contener al menos un número.");                    
                     return View(model);
                 }
 
                 if (!Regex.IsMatch(model.new_password, @"[\W_]"))
                 {
-                    ViewBag.Error = "La contraseña debe contener al menos un símbolo.";
+                    ModelState.AddModelError("new_password", "La contraseña debe contener al menos un símbolo.");                    
                     return View(model);
                 }
 
@@ -154,7 +161,7 @@ namespace SistemaGestionVentas.Controllers
 
                 if (newHash == user.user_password)
                 {
-                    ViewBag.Error = "La nueva contraseña debe ser diferente.";
+                    ModelState.AddModelError("new_password", "La nueva contraseña debe ser diferente.");                    
                     return View(model);
                 }
                 user.user_password = newHash;

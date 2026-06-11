@@ -1,7 +1,14 @@
-﻿@model SistemaGestionVentas.Models.Users
+﻿@model SistemaGestionVentas.Models.ViewModels.UserDetailsViewModel
+@using PagedList.Mvc
 
 @{
     ViewBag.Title = "Información";
+}
+
+@{
+    int roleId = Convert.ToInt32(Session["RoleId"]);
+    int currentUserId = Convert.ToInt32(Session["UserId"]);
+    bool canManageCards = roleId != 3 && currentUserId != Model.User.user_id;
 }
 
 <h2>Información</h2>
@@ -10,67 +17,116 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>Nombre</dt>
-        <dd>@Html.DisplayFor(model => model.user_name)</dd>
+        <dd>@Html.DisplayFor(model => model.User.user_name)</dd>
 
         <dt>Apellido</dt>
-        <dd>@Html.DisplayFor(model => model.user_lastname)</dd>
+        <dd>@Html.DisplayFor(model => model.User.user_lastname)</dd>
 
-        @if (Convert.ToInt32(Session["RoleId"]) != 3)
+        @if (roleId != 3)
         {
             <dt>Apodo</dt>
-            <dd>@Html.DisplayFor(model => model.user_nickname)</dd>
+            <dd>@Html.DisplayFor(model => model.User.user_nickname)</dd>
         }
 
         <dt>Número de teléfono</dt>
-        <dd>@Html.DisplayFor(model => model.user_phone)</dd>
+        <dd>@Html.DisplayFor(model => model.User.user_phone)</dd>
 
         <dt>Dirección</dt>
-        <dd>@(Model.Addresses.FirstOrDefault() != null? Model.Addresses.FirstOrDefault().address_name: "")</dd>
+        <dd>@(Model.User.Addresses.FirstOrDefault() != null? Model.User.Addresses.FirstOrDefault().address_name: "")</dd>
 
         <dt>Latitud</dt>
-        <dd>@(Model.Addresses.FirstOrDefault() != null? Model.Addresses.FirstOrDefault().address_latitude.ToString() : "")</dd>
+        <dd>@(Model.User.Addresses.FirstOrDefault() != null? Model.User.Addresses.FirstOrDefault().address_latitude.ToString() : "")</dd>
 
         <dt>Longitud</dt>
-        <dd>@(Model.Addresses.FirstOrDefault() != null? Model.Addresses.FirstOrDefault().address_longitude.ToString() : "")</dd>
+        <dd>@(Model.User.Addresses.FirstOrDefault() != null? Model.User.Addresses.FirstOrDefault().address_longitude.ToString() : "")</dd>
 
         <dt>Dirección exacta</dt>
-        <dd>@(Model.Addresses.FirstOrDefault() != null? Model.Addresses.FirstOrDefault().address_description: "")</dd>
+        <dd>@(Model.User.Addresses.FirstOrDefault() != null? Model.User.Addresses.FirstOrDefault().address_description: "")</dd>
 
         <dt>Correo electrónico</dt>
-        <dd>@Html.DisplayFor(model => model.user_email)</dd>
+        <dd>@Html.DisplayFor(model => model.User.user_email)</dd>
 
-        @if (Convert.ToInt32(Session["RoleId"]) != 3)
+        @if (roleId != 3)
         {
             <dt>Estado</dt>
-            <dd>@(Model.user_active ? "Activo" : "Inactivo")</dd>
+            <dd>@(Model.User.user_active ? "Activo" : "Inactivo")</dd>
 
             <dt>Tipo de usuario</dt>
-            <dd>@Html.DisplayFor(model => model.Roles.role_description)</dd>
+            <dd>@Html.DisplayFor(model => model.User.Roles.role_description)</dd>
         }
     </dl>
 </div>
 <p>
-    @{
-        int roleId = Convert.ToInt32(Session["RoleId"]);
-        bool canEdit = roleId != 3 && !(roleId == 2 && Model.role_id == 1);
-    }
-    @if (canEdit)
+    @if (canManageCards)
     {
-        @Html.ActionLink("Editar", "Edit", new { id = Model.user_id })
+        @Html.ActionLink("Editar", "Edit", new { id = Model.User.user_id })
     }
 </p>
 
 <h3>Tarjetas del usuario</h3>
-@{
-    int currentUserId = Convert.ToInt32(Session["UserId"]);
-    bool canManageCards = roleId != 3 && currentUserId != Model.user_id;
-}
+
 @if (canManageCards)
 {
     <p>
-        @Html.ActionLink("Registrar tarjeta", "Create", "Cards", new { userId = Model.user_id }, null)
+        @Html.ActionLink("Registrar tarjeta", "Create", "Cards", new { userId = Model.User.user_id }, null)
     </p>
 }
+
+@using (Html.BeginForm("Details", "Users", FormMethod.Get))
+{
+    @Html.Hidden("id", Model.User.user_id)
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <label>Día de pago</label>
+            <input type="text" name="card_payday" value="@Model.CardPaydayFilter" class="form-control" maxlength="50" />
+        </div>
+
+        <div class="col-md-2">
+            <label>Periodicidad</label>
+            @Html.DropDownList("frequency_id", (SelectList)ViewBag.frequency_id, "Todas", new { @class = "form-control" })
+        </div>
+
+        <div class="col-md-2">
+            <label>Estado</label>
+            <select name="card_state" class="form-control">
+                <option value="">Todos</option>
+                <option value="true" @(Request["card_state"] == "true" ? "selected" : "")>Vigente</option>
+                <option value="false" @(Request["card_state"] == "false" ? "selected" : "")>Cancelada</option>
+            </select>
+        </div>
+
+        @if (Convert.ToInt32(Session["RoleId"]) != 3)
+        {
+            <div class="col-md-2">
+                <label>Activo</label>
+                <select name="card_active" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="true" @(Request["card_active"] == "true" ? "selected" : "")>Activo</option>
+                    <option value="false" @(Request["card_active"] == "false" ? "selected" : "")>Inactivo</option>
+                </select>
+            </div>}
+
+        <div class="col-md-2">
+            <label>&nbsp;</label>
+            <div>
+                <input type="submit" value="Buscar" class="btn btn-primary" />
+                <a href="@Url.Action("Details", "Users", new { id = Model.User.user_id })" class="btn btn-default">Limpiar</a>
+            </div>
+            @*<input type="submit" value="Buscar" class="btn btn-primary form-control" />
+                <a href="@Url.Action("Details", "Users", new { id = Model.User.user_id })" class="btn btn-default form-control">Limpiar</a>*@
+        </div>
+
+        @*<div class="col-md-1">
+                <label>&nbsp;</label>
+                <a href="@Url.Action("Details", "Users", new { id = Model.User.user_id })" class="btn btn-default form-control">Limpiar</a>
+            </div>*@
+    </div>
+
+    <br />
+}
+
 <table class="table">
     <tr>
         <th>Día de pago</th>
@@ -78,7 +134,10 @@
         <th>Artículo</th>
         <th>Precio del artículo</th>
         <th>Estado</th>
-        <th>Activo</th>
+        @if (roleId != 3)
+        {
+            <th>Activo</th>
+        }
         <th></th>
     </tr>
 
@@ -89,15 +148,18 @@
             <td>@card.Frequencies.frequency_description</td>
             <td>@card.card_item</td>
             <td>@card.card_item_price</td>
-            <td>@card.card_state</td>
-            <td>@card.card_active</td>
+            <td>@(card.card_state ? "Vigente" : "Cancelada")</td>
+            @if (roleId != 3)
+            {
+                <td>@(card.card_active ? "Activo" : "Inactivo")</td>
+            }
 
             <td>
                 @if (canManageCards)
                 {
                     @Html.ActionLink("Editar", "Edit", "Cards", new { id = card.card_id }, null) @: |
                 }
-                @Html.ActionLink("Detalles", "Details", "Cards", new { id = card.card_id }, null)
+                @Html.ActionLink("Ver cobros", "Details", "Cards", new { id = card.card_id }, null)
                 @if (canManageCards)
                 {
                     @: |
@@ -108,8 +170,19 @@
     }
 
 </table>
+
+@Html.PagedListPager(Model.Cards, page => Url.Action("Details", new
+{
+    id = Model.User.user_id,
+    page,
+    card_payday = Request["card_payday"],
+    frequency_id = Request["frequency_id"],
+    card_state = Request["card_state"],
+    card_active = Request["card_active"]
+}))
+
 <p>
-    @if (Convert.ToInt32(Session["RoleId"]) != 3)
+    @if (roleId != 3)
     {
         @Html.ActionLink("Atrás", "Index")
     }

@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using SistemaGestionVentas.Models;
 using SistemaGestionVentas.Filters;
 using PagedList;
+using SistemaGestionVentas.Models.ViewModels;
 
 namespace SistemaGestionVentas.Controllers
 {
@@ -27,16 +28,48 @@ namespace SistemaGestionVentas.Controllers
         // GET: Cards/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+                int userId = Convert.ToInt32(Session["UserId"]);
+
+                Cards card = db.Cards.Include(c => c.Users).Include(c => c.Frequencies).FirstOrDefault(c => c.card_id == id);
+
+                if (card == null)
+                {
+                    TempData["Error"] = "Tarjeta no encontrada.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                if(roleId == 3 && !card.card_active)
+{
+                    TempData["Error"] = "Tarjeta no encontrada.";
+                    return RedirectToAction("Details", "Users", new { id = userId });
+                }
+
+                if (roleId == 3 && card.user_id != userId)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Details", "Users", new { id = userId });
+                }
+
+                var viewModel = new CardDetailsViewModel
+                {
+                    Card = card,
+                    Collections = Enumerable.Empty<Collections>().ToPagedList(1, 1)
+                };
+                return View(viewModel);
             }
-            Cards cards = db.Cards.Find(id);
-            if (cards == null)
+            catch
             {
-                return HttpNotFound();
+                TempData["Error"] = "No se pudo obtener la información.";
+                return RedirectToAction("Index", "Users");
             }
-            return View(cards);
         }
 
         // GET: Cards/Create

@@ -1,123 +1,106 @@
-﻿@model SistemaGestionVentas.Models.Cards
+﻿@model SistemaGestionVentas.Models.ViewModels.CardDetailsViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Información de la tarjeta y cobros";
 }
 
-<h2>Details</h2>
+@{
+    int roleId = Convert.ToInt32(Session["RoleId"]);    
+    int currentUserId = Convert.ToInt32(Session["UserId"]);
+    bool canManageCards = roleId != 3 && currentUserId != Model.Card.Users.user_id;
+}
+
+<h2>Información de la tarjeta y cobros</h2>
 
 <div>
-    <h4>Cards</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.card_payday)
-        </dt>
+        <dt>Día de pago</dt>
+        <dd>@Html.DisplayFor(model => model.Card.card_payday)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.card_payday)
-        </dd>
+        <dt>Monto por pagar</dt>
+        <dd>@Html.DisplayFor(model => model.Card.card_payment_amount)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.card_payment_amount)
-        </dt>
+        <dt>Frecuencia de pago</dt>
+        <dd>@Html.DisplayFor(model => model.Card.Frequencies.frequency_description)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.card_payment_amount)
-        </dd>
+        <dt>Descripción del artículo</dt>
+        <dd>@Html.DisplayFor(model => model.Card.card_item)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.card_item)
-        </dt>
+        <dt>Precio del artículo</dt>
+        <dd>@Html.DisplayFor(model => model.Card.card_item_price)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.card_item)
-        </dd>
+        <dt>Vigencia</dt>
+        <dd>@(Model.Card.card_state ? "Vigente" : "Cancelada")</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.card_item_price)
-        </dt>
+        @if (roleId != 3)
+        {
+            <dt>Estado de la tarjeta</dt>
+            <dd>@(Model.Card.card_active ? "Activo" : "Inactivo")</dd>
+        }
 
-        <dd>
-            @Html.DisplayFor(model => model.card_item_price)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.card_state)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.card_state)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.card_active)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.card_active)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Frequencies.frequency_description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Frequencies.frequency_description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Items.item_name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Items.item_name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Users.user_name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Users.user_name)
-        </dd>
-
+        @*<dt>Imagen del artículo</dt>
+            <dd>@Html.DisplayFor(model => model.Items.item_name)</dd>*@
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.card_id })
-</p>
+
+@if (canManageCards)
+{
+    <p>
+        @Html.ActionLink("Editar", "Edit", new { id = Model.Card.card_id })
+    </p>
+}
+
 <h3>Cobros de la tarjeta</h3>
-<p>
-    @Html.ActionLink("Agregar Cobro", "Create", "Collections")
-</p>
+
+@if (canManageCards)
+{
+    <p>
+        @Html.ActionLink("Registrar cobro", "Create", "Collections", new { cardId = Model.Card.card_id },
+    null)
+    </p>
+}
 <table class="table">
     <tr>
         <th>Fecha</th>
         <th>Monto</th>
         <th>Saldo</th>
-        <th>Nota</th>
-        <th>Activo</th>
+        @if (roleId != 3)
+        {
+            <th>Nota</th>
+            <th>Activo</th>
+        }
         <th></th>
     </tr>
 
     @foreach (var collection in Model.Collections)
     {
-<tr>
-    <td>@collection.collection_date</td>
-    <td>@collection.collection_amount</td>
-    <td>@collection.collection_balance</td>
-    <td>@collection.collection_note</td>
-    <td>@collection.collection_active</td>
+        <tr>
+            <td>@collection.collection_date</td>
+            <td>@collection.collection_amount</td>
+            <td>@collection.collection_balance</td>
+            @if (roleId != 3)
+            {
+                <td>@collection.collection_note</td>
+                <td>@(collection.collection_active ? "Activo" : "Inactivo")</td>
+            }
 
-    <td>
-        @Html.ActionLink("Editar", "Edit", "Collections", new { id = collection.collection_id }, null) |
-        @Html.ActionLink("Detalles", "Details", "Collections", new { id = collection.collection_id }, null) |
-        @Html.ActionLink("Eliminar", "Delete", "Collections", new { id = collection.collection_id }, null)
-    </td>
-</tr>}
+            <td>
+                @if (canManageCards)
+                {
+                    @Html.ActionLink("Editar", "Edit", "Collections", new { id = collection.collection_id }, null) @: |
+                }
+                @Html.ActionLink("Detalles", "Details", "Collections", new { id = collection.collection_id }, null)
+                @if (canManageCards)
+                {
+                    @: |
+                    @Html.ActionLink("Desactivar", "Delete", "Collections", new { id = collection.collection_id }, null)
+                }
+            </td>
+        </tr>
+    }
 
 </table>
 <p>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Atrás", "Details", "Users", new { id = Model.Card.user_id }, null)
 </p>

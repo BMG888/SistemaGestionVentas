@@ -12,6 +12,7 @@ using SistemaGestionVentas.Helpers;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using PagedList;
+using SistemaGestionVentas.Models.ViewModels;
 
 namespace SistemaGestionVentas.Controllers
 {
@@ -71,7 +72,7 @@ namespace SistemaGestionVentas.Controllers
         }
 
         // GET: Users/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, string card_payday, int? frequency_id, bool? card_state, bool? card_active, int page = 1)
         {
             try
             {
@@ -95,7 +96,52 @@ namespace SistemaGestionVentas.Controllers
                     TempData["Error"] = "Usuario no encontrado.";
                     return RedirectToAction("Index");
                 }
-                return View(users);
+
+                var cardsQuery = db.Cards.Include(c => c.Frequencies).Where(c => c.user_id == users.user_id);
+
+                if (!string.IsNullOrWhiteSpace(card_payday))
+                {
+                    cardsQuery = cardsQuery.Where(c => c.card_payday.Contains(card_payday));
+                }
+
+                if (frequency_id.HasValue)
+                {
+                    cardsQuery = cardsQuery.Where(c => c.frequency_id == frequency_id.Value);
+                }
+
+                if (card_state.HasValue)
+                {
+                    cardsQuery = cardsQuery.Where(c => c.card_state == card_state.Value);
+                }
+
+                if (roleId == 3)
+                {
+                    cardsQuery = cardsQuery.Where(c => c.card_active);
+                }
+                else
+                {
+                    if (card_active.HasValue)
+                    {
+                        cardsQuery = cardsQuery.Where(c => c.card_active == card_active.Value);
+                    }
+                }
+
+                int pageSize = 5;
+                var cards = cardsQuery.OrderBy(c => c.card_id).ToPagedList(page, pageSize);
+
+                var viewModel = new UserDetailsViewModel
+                {
+                    User = users,
+                    Cards = cards,                    
+
+                    CardPaydayFilter = card_payday,
+                    FrequencyIdFilter = frequency_id,
+                    CardStateFilter = card_state,
+                    CardActiveFilter = card_active
+                };
+
+                ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description", frequency_id);
+                return View(viewModel);
             }
             catch
             {

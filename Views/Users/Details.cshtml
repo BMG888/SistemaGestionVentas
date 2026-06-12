@@ -160,10 +160,21 @@
                     @Html.ActionLink("Editar", "Edit", "Cards", new { id = card.card_id }, null) @: |
                 }
                 @Html.ActionLink("Ver cobros", "Details", "Cards", new { id = card.card_id }, null)
-                @if (canManageCards)
+                @if (card.card_active)
                 {
-                    @: |
-                    @Html.ActionLink("Desactivar", "Delete", "Cards", new { id = card.card_id }, null)
+                    if (canManageCards)
+                    {
+                        @: |
+                        @Html.ActionLink("Desactivar", "Delete", "Cards", new { id = card.card_id }, null)
+                    }
+                }
+                else
+                {
+                    if (roleId == 1)
+                    {
+                        @: |
+                        @Html.ActionLink("Reactivar", "Reactivate", "Cards", new { id = card.card_id }, null)
+                    }
                 }
             </td>
         </tr>

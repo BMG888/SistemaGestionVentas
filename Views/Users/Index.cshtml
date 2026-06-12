@@ -101,14 +101,16 @@
                     if (canDeactivate)
                     {
                         @: |
-                        @Html.ActionLink("Desactivar", "Delete", new { id = item.user_id }) }
+                        @Html.ActionLink("Desactivar", "Delete", new { id = item.user_id }) 
+                    }
                 }
                 else
                 {
                     if (roleId == 1)
                     {
                         @: |
-                        @Html.ActionLink("Reactivar", "Reactivate", new { id = item.user_id })}
+                        @Html.ActionLink("Reactivar", "Reactivate", new { id = item.user_id })
+                    }
                 }
             </td>
         </tr>

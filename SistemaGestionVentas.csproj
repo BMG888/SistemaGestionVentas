@@ -285,6 +285,7 @@
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Auth\ChangePassword.cshtml" />
     <Content Include="Views\Users\Reactivate.cshtml" />
+    <Content Include="Views\Cards\Reactivate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

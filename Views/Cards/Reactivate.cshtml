@@ -1,12 +1,12 @@
 ﻿@model SistemaGestionVentas.Models.Cards
 
 @{
-    ViewBag.Title = "Desactivar";
+    ViewBag.Title = "Reactivar";
 }
 
-<h2>Desactivar tarjeta</h2>
+<h2>Reactivar tarjeta</h2>
 
-<h3>¿Está seguro de desactivar esta tarjeta?</h3>
+<h3>¿Está seguro de reactivar esta tarjeta?</h3>
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -29,14 +29,15 @@
         <dd>@Html.DisplayFor(model => model.card_state)</dd>
 
         @*<dt>Imagen del artículo</dt>
-        <dd>@Html.DisplayFor(model => model.Items.item_name)</dd>*@        
+            <dd>@Html.DisplayFor(model => model.Items.item_name)</dd>*@
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Desactivar" class="btn btn-default" /> |
+            <input type="submit" value="Reactivar" class="btn btn-default" /> |
             @Html.ActionLink("Atrás", "Details", "Users", new { id = Model.user_id }, null)
         </div>
     }

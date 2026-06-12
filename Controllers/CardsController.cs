@@ -46,8 +46,8 @@ namespace SistemaGestionVentas.Controllers
                     return RedirectToAction("Index", "Users");
                 }
 
-                if(roleId == 3 && !card.card_active)
-{
+                if (roleId == 3 && !card.card_active)
+                {
                     TempData["Error"] = "Tarjeta no encontrada.";
                     return RedirectToAction("Details", "Users", new { id = userId });
                 }
@@ -100,7 +100,7 @@ namespace SistemaGestionVentas.Controllers
             }
 
             ViewBag.UserId = userId;
-            ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description");            
+            ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description");
             return View();
         }
 
@@ -117,7 +117,7 @@ namespace SistemaGestionVentas.Controllers
                 ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description", cards.frequency_id);
                 return View(cards);
             }
-            
+
             if (!db.Frequencies.Any(f => f.frequency_id == cards.frequency_id))
             {
                 ModelState.AddModelError("frequency_id", "La frecuencia seleccionada no existe.");
@@ -172,19 +172,45 @@ namespace SistemaGestionVentas.Controllers
         // GET: Cards/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+                int currentUserId = Convert.ToInt32(Session["UserId"]);
+
+                if (roleId == 3)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                Cards card = db.Cards.Find(id);
+
+                if (card == null)
+                {
+                    TempData["Error"] = "Tarjeta no encontrada.";
+                    return RedirectToAction("Details", "Users", new { id = card.user_id });
+                }
+
+                if (card.user_id == currentUserId)
+                {
+                    TempData["Error"] = "No puede editar tarjetas asociadas a su propia cuenta.";
+                    return RedirectToAction("Details", new { id = card.card_id });
+                }
+
+                ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description", card.frequency_id);
+                ViewBag.item_id = new SelectList(db.Items, "item_id", "item_name", card.item_id);
+                return View(card);
             }
-            Cards cards = db.Cards.Find(id);
-            if (cards == null)
+            catch
             {
-                return HttpNotFound();
+                TempData["Error"] = "No se pudo obtener la información.";
+                return RedirectToAction("Index", "Users");
             }
-            ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description", cards.frequency_id);
-            ViewBag.item_id = new SelectList(db.Items, "item_id", "item_name", cards.item_id);
-            ViewBag.user_id = new SelectList(db.Users, "user_id", "user_name", cards.user_id);
-            return View(cards);
         }
 
         // POST: Cards/Edit/5
@@ -194,31 +220,120 @@ namespace SistemaGestionVentas.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "card_id,card_payday,card_payment_amount,card_item, card_item_price,card_state,card_active,user_id,frequency_id,item_id")] Cards cards)
         {
+            int roleId = Convert.ToInt32(Session["RoleId"]);
+            int currentUserId = Convert.ToInt32(Session["UserId"]);
+
+            if (roleId == 3)
+            {
+                TempData["Error"] = "Acceso denegado.";
+                return RedirectToAction("Details", new { id = cards.card_id });
+            }
+
             if (ModelState.IsValid)
             {
-                db.Entry(cards).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                bool frequencyExists = db.Frequencies.Any(f => f.frequency_id == cards.frequency_id);
+
+                if (!frequencyExists)
+                {
+                    ModelState.AddModelError("frequency_id", "La frecuencia seleccionada no existe.");
+                    ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description", cards.frequency_id);
+                    ViewBag.item_id = new SelectList(db.Items, "item_id", "item_name", cards.item_id);
+                    return View(cards);
+                }
+
+                if (cards.item_id.HasValue)
+                {
+                    bool itemExists = db.Items.Any(i => i.item_id == cards.item_id.Value);
+
+                    if (!itemExists)
+                    {
+                        ModelState.AddModelError("item_id", "El producto seleccionado no existe.");
+
+                        ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description", cards.frequency_id);
+                        ViewBag.item_id = new SelectList(db.Items, "item_id", "item_name", cards.item_id);
+                        return View(cards);
+                    }
+                }
+
+                try
+                {
+                    Cards originalCard = db.Cards.FirstOrDefault(c => c.card_id == cards.card_id);
+                    if (originalCard == null)
+                    {
+                        TempData["Error"] = "Tarjeta no encontrada.";
+                        return RedirectToAction("Index", "Users");
+                    }
+
+                    if (originalCard.user_id == currentUserId)
+                    {
+                        TempData["Error"] = "No puede editar tarjetas asociadas a su propia cuenta.";
+                        return RedirectToAction("Details", new { id = originalCard.card_id });
+                    }
+
+                    originalCard.card_payday = cards.card_payday;
+                    originalCard.card_payment_amount = cards.card_payment_amount;
+                    originalCard.card_item = cards.card_item;
+                    originalCard.card_item_price = cards.card_item_price;
+                    originalCard.frequency_id = cards.frequency_id;
+                    originalCard.item_id = cards.item_id;
+
+                    db.SaveChanges();
+                    TempData["Success"] = "Tarjeta actualizada correctamente.";
+                    return RedirectToAction("Details", new { id = originalCard.card_id });
+                }
+                catch
+                {
+                    TempData["Error"] = "No se pudo actualizar la tarjeta.";
+                    return RedirectToAction("Details", new { id = cards.card_id });
+                }
             }
+
             ViewBag.frequency_id = new SelectList(db.Frequencies, "frequency_id", "frequency_description", cards.frequency_id);
             ViewBag.item_id = new SelectList(db.Items, "item_id", "item_name", cards.item_id);
-            ViewBag.user_id = new SelectList(db.Users, "user_id", "user_name", cards.user_id);
             return View(cards);
         }
 
         // GET: Cards/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+                int currentUserId = Convert.ToInt32(Session["UserId"]);
+
+                if (roleId == 3)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Details", "Users", new { id = currentUserId });
+                }
+
+                if (id == null)
+                {
+                    TempData["Error"] = "Tarjeta no encontrada.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                Cards cards = db.Cards.Find(id);
+
+                if (cards == null)
+                {
+                    TempData["Error"] = "Tarjeta no encontrada.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                if (cards.user_id == currentUserId)
+                {
+                    TempData["Error"] = "No puede desactivar tarjetas asociadas a su propia cuenta.";
+                    return RedirectToAction("Details", new { id = cards.card_id });
+                }
+
+                return View(cards);
             }
-            Cards cards = db.Cards.Find(id);
-            if (cards == null)
+            catch
             {
-                return HttpNotFound();
+                TempData["Error"] = "No se pudo obtener la información.";
+                return RedirectToAction("Index", "Users");
             }
-            return View(cards);
         }
 
         // POST: Cards/Delete/5
@@ -226,10 +341,134 @@ namespace SistemaGestionVentas.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Cards cards = db.Cards.Find(id);
-            db.Cards.Remove(cards);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+                int currentUserId = Convert.ToInt32(Session["UserId"]);
+
+                if (roleId == 3)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Details", "Users", new { id = currentUserId });
+                }
+
+                Cards cards = db.Cards.Find(id);
+
+                if (cards == null)
+                {
+                    TempData["Error"] = "Tarjeta no encontrada.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                if (cards.user_id == currentUserId)
+                {
+                    TempData["Error"] = "No puede desactivar tarjetas asociadas a su propia cuenta.";
+                    return RedirectToAction("Details", new { id = cards.card_id });
+                }
+
+                cards.card_active = false;
+                db.SaveChanges();
+
+                TempData["Success"] = "Tarjeta desactivada correctamente.";
+
+                return RedirectToAction("Details", "Users", new { id = cards.user_id });
+            }
+            catch
+            {
+                TempData["Error"] = "No se pudo desactivar la tarjeta.";
+
+                Cards card = db.Cards.Find(id);
+
+                if (card != null)
+                {
+                    return RedirectToAction("Details", "Users", new { id = card.user_id });
+                }
+
+                return RedirectToAction("Index", "Users");
+            }
+        }
+
+        public ActionResult Reactivate(int? id)
+        {
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+
+                if (roleId != 1)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                if (id == null)
+                {
+                    TempData["Error"] = "Tarjeta no encontrada.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                Cards cards = db.Cards.Find(id);
+
+                if (cards == null)
+                {
+                    TempData["Error"] = "Tarjeta no encontrada.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                if (cards.card_active)
+                {
+                    TempData["Error"] = "La tarjeta ya se encuentra activa.";
+                    return RedirectToAction("Details", new { id = cards.card_id });
+                }
+
+                return View(cards);
+            }
+            catch
+            {
+                TempData["Error"] = "No se pudo obtener la información.";
+                return RedirectToAction("Index", "Users");
+            }
+        }
+
+        [HttpPost, ActionName("Reactivate")]
+        [ValidateAntiForgeryToken]
+        public ActionResult ReactivateConfirmed(int id)
+        {
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+
+                if (roleId != 1)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                Cards cards = db.Cards.Find(id);
+
+                if (cards == null)
+                {
+                    TempData["Error"] = "Tarjeta no encontrada.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                if (cards.card_active)
+                {
+                    TempData["Error"] = "La tarjeta ya se encuentra activa.";
+                    return RedirectToAction("Details", new { id = cards.card_id });
+                }
+
+                cards.card_active = true;
+                db.SaveChanges();
+
+                TempData["Success"] = "Tarjeta reactivada correctamente.";
+
+                return RedirectToAction("Details", "Users", new { id = cards.user_id });
+            }
+            catch
+            {
+                TempData["Error"] = "No se pudo reactivar la tarjeta.";
+                return RedirectToAction("Index", "Users");
+            }
         }
 
         protected override void Dispose(bool disposing)

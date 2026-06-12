@@ -43,6 +43,10 @@
     const cardPaydayCounter = document.getElementById("card_payday_counter");
     const cardItem = document.getElementById("card_item");
     const cardItemCounter = document.getElementById("card_item_counter");
+    const editCardPayday = document.getElementById("edit_card_payday");
+    const editCardPaydayCounter = document.getElementById("edit_card_payday_counter");
+    const editCardItem = document.getElementById("edit_card_item");
+    const editCardItemCounter = document.getElementById("edit_card_item_counter");
 
     function initializeCounter(input, counter, maxLength) {
 
@@ -165,6 +169,18 @@
     initializeCounter(
         cardItem,
         cardItemCounter,
+        100
+    );
+
+    initializeCounter(
+        editCardPayday,
+        editCardPaydayCounter,
+        100
+    );
+
+    initializeCounter(
+        editCardItem,
+        editCardItemCounter,
         100
     );
 });

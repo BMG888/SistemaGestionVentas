@@ -58,11 +58,7 @@ namespace SistemaGestionVentas.Controllers
                     return RedirectToAction("Details", "Users", new { id = userId });
                 }
 
-                var viewModel = new CardDetailsViewModel
-                {
-                    Card = card,
-                    Collections = Enumerable.Empty<Collections>().ToPagedList(1, 1)
-                };
+                var viewModel = new CardDetailsViewModel { Card = card, Collections = Enumerable.Empty<Collections>().ToPagedList(1, 1) };
                 return View(viewModel);
             }
             catch

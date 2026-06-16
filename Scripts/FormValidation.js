@@ -48,6 +48,10 @@
     const editCardItem = document.getElementById("edit_card_item");
     const editCardItemCounter = document.getElementById("edit_card_item_counter");
 
+    // collections
+    const collectionNote = document.getElementById("collection_note");
+    const collectionNoteCounter = document.getElementById("collection_note_counter");
+
     function initializeCounter(input, counter, maxLength) {
 
         if (!input || !counter) {
@@ -182,5 +186,11 @@
         editCardItem,
         editCardItemCounter,
         100
+    );
+
+    initializeCounter(
+        collectionNote,
+        collectionNoteCounter,
+        255
     );
 });

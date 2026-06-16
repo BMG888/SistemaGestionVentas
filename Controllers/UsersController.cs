@@ -33,11 +33,6 @@ namespace SistemaGestionVentas.Controllers
 
             var users = db.Users.Include(u => u.Roles).AsQueryable();
 
-            if (roleId == 2)
-            {
-                users = users.Where(u => u.user_active);
-            }
-
             if (!string.IsNullOrWhiteSpace(user_name))
             {
                 users = users.Where(u => u.user_name.Contains(user_name));
@@ -299,13 +294,7 @@ namespace SistemaGestionVentas.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Users users = db.Users.Find(id);
-
-            if (roleId == 2 && users.role_id == 1)
-            {
-                TempData["Error"] = "No puede editar administradores.";
-                return RedirectToAction("Index");
-            }
+            Users users = db.Users.Find(id);            
 
             if (users == null)
             {
@@ -372,6 +361,12 @@ namespace SistemaGestionVentas.Controllers
 
                     if (roleId == 1)
                     {
+                        if (originalUser.user_id == Convert.ToInt32(Session["UserId"]) && originalUser.role_id != users.role_id)
+                        {
+                            TempData["Error"] = "No puede modificar su propio rol.";
+                            ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
+                            return View(users);
+                        }
                         originalUser.role_id = users.role_id;
                     }
                     db.SaveChanges();

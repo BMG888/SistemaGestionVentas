@@ -89,10 +89,10 @@
             </div>
         </div>
 
-        @if (Convert.ToInt32(Session["RoleId"]) == 1)
+        @if (Convert.ToInt32(Session["RoleId"]) == 1 && Model.user_id != Convert.ToInt32(Session["UserId"]))
         {
             <div class="form-group">
-                @Html.Label("Tipo de usuario", "role_id", htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.Label("Tipo de usuario", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.DropDownList("role_id", null, htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.role_id, "", new { @class = "text-danger" })

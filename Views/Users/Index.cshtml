@@ -87,21 +87,18 @@
                 @{
                     int roleId = Convert.ToInt32(Session["RoleId"]);
                     int currentUserId = Convert.ToInt32(Session["UserId"]);
-                    bool canEdit = !(roleId == 2 && item.role_id == 1);
-                    bool canDeactivate = item.user_id != currentUserId && !(roleId == 2 && item.role_id == 1); }
-
-                @if (canEdit)
-                {
-                    @Html.ActionLink("Editar", "Edit", new { id = item.user_id })
-                    @: |
+                    bool canDeactivate = item.user_id != currentUserId && !(roleId == 2 && item.role_id == 1);
                 }
+
+                @Html.ActionLink("Editar", "Edit", new { id = item.user_id }) |
                 @Html.ActionLink("Ver más", "Details", new { id = item.user_id })
+
                 @if (item.user_active)
                 {
                     if (canDeactivate)
                     {
                         @: |
-                        @Html.ActionLink("Desactivar", "Delete", new { id = item.user_id }) 
+                        @Html.ActionLink("Desactivar", "Delete", new { id = item.user_id })
                     }
                 }
                 else

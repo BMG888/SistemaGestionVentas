@@ -28,16 +28,36 @@ namespace SistemaGestionVentas.Controllers
         // GET: Collections/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+
+                if (roleId == 3)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                Collections collections = db.Collections.Find(id);
+
+                if (collections == null)
+                {
+                    TempData["Error"] = "Cobro no encontrado.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                return View(collections);
             }
-            Collections collections = db.Collections.Find(id);
-            if (collections == null)
+            catch
             {
-                return HttpNotFound();
+                TempData["Error"] = "No se pudo obtener la información.";
+                return RedirectToAction("Index", "Users");
             }
-            return View(collections);
         }
 
         // GET: Collections/Create
@@ -208,16 +228,58 @@ namespace SistemaGestionVentas.Controllers
         // GET: Collections/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+                int currentUserId = Convert.ToInt32(Session["UserId"]);
+
+                if (roleId == 3)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                if (id == null)
+                {
+                    TempData["Error"] = "Cobro no encontrado.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                Collections collection = db.Collections.Find(id);
+
+                if (collection == null)
+                {
+                    TempData["Error"] = "Cobro no encontrado.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                if (collection.collection_note == "Se modificó el precio del producto.")
+                {
+                    TempData["Error"] = "Los ajustes automáticos del sistema no pueden desactivarse.";
+                    return RedirectToAction("Details", "Cards", new { id = collection.card_id });
+                }
+
+                if (!collection.collection_active)
+                {
+                    TempData["Error"] = "El cobro ya se encuentra desactivado.";
+                    return RedirectToAction("Details", "Cards", new { id = collection.card_id });
+                }
+
+                Cards card = db.Cards.Find(collection.card_id);
+
+                if (card.user_id == currentUserId)
+                {
+                    TempData["Error"] = "No puede desactivar cobros asociados a su propia cuenta.";
+                    return RedirectToAction("Details", "Cards", new { id = card.card_id });
+                }
+
+                return View(collection);
             }
-            Collections collections = db.Collections.Find(id);
-            if (collections == null)
+            catch
             {
-                return HttpNotFound();
+                TempData["Error"] = "No se pudo obtener la información.";
+                return RedirectToAction("Index", "Users");
             }
-            return View(collections);
         }
 
         // POST: Collections/Delete/5
@@ -225,10 +287,72 @@ namespace SistemaGestionVentas.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Collections collections = db.Collections.Find(id);
-            db.Collections.Remove(collections);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+                int currentUserId = Convert.ToInt32(Session["UserId"]);
+
+                if (roleId == 3)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                Collections collection = db.Collections.Find(id);
+
+                if (collection == null)
+                {
+                    TempData["Error"] = "Cobro no encontrado.";
+                    return RedirectToAction("Index", "Users");
+                }
+
+                if (collection.collection_note == "Se modificó el precio del producto.")
+                {
+                    TempData["Error"] = "Los ajustes automáticos del sistema no pueden desactivarse.";
+                    return RedirectToAction("Details", "Cards", new { id = collection.card_id });
+                }
+
+                if (!collection.collection_active)
+                {
+                    TempData["Error"] = "El cobro ya se encuentra desactivado.";
+                    return RedirectToAction("Details", "Cards", new { id = collection.card_id });
+                }
+
+                Cards card = db.Cards.Find(collection.card_id);
+
+                if (card.user_id == currentUserId)
+                {
+                    TempData["Error"] = "No puede desactivar cobros asociados a su propia cuenta.";
+                    return RedirectToAction("Details", "Cards", new { id = card.card_id });
+                }
+
+                collection.collection_active = false;
+                Collections ultimoCobroActivo = db.Collections.Where(c => c.card_id == card.card_id && c.collection_active).OrderByDescending(c => c.collection_id).FirstOrDefault();
+
+                if (ultimoCobroActivo == null)
+                {
+                    card.card_state = true;
+                }
+                else
+                {
+                    card.card_state = ultimoCobroActivo.collection_balance > 0;
+                }
+
+                db.SaveChanges();
+                TempData["Success"] = "Cobro desactivado correctamente.";
+                return RedirectToAction("Details", "Cards", new { id = card.card_id });
+            }
+            catch
+            {
+                TempData["Error"] = "No se pudo desactivar el cobro.";
+                Collections collection = db.Collections.Find(id);
+
+                if (collection != null)
+                {
+                    return RedirectToAction("Details", "Cards", new { id = collection.card_id });
+                }
+                return RedirectToAction("Index", "Users");
+            }
         }
 
         protected override void Dispose(bool disposing)

@@ -11,5 +11,11 @@ namespace SistemaGestionVentas.Models.ViewModels
         public Cards Card { get; set; }
 
         public IPagedList<Collections> Collections { get; set; }
+
+        public DateTime? CollectionDateFilter { get; set; }
+
+        public int? UserIdFilter { get; set; }
+
+        public bool? CollectionActiveFilter { get; set; }
     }
 }

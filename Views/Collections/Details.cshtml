@@ -1,74 +1,33 @@
 ﻿@model SistemaGestionVentas.Models.Collections
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Información del cobro y nota";
 }
 
-<h2>Details</h2>
+<h2>Información del cobro y nota</h2>
 
 <div>
-    <h4>Collections</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.collection_date)
-        </dt>
+        <dt>Fecha y hora</dt>
+        <dd>@Model.collection_date.ToString("dd/MM/yyyy HH:mm")</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.collection_date)
-        </dd>
+        <dt>Monto cobrado</dt>
+        <dd>@Html.DisplayFor(model => model.collection_amount)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.collection_amount)
-        </dt>
+        <dt>Saldo restante</dt>
+        <dd>@Html.DisplayFor(model => model.collection_balance)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.collection_amount)
-        </dd>
+        <dt>Nota del cobrador</dt>
+        <dd>@Html.DisplayFor(model => model.collection_note)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.collection_balance)
-        </dt>
+        <dt>Nombre del cobrador</dt>
+        <dd>@($"{Model.Users.user_name} {Model.Users.user_lastname}")</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.collection_balance)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.collection_note)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.collection_note)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.collection_active)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.collection_active)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Cards.card_payday)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Cards.card_payday)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Users.user_name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Users.user_name)
-        </dd>
-
+        <dt>Estado del cobro</dt>
+        <dd>@(Model.collection_active ? "Activo" : "Inactivo")</dd>
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.collection_id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Atrás", "Details", "Cards", new { id = Model.card_id }, null)
 </p>

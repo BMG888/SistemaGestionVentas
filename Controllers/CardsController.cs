@@ -26,7 +26,7 @@ namespace SistemaGestionVentas.Controllers
         }
 
         // GET: Cards/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, DateTime? collection_date, int? user_id, bool? collection_active, int page = 1)
         {
             try
             {
@@ -58,7 +58,43 @@ namespace SistemaGestionVentas.Controllers
                     return RedirectToAction("Details", "Users", new { id = userId });
                 }
 
-                var viewModel = new CardDetailsViewModel { Card = card, Collections = Enumerable.Empty<Collections>().ToPagedList(1, 1) };
+                var collections = db.Collections.Include(c => c.Users).Where(c => c.card_id == card.card_id);
+
+                if (collection_date.HasValue)
+                {
+                    collections = collections.Where(c => DbFunctions.TruncateTime(c.collection_date) == DbFunctions.TruncateTime(collection_date.Value));
+                }
+
+                if (user_id.HasValue)
+                {
+                    collections = collections.Where(c => c.user_id == user_id.Value);
+                }
+
+                if (roleId != 3)
+                {
+                    if (collection_active.HasValue)
+                    {
+                        collections = collections.Where(c => c.collection_active == collection_active.Value);
+                    }
+                }
+
+                if (roleId == 3)
+                {
+                    collections = collections.Where(c => c.collection_active);
+                }
+
+                var viewModel = new CardDetailsViewModel
+                {
+                    Card = card,
+                    Collections = collections.OrderByDescending(c => c.collection_date).ToPagedList(page, 50),
+                    CollectionDateFilter = collection_date,
+                    UserIdFilter = user_id,
+                    CollectionActiveFilter = collection_active
+                };
+                if (roleId != 3)
+                {
+                    ViewBag.user_id = new SelectList(db.Users.Where(u => u.role_id != 3).Select(u => new { u.user_id, NombreCompleto = u.user_name + " " + u.user_lastname }).OrderBy(u => u.NombreCompleto), "user_id", "NombreCompleto", user_id);
+                }
                 return View(viewModel);
             }
             catch
@@ -253,17 +289,53 @@ namespace SistemaGestionVentas.Controllers
 
                 try
                 {
-                    Cards originalCard = db.Cards.FirstOrDefault(c => c.card_id == cards.card_id);
+                    Cards originalCard = db.Cards.FirstOrDefault(c => c.card_id == cards.card_id);                    
+
                     if (originalCard == null)
                     {
                         TempData["Error"] = "Tarjeta no encontrada.";
                         return RedirectToAction("Index", "Users");
                     }
 
+                    int precioAnterior = originalCard.card_item_price;
+                    int precioNuevo = cards.card_item_price;
+                    bool precioCambio = precioAnterior != precioNuevo;
+
                     if (originalCard.user_id == currentUserId)
                     {
                         TempData["Error"] = "No puede editar tarjetas asociadas a su propia cuenta.";
                         return RedirectToAction("Details", new { id = originalCard.card_id });
+                    }
+
+                    if (precioCambio)
+                    {
+                        Collections ultimoCobro = db.Collections.Where(c => c.card_id == originalCard.card_id && c.collection_active).OrderByDescending(c => c.collection_id).FirstOrDefault();
+
+                        if (ultimoCobro != null)
+                        {
+                            int diferencia = precioNuevo - precioAnterior;
+                            int nuevoSaldo = ultimoCobro.collection_balance + diferencia;
+
+                            if (nuevoSaldo < 0)
+                            {
+                                TempData["Error"] = "El nuevo precio no puede ser menor al saldo ya cobrado.";
+                                return RedirectToAction("Edit", new { id = originalCard.card_id });
+                            }
+
+                            Collections ajuste = new Collections
+                            {
+                                collection_date = DateTime.Now,
+                                collection_amount = 0,
+                                collection_balance = nuevoSaldo,
+                                collection_note = "Se modificó el precio del producto.",
+                                collection_active = true,
+                                user_id = currentUserId,
+                                card_id = originalCard.card_id
+                            };
+
+                            db.Collections.Add(ajuste);
+                            originalCard.card_state = nuevoSaldo > 0;
+                        }
                     }
 
                     originalCard.card_payday = cards.card_payday;

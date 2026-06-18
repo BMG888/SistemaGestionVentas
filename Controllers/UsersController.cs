@@ -165,6 +165,10 @@ namespace SistemaGestionVentas.Controllers
             {                
                 try
                 {
+                    users.user_name = users.user_name.Trim();
+                    users.user_lastname = users.user_lastname.Trim();
+                    users.user_nickname = users.user_nickname.Trim();
+                    users.user_phone = users.user_phone.Trim();
                     string email = users.user_email?.Trim(); // elimina los espacios en blanco                    
                     bool emailExists = db.Users.Any(u => u.user_email.ToLower() == email.ToLower()); // busca si existe el correo, comparándolo en minúsculas
 
@@ -324,6 +328,10 @@ namespace SistemaGestionVentas.Controllers
             
             if (ModelState.IsValid)
             {
+                users.user_name = users.user_name.Trim();
+                users.user_lastname = users.user_lastname.Trim();
+                users.user_nickname = users.user_nickname.Trim();
+                users.user_phone = users.user_phone.Trim();
                 string email = users.user_email?.Trim();
                 bool emailExists = db.Users.Any(u => u.user_email.ToLower() == email.ToLower() && u.user_id != users.user_id);
 

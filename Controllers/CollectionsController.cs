@@ -117,6 +117,7 @@ namespace SistemaGestionVentas.Controllers
 
             try
             {
+                collections.collection_note = collections.collection_note.Trim();
                 int roleId = Convert.ToInt32(Session["RoleId"]);
 
                 if (roleId == 3)

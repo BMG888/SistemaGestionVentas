@@ -1,50 +1,41 @@
 ﻿@model SistemaGestionVentas.Models.Albums
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Crear álbum";
 }
 
-<h2>Create</h2>
+<h2>Crear álbum</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Albums</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.album_name, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.Label("Nombre del álbum", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.album_name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.album_name, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "album_name" } })
+                <small id="album_name_counter" class="text-muted character-counter">100 caracteres restantes</small>
                 @Html.ValidationMessageFor(model => model.album_name, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.album_active, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.album_active)
-                    @Html.ValidationMessageFor(model => model.album_active, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Crear" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Atrás", "Index")
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/FormValidation.js"></script>
 }

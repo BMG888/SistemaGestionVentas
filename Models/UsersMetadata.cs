@@ -10,6 +10,7 @@ namespace SistemaGestionVentas.Models
     public partial class Users
     {
     }
+
     public class UsersMetadata
     {
         [Required(ErrorMessage = "El nombre es obligatorio.")]

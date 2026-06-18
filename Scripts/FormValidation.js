@@ -52,6 +52,12 @@
     const collectionNote = document.getElementById("collection_note");
     const collectionNoteCounter = document.getElementById("collection_note_counter");
 
+    // albums
+    const albumName = document.getElementById("album_name");
+    const albumNameCounter = document.getElementById("album_name_counter");
+    const editAlbumName = document.getElementById("edit_album_name");
+    const editAlbumNameCounter = document.getElementById("edit_album_name_counter");
+
     function initializeCounter(input, counter, maxLength) {
 
         if (!input || !counter) {
@@ -179,7 +185,7 @@
     initializeCounter(
         editCardPayday,
         editCardPaydayCounter,
-        100
+        50
     );
 
     initializeCounter(
@@ -192,5 +198,17 @@
         collectionNote,
         collectionNoteCounter,
         255
+    );
+
+    initializeCounter(
+        albumName,
+        albumNameCounter,
+        100
+    );
+
+    initializeCounter(
+        editAlbumName,
+        editAlbumNameCounter,
+        100
     );
 });

@@ -153,6 +153,7 @@
     <Compile Include="Models\Albums.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AlbumsMetadata.cs" />
     <Compile Include="Models\Cards.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>

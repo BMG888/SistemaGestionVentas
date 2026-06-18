@@ -1,39 +1,33 @@
 ﻿@model IEnumerable<SistemaGestionVentas.Models.Albums>
+@using PagedList.Mvc
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Lista de álbumes";
 }
 
-<h2>Index</h2>
+<h2>Álbumes</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Crear álbum", "Create")
 </p>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.album_name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.album_active)
-        </th>
+        <th>Nombre</th>
+        <th>Estado</th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.album_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.album_active)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.album_id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.album_id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.album_id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.album_name)</td>
+            <td> @(item.album_active ? "Activo" : "Inactivo")</td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.album_id }) |
+                @Html.ActionLink("Ver fotos", "Details", new { id = item.album_id }) |
+                @Html.ActionLink("Desactivar", "Delete", new { id = item.album_id })
+            </td>
+        </tr>
+    }
 
 </table>

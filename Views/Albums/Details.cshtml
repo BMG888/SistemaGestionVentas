@@ -1,45 +1,33 @@
 ﻿@model SistemaGestionVentas.Models.Albums
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Fotos";
 }
 
-<h2>Details</h2>
+<h2>Fotos</h2>
 <div>
-    <h4>Albums</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.album_name)
-        </dt>
+        <dt>Nombre del álbum</dt>
+        <dd>@Html.DisplayFor(model => model.album_name)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.album_name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.album_active)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.album_active)
-        </dd>
+        <dt>Estado</dt>
+        <dd>@(Model.album_active ? "Activo" : "Inactivo")</dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.album_id })
+    @Html.ActionLink("Editar álbum", "Edit", new { id = Model.album_id })
 </p>
 
-<h3>Items del álbum</h3>
+<h3>Fotos del álbum</h3>
 <p>
     @Html.ActionLink("Agregar Item", "Create", "Items")
 </p>
 <table class="table">
     <tr>        
         <th>Nombre</th>
-        <th>URL</th>
-        <th>Descripción</th>
+        <th>Foto</th>        
         <th>Activo</th>
         <th></th>
     </tr>
@@ -48,13 +36,12 @@
     {
 <tr>    
     <td>@item.item_name</td>
-    <td>@item.item_url</td>
-    <td>@item.item_description</td>
+    <td>@item.item_url</td>    
     <td>@item.item_active</td>
 
     <td>
         @Html.ActionLink("Editar", "Edit", "Items", new { id = item.item_id }, null) |
-        @Html.ActionLink("Detalles", "Details", "Items", new { id = item.item_id }, null) |
+        @Html.ActionLink("Ver descripción", "Details", "Items", new { id = item.item_id }, null) |
         @Html.ActionLink("Eliminar", "Delete", "Items", new { id = item.item_id }, null)
     </td>
 </tr>}
@@ -62,5 +49,5 @@
 </table>
 
 <p>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Atrás", "Index")
 </p>

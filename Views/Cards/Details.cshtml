@@ -111,6 +111,7 @@
         <th></th>
     </tr>
 
+    @{ int? ultimoCobroActivoId = Model.Collections.Where(c => c.collection_active).OrderByDescending(c => c.collection_id).Select(c => (int?)c.collection_id).FirstOrDefault(); }
     @foreach (var collection in Model.Collections)
     {
         <tr>
@@ -124,15 +125,14 @@
             }
 
             <td>
-                @if (canManageCards)
+                @Html.ActionLink("Ver nota", "Details", "Collections", new { id = collection.collection_id }, null)
+
+                @if (canManageCards && collection.collection_active && collection.collection_note != "Se modificó el precio del producto." && collection.collection_id == ultimoCobroActivoId)
                 {
-                    @Html.ActionLink("Ver nota", "Details", "Collections", new { id = collection.collection_id }, null)
-                    if (collection.collection_active && collection.collection_note != "Se modificó el precio del producto.")
-                    {
-                        @: |
-                        @Html.ActionLink("Desactivar", "Delete", "Collections", new { id = collection.collection_id }, null)
-                    }
+                    @: |
+                    @Html.ActionLink("Desactivar", "Delete", "Collections", new { id = collection.collection_id }, null)
                 }
+
             </td>
         </tr>
     }

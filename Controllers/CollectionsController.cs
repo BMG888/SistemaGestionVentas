@@ -33,15 +33,7 @@ namespace SistemaGestionVentas.Controllers
                 if (id == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-
-                int roleId = Convert.ToInt32(Session["RoleId"]);
-
-                if (roleId == 3)
-                {
-                    TempData["Error"] = "Acceso denegado.";
-                    return RedirectToAction("Index", "Home");
-                }
+                }              
 
                 Collections collections = db.Collections.Find(id);
 
@@ -116,8 +108,7 @@ namespace SistemaGestionVentas.Controllers
             }
 
             try
-            {
-                collections.collection_note = collections.collection_note.Trim();
+            {                
                 int roleId = Convert.ToInt32(Session["RoleId"]);
 
                 if (roleId == 3)
@@ -244,9 +235,17 @@ namespace SistemaGestionVentas.Controllers
                 {
                     TempData["Error"] = "Cobro no encontrado.";
                     return RedirectToAction("Index", "Users");
-                }
+                }                               
 
                 Collections collection = db.Collections.Find(id);
+                Collections ultimoCobroActivo = db.Collections.Where(c => c.card_id == collection.card_id && c.collection_active).OrderByDescending(c => c.collection_id).FirstOrDefault();
+
+
+                if (ultimoCobroActivo == null || ultimoCobroActivo.collection_id != collection.collection_id)
+                {
+                    TempData["Error"] = "Solo se puede desactivar el último cobro registrado por un agente.";
+                    return RedirectToAction("Details", "Cards", new { id = collection.card_id });
+                }
 
                 if (collection == null)
                 {
@@ -300,11 +299,19 @@ namespace SistemaGestionVentas.Controllers
                 }
 
                 Collections collection = db.Collections.Find(id);
+                Cards card = db.Cards.Find(collection.card_id);
+                Collections ultimoCobroActivo = db.Collections.Where(c => c.card_id == card.card_id && c.collection_active).OrderByDescending(c => c.collection_id).FirstOrDefault();
 
                 if (collection == null)
                 {
                     TempData["Error"] = "Cobro no encontrado.";
                     return RedirectToAction("Index", "Users");
+                }
+
+                if (ultimoCobroActivo == null || ultimoCobroActivo.collection_id != collection.collection_id)
+                {
+                    TempData["Error"] = "Solo se puede desactivar el último cobro registrado por un agente.";
+                    return RedirectToAction("Details", "Cards", new { id = collection.card_id });
                 }
 
                 if (collection.collection_note == "Se modificó el precio del producto.")
@@ -317,9 +324,7 @@ namespace SistemaGestionVentas.Controllers
                 {
                     TempData["Error"] = "El cobro ya se encuentra desactivado.";
                     return RedirectToAction("Details", "Cards", new { id = collection.card_id });
-                }
-
-                Cards card = db.Cards.Find(collection.card_id);
+                }                
 
                 if (card.user_id == currentUserId)
                 {
@@ -327,8 +332,7 @@ namespace SistemaGestionVentas.Controllers
                     return RedirectToAction("Details", "Cards", new { id = card.card_id });
                 }
 
-                collection.collection_active = false;
-                Collections ultimoCobroActivo = db.Collections.Where(c => c.card_id == card.card_id && c.collection_active).OrderByDescending(c => c.collection_id).FirstOrDefault();
+                collection.collection_active = false;                
 
                 if (ultimoCobroActivo == null)
                 {

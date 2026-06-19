@@ -4,6 +4,10 @@
     ViewBag.Title = "Información del cobro y nota";
 }
 
+@{
+    int roleId = Convert.ToInt32(Session["RoleId"]);
+}
+
 <h2>Información del cobro y nota</h2>
 
 <div>
@@ -24,8 +28,11 @@
         <dt>Nombre del cobrador</dt>
         <dd>@($"{Model.Users.user_name} {Model.Users.user_lastname}")</dd>
 
-        <dt>Estado del cobro</dt>
-        <dd>@(Model.collection_active ? "Activo" : "Inactivo")</dd>
+        @if (roleId != 3)
+        {
+            <dt>Estado del cobro</dt>
+            <dd>@(Model.collection_active ? "Activo" : "Inactivo")</dd>
+        }
     </dl>
 </div>
 <p>

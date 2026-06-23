@@ -17,9 +17,30 @@ namespace SistemaGestionVentas.Controllers
         private SistemaGestionVentasDBEntities db = new SistemaGestionVentasDBEntities();
 
         // GET: Albums
-        public ActionResult Index()
+        public ActionResult Index(string album_name, bool? album_active, int? page)
         {
-            return View(db.Albums.ToList());
+            int? roleId = Session["RoleId"] != null ? Convert.ToInt32(Session["RoleId"]) : (int?)null;
+            var albums = db.Albums.AsQueryable();
+            
+            if (roleId == null || roleId == 3)
+            {
+                albums = albums.Where(a => a.album_active);
+            }
+          
+            if (!string.IsNullOrWhiteSpace(album_name))
+            {
+                albums = albums.Where(a => a.album_name.Contains(album_name));
+            }
+            
+            if ((roleId == 1 || roleId == 2) && album_active.HasValue)
+            {
+                albums = albums.Where(a => a.album_active == album_active.Value);
+            }
+
+            int pageSize = 10;
+            int pageNumber = page ?? 1;
+
+            return View(albums.OrderBy(a => a.album_name).ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Albums/Details/5

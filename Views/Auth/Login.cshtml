@@ -18,11 +18,13 @@
 
     <div class="form-group">
         <label>Contraseña</label>
-        @Html.PasswordFor(model => model.user_password, new { @class = "form-control", maxlength = "20", id = "login_password" })
+        <div style="display:flex; gap:10px;">
+            @Html.PasswordFor(model => model.user_password, new { @class = "form-control", maxlength = "20", id = "login_password" })
+            <button type="button" class="btn btn-default toggle-password" data-target="login_password">Mostrar</button>
+        </div>
         <small id="login_password_counter" class="text-muted character-counter">20 caracteres restantes</small>
         @Html.ValidationMessageFor(model => model.user_password, "", new { @class = "text-danger" })
     </div>
-
     <br />
 
     <input type="submit" value="Iniciar sesión" class="btn btn-primary" />
@@ -38,4 +40,5 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/FormValidation.js"></script>
+    <script src="~/Scripts/PasswordToggle.js"></script>
 }

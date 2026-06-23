@@ -1,19 +1,59 @@
-﻿@model IEnumerable<SistemaGestionVentas.Models.Albums>
+﻿@model PagedList.IPagedList<SistemaGestionVentas.Models.Albums>
 @using PagedList.Mvc
 
-@{
-    ViewBag.Title = "Lista de álbumes";
-}
+@{ ViewBag.Title = "Lista de álbumes";
+    int? roleId = Session["RoleId"] != null ? Convert.ToInt32(Session["RoleId"]) : (int?)null;
+    bool canManage = roleId == 1 || roleId == 2; }
 
 <h2>Álbumes</h2>
 
-<p>
-    @Html.ActionLink("Crear álbum", "Create")
-</p>
+@if (canManage)
+{
+    <p>
+        @Html.ActionLink("Crear álbum", "Create")
+    </p>
+}
+
+@using (Html.BeginForm("Index", "Albums", FormMethod.Get))
+{
+    <div class="row">
+
+        <div class="col-md-3">
+            <label>Nombre</label>
+            <input type="text" name="album_name" value="@Request["album_name"]" class="form-control" />
+        </div>
+
+        @if (canManage)
+        {
+            <div class="col-md-2">
+                <label>Estado</label>
+                <select name="album_active" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="true" @(Request["album_active"] == "true" ? "selected" : "")>Activo</option>
+                    <option value="false" @(Request["album_active"] == "false" ? "selected" : "")>Inactivo</option>
+                </select>
+            </div>
+        }
+
+        <div class="col-md-2">
+            <label>&nbsp;</label>
+            <div>
+                <input type="submit" value="Buscar" class="btn btn-primary" />
+                <a href="@Url.Action("Index")" class="btn btn-default">Limpiar</a>
+            </div>
+        </div>
+
+    </div>
+    <hr />
+}
+
 <table class="table">
     <tr>
         <th>Nombre</th>
-        <th>Estado</th>
+        @if (canManage)
+        {
+            <th>Estado</th>
+        }
         <th></th>
     </tr>
 
@@ -21,13 +61,38 @@
     {
         <tr>
             <td>@Html.DisplayFor(modelItem => item.album_name)</td>
-            <td> @(item.album_active ? "Activo" : "Inactivo")</td>
-            <td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.album_id }) |
-                @Html.ActionLink("Ver fotos", "Details", new { id = item.album_id }) |
-                @Html.ActionLink("Desactivar", "Delete", new { id = item.album_id })
-            </td>
+            @if (canManage)
+            {
+                <td> @(item.album_active ? "Activo" : "Inactivo")</td>
+            }    
+        <td>
+            @if (canManage)
+            {
+                @Html.ActionLink("Editar", "Edit", new { id = item.album_id })
+                @: |
+            }
+            @Html.ActionLink("Ver fotos", "Details", new { id = item.album_id })
+
+            @if (canManage)
+            {
+                if (item.album_active)
+                {
+                    @: |
+                    @Html.ActionLink("Desactivar", "Delete", new { id = item.album_id }) 
+                }
+                else if (roleId == 1)
+                {
+                    @: |
+                    @Html.ActionLink("Reactivar", "Reactivate", new { id = item.album_id })}
+                }
+        </td>
         </tr>
     }
-
 </table>
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new
+{
+    page,
+    album_name = Request["album_name"],
+    album_active = Request["album_active"]
+}))

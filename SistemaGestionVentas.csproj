@@ -183,6 +183,7 @@
     <Compile Include="Models\Items.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ItemsMetadata.cs" />
     <Compile Include="Models\Roles.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
@@ -193,6 +194,7 @@
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UsersMetadata.cs" />
+    <Compile Include="Models\ViewModels\AlbumDetailsViewModel.cs" />
     <Compile Include="Models\ViewModels\CardDetailsViewModel.cs" />
     <Compile Include="Models\ViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="Models\ViewModels\LoginViewModel.cs" />
@@ -270,7 +272,6 @@
     <Content Include="Views\Items\Delete.cshtml" />
     <Content Include="Views\Items\Details.cshtml" />
     <Content Include="Views\Items\Edit.cshtml" />
-    <Content Include="Views\Items\Index.cshtml" />
     <Content Include="Views\Cards\Create.cshtml" />
     <Content Include="Views\Cards\Delete.cshtml" />
     <Content Include="Views\Cards\Details.cshtml" />
@@ -288,6 +289,8 @@
     <Content Include="Views\Auth\ChangePassword.cshtml" />
     <Content Include="Views\Users\Reactivate.cshtml" />
     <Content Include="Views\Cards\Reactivate.cshtml" />
+    <Content Include="Views\Albums\Reactivate.cshtml" />
+    <Content Include="Views\Items\Reactivate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

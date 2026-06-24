@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using SistemaGestionVentas.Models;
 using PagedList;
 using SistemaGestionVentas.Filters;
+using SistemaGestionVentas.Models.ViewModels;
 
 namespace SistemaGestionVentas.Controllers
 {
@@ -44,18 +45,64 @@ namespace SistemaGestionVentas.Controllers
         }
 
         // GET: Albums/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, string item_name, bool? item_active, int page = 1)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                int roleId = Session["RoleId"] != null ? Convert.ToInt32(Session["RoleId"]) : 0;
+                Albums album = db.Albums.Find(id);
+
+                if (album == null)
+                {
+                    TempData["Error"] = "Álbum no encontrado.";
+                    return RedirectToAction("Index");
+                }
+                
+                if ((roleId == 0 || roleId == 3) && !album.album_active)
+                {
+                    TempData["Error"] = "Álbum no encontrado.";
+                    return RedirectToAction("Index");
+                }
+
+                var itemsQuery = db.Items.Where(i => i.album_id == album.album_id);
+
+                if (!string.IsNullOrWhiteSpace(item_name))
+                {
+                    itemsQuery = itemsQuery.Where(i => i.item_name.Contains(item_name));
+                }
+                
+                if (roleId == 0 || roleId == 3)
+                {
+                    itemsQuery = itemsQuery.Where(i => i.item_active);
+                }
+                else
+                {
+                    if (item_active.HasValue)
+                    {
+                        itemsQuery = itemsQuery.Where(i => i.item_active == item_active.Value);
+                    }
+                }
+
+                int pageSize = 5;
+                var viewModel = new AlbumDetailsViewModel
+                {
+                    Album = album,
+                    Items = itemsQuery.OrderBy(i => i.item_name).ToPagedList(page, pageSize),
+                    ItemNameFilter = item_name,
+                    ItemActiveFilter = item_active
+                };
+                return View(viewModel);
             }
-            Albums albums = db.Albums.Find(id);
-            if (albums == null)
+            catch
             {
-                return HttpNotFound();
+                TempData["Error"] = "No se pudo obtener la información.";
+                return RedirectToAction("Index");
             }
-            return View(albums);
         }
 
         // GET: Albums/Create
@@ -117,16 +164,28 @@ namespace SistemaGestionVentas.Controllers
         [SessionAuthorize]
         public ActionResult Edit(int? id)
         {
+            int roleId = Convert.ToInt32(Session["RoleId"]);
+
+            if (roleId != 1 && roleId != 2)
+            {
+                TempData["Error"] = "Acceso denegado.";
+                return RedirectToAction("Index");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Albums albums = db.Albums.Find(id);
-            if (albums == null)
+
+            Albums album = db.Albums.Find(id);
+
+            if (album == null)
             {
-                return HttpNotFound();
+                TempData["Error"] = "Álbum no encontrado.";
+                return RedirectToAction("Index");
             }
-            return View(albums);
+
+            return View(album);
         }
 
         // POST: Albums/Edit/5
@@ -135,13 +194,47 @@ namespace SistemaGestionVentas.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SessionAuthorize]
-        public ActionResult Edit([Bind(Include = "album_id,album_name,album_active")] Albums albums)
+        public ActionResult Edit([Bind(Include = "album_id,album_name")] Albums albums)
         {
+            int roleId = Convert.ToInt32(Session["RoleId"]);
+
+            if (roleId != 1 && roleId != 2)
+            {
+                TempData["Error"] = "Acceso denegado.";
+                return RedirectToAction("Index");
+            }
+
             if (ModelState.IsValid)
             {
-                db.Entry(albums).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                albums.album_name = albums.album_name.Trim();
+                bool albumExist = db.Albums.Any(a => a.album_name == albums.album_name && a.album_id != albums.album_id);
+
+                if (albumExist)
+                {
+                    ModelState.AddModelError("album_name", "Ya existe un álbum registrado con ese nombre.");
+                    return View(albums);
+                }
+
+                try
+                {
+                    Albums originalAlbum = db.Albums.FirstOrDefault(a => a.album_id == albums.album_id);
+
+                    if (originalAlbum == null)
+                    {
+                        TempData["Error"] = "Álbum no encontrado.";
+                        return RedirectToAction("Index");
+                    }
+
+                    originalAlbum.album_name = albums.album_name;
+                    db.SaveChanges();
+                    TempData["Success"] = "Álbum actualizado correctamente.";
+                    return RedirectToAction("Details", new { id = albums.album_id });
+                }
+                catch
+                {
+                    TempData["Error"] = "No se pudo actualizar el álbum.";
+                    return RedirectToAction("Details", new { id = albums.album_id });
+                }
             }
             return View(albums);
         }
@@ -150,16 +243,43 @@ namespace SistemaGestionVentas.Controllers
         [SessionAuthorize]
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+
+                if (roleId != 1 && roleId != 2)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index");
+                }
+
+                if (id == null)
+                {
+                    TempData["Error"] = "Álbum no encontrado.";
+                    return RedirectToAction("Index");
+                }
+
+                Albums albums = db.Albums.Find(id);
+
+                if (albums == null)
+                {
+                    TempData["Error"] = "Álbum no encontrado.";
+                    return RedirectToAction("Index");
+                }
+
+                if (!albums.album_active)
+                {
+                    TempData["Error"] = "El álbum ya se encuentra desactivado.";
+                    return RedirectToAction("Details", new { id = albums.album_id });
+                }
+
+                return View(albums);
             }
-            Albums albums = db.Albums.Find(id);
-            if (albums == null)
+            catch
             {
-                return HttpNotFound();
+                TempData["Error"] = "No se pudo obtener la información.";
+                return RedirectToAction("Index");
             }
-            return View(albums);
         }
 
         // POST: Albums/Delete/5
@@ -168,10 +288,123 @@ namespace SistemaGestionVentas.Controllers
         [SessionAuthorize]
         public ActionResult DeleteConfirmed(int id)
         {
-            Albums albums = db.Albums.Find(id);
-            db.Albums.Remove(albums);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+
+                if (roleId != 1 && roleId != 2)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index");
+                }
+
+                Albums albums = db.Albums.Find(id);
+
+                if (albums == null)
+                {
+                    TempData["Error"] = "Álbum no encontrado.";
+                    return RedirectToAction("Index");
+                }
+
+                if (!albums.album_active)
+                {
+                    TempData["Error"] = "El álbum ya se encuentra desactivado.";
+                    return RedirectToAction("Details", new { id = albums.album_id });
+                }
+
+                albums.album_active = false;
+                db.SaveChanges();
+                TempData["Success"] = "Álbum desactivado correctamente.";
+                return RedirectToAction("Details", new { id = albums.album_id });
+            }
+            catch
+            {
+                TempData["Error"] = "No se pudo desactivar el álbum.";
+                return RedirectToAction("Index");
+            }
+        }
+
+        [SessionAuthorize]
+        public ActionResult Reactivate(int? id)
+        {
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+
+                if (roleId != 1)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index");
+                }
+
+                if (id == null)
+                {
+                    TempData["Error"] = "Álbum no encontrado.";
+                    return RedirectToAction("Index");
+                }
+
+                Albums albums = db.Albums.Find(id);
+
+                if (albums == null)
+                {
+                    TempData["Error"] = "Álbum no encontrado.";
+                    return RedirectToAction("Index");
+                }
+
+                if (albums.album_active)
+                {
+                    TempData["Error"] = "El álbum ya se encuentra activo.";
+                    return RedirectToAction("Details", new { id = albums.album_id });
+                }
+
+                return View(albums);
+            }
+            catch
+            {
+                TempData["Error"] = "No se pudo obtener la información.";
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost, ActionName("Reactivate")]
+        [ValidateAntiForgeryToken]
+        [SessionAuthorize]
+        public ActionResult ReactivateConfirmed(int id)
+        {
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+
+                if (roleId != 1)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index");
+                }
+
+                Albums albums = db.Albums.Find(id);
+
+                if (albums == null)
+                {
+                    TempData["Error"] = "Álbum no encontrado.";
+                    return RedirectToAction("Index");
+                }
+
+                if (albums.album_active)
+                {
+                    TempData["Error"] = "El álbum ya se encuentra activo.";
+                    return RedirectToAction("Details", new { id = albums.album_id });
+                }
+
+                albums.album_active = true;
+                db.SaveChanges();
+                TempData["Success"] = "Álbum reactivado correctamente.";
+                return RedirectToAction("Details", new { id = albums.album_id });
+            }
+            catch
+            {
+                TempData["Error"] = "No se pudo reactivar el álbum.";
+                return RedirectToAction("Index");
+            }
         }
 
         protected override void Dispose(bool disposing)

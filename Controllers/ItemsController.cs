@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using SistemaGestionVentas.Models;
+using SistemaGestionVentas.Filters;
 
 namespace SistemaGestionVentas.Controllers
 {
@@ -37,6 +38,7 @@ namespace SistemaGestionVentas.Controllers
         }
 
         // GET: Items/Create
+        [SessionAuthorize]
         public ActionResult Create()
         {
             ViewBag.album_id = new SelectList(db.Albums, "album_id", "album_name");
@@ -48,6 +50,7 @@ namespace SistemaGestionVentas.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [SessionAuthorize]
         public ActionResult Create([Bind(Include = "item_id,item_name,item_url,item_description,item_active,album_id")] Items items)
         {
             if (ModelState.IsValid)
@@ -62,6 +65,7 @@ namespace SistemaGestionVentas.Controllers
         }
 
         // GET: Items/Edit/5
+        [SessionAuthorize]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -82,6 +86,7 @@ namespace SistemaGestionVentas.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [SessionAuthorize]
         public ActionResult Edit([Bind(Include = "item_id,item_name,item_url,item_description,item_active,album_id")] Items items)
         {
             if (ModelState.IsValid)
@@ -95,6 +100,7 @@ namespace SistemaGestionVentas.Controllers
         }
 
         // GET: Items/Delete/5
+        [SessionAuthorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -112,6 +118,7 @@ namespace SistemaGestionVentas.Controllers
         // POST: Items/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [SessionAuthorize]
         public ActionResult DeleteConfirmed(int id)
         {
             Items items = db.Items.Find(id);

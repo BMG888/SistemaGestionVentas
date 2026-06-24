@@ -1,12 +1,12 @@
 ﻿@model SistemaGestionVentas.Models.Albums
 
 @{
-    ViewBag.Title = "Desactivar álbum";
+    ViewBag.Title = "Reactivar álbum";
 }
 
-<h2>Desactivar álbum</h2>
+<h2>Reactivar álbum</h2>
 
-<h3>¿Está seguro de desactivar este álbum?</h3>
+<h3>¿Está seguro de reactivar este álbum?</h3>
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -18,11 +18,12 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Desactivar" class="btn btn-default" /> |
+            <input type="submit" value="Reactivar" class="btn btn-default" /> |
             @Html.ActionLink("Atrás", "Index")
         </div>
     }

@@ -1,32 +1,32 @@
 ﻿@model SistemaGestionVentas.Models.Items
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Editar producto";
 }
 
-<h2>Edit</h2>
+<h2>Editar producto</h2>
 
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Items</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.item_id)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.item_name, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.Label("Nombre del producto", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.item_name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.item_name, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "edit_item_name" } })
+                <small id="edit_item_name_counter" class="text-muted character-counter">100 caracteres restantes</small>
                 @Html.ValidationMessageFor(model => model.item_name, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.item_url, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.Label("Imagen", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.item_url, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.item_url, "", new { @class = "text-danger" })
@@ -34,25 +34,16 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.item_description, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.Label("Descripción del producto", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.item_description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.item_description, new { htmlAttributes = new { @class = "form-control", maxlength = "255", id = "edit_item_description" } })
+                <small id="edit_item_description_counter" class="text-muted character-counter">255 caracteres restantes</small>
                 @Html.ValidationMessageFor(model => model.item_description, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.item_active, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.item_active)
-                    @Html.ValidationMessageFor(model => model.item_active, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.album_id, "album_id", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.Label("Cambiar álbum", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("album_id", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.album_id, "", new { @class = "text-danger" })
@@ -61,16 +52,17 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Actualizar" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Atrás", "Details", "Albums", new { id = Model.album_id }, null)
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/FormValidation.js"></script>
 }

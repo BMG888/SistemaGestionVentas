@@ -1,52 +1,134 @@
-﻿@model SistemaGestionVentas.Models.Albums
+﻿@model SistemaGestionVentas.Models.ViewModels.AlbumDetailsViewModel
+@using PagedList.Mvc
 
 @{
-    ViewBag.Title = "Fotos";
+    ViewBag.Title = "Productos";
 }
 
-<h2>Fotos</h2>
+@{
+    int roleId = Session["RoleId"] != null ? Convert.ToInt32(Session["RoleId"]) : 0;
+    bool canManage = roleId == 1 || roleId == 2;
+}
+
+<h2>Productos</h2>
 <div>
     <hr />
     <dl class="dl-horizontal">
         <dt>Nombre del álbum</dt>
-        <dd>@Html.DisplayFor(model => model.album_name)</dd>
+        <dd>@Html.DisplayFor(model => model.Album.album_name)</dd>
 
-        <dt>Estado</dt>
-        <dd>@(Model.album_active ? "Activo" : "Inactivo")</dd>
+        @if (canManage)
+        {
+            <dt>Estado</dt>
+            <dd>@(Model.Album.album_active ? "Activo" : "Inactivo")</dd>
+        }        
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Editar álbum", "Edit", new { id = Model.album_id })
-</p>
+
+@if (canManage)
+{
+    <p>
+        @Html.ActionLink("Editar álbum", "Edit", new { id = Model.Album.album_id })
+    </p>
+}
 
 <h3>Fotos del álbum</h3>
-<p>
-    @Html.ActionLink("Agregar Item", "Create", "Items")
-</p>
+@if (canManage) 
+{ 
+    <p>
+        @Html.ActionLink("Agregar producto", "Create", "Items")
+    </p>
+}
+
+@using (Html.BeginForm("Details", "Albums", FormMethod.Get))
+{
+    @Html.Hidden("id", Model.Album.album_id)
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <label>Nombre</label>
+            <input type="text" name="item_name" value="@Model.ItemNameFilter" class="form-control" />
+        </div>
+
+        @if (canManage)
+        {
+            <div class="col-md-2">
+                <label>Estado</label>
+                <select name="item_active" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="true" @(Request["item_active"] == "true" ? "selected" : "")>Activo</option>
+                    <option value="false" @(Request["item_active"] == "false" ? "selected" : "")>Inactivo</option>
+                </select>
+            </div>
+        }
+
+        <div class="col-md-2">
+            <label>&nbsp;</label>
+            <div>
+                <input type="submit" value="Buscar" class="btn btn-primary" />
+                <a href="@Url.Action("Details", new { id = Model.Album.album_id })" class="btn btn-default">Limpiar</a>
+            </div>
+        </div>
+    </div>
+    <br />
+}
+
 <table class="table">
     <tr>        
         <th>Nombre</th>
-        <th>Foto</th>        
-        <th>Activo</th>
+        <th>Imagen</th>  
+        @if (canManage)
+        {
+            <th>Activo</th>
+        }        
         <th></th>
     </tr>
 
     @foreach (var item in Model.Items)
     {
-<tr>    
-    <td>@item.item_name</td>
-    <td>@item.item_url</td>    
-    <td>@item.item_active</td>
+    <tr>    
+        <td>@item.item_name</td>
+        <td>@item.item_url</td>  
+        @if (canManage)
+        {
+            <td>@(item.item_active ? "Activo" : "Inactivo")</td>
+        }    
 
-    <td>
-        @Html.ActionLink("Editar", "Edit", "Items", new { id = item.item_id }, null) |
-        @Html.ActionLink("Ver descripción", "Details", "Items", new { id = item.item_id }, null) |
-        @Html.ActionLink("Eliminar", "Delete", "Items", new { id = item.item_id }, null)
-    </td>
-</tr>}
+        <td>
+            @if (canManage)
+            {
+                @Html.ActionLink("Editar", "Edit", "Items", new { id = item.item_id }, null)
+                @: |
+            }
+            @Html.ActionLink("Ver descripción", "Details", "Items", new { id = item.item_id }, null)
+            @if (canManage)
+            {
+                if (item.item_active)
+                {
+                    @: |
+                    @Html.ActionLink("Desactivar", "Delete", "Items", new { id = item.item_id }, null)
+                }
+                else if (roleId == 1)
+                {
+                    @: |
+                    @Html.ActionLink("Reactivar", "Reactivate", "Items", new { id = item.item_id }, null)
+                }
+            }
+        </td>
+    </tr>
+    }
 
 </table>
+
+@Html.PagedListPager(Model.Items, page => Url.Action("Details", new
+{
+    id = Model.Album.album_id,
+    page,
+    item_name = Request["item_name"],
+    item_active = Request["item_active"]
+}))
 
 <p>
     @Html.ActionLink("Atrás", "Index")

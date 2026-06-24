@@ -58,6 +58,16 @@
     const editAlbumName = document.getElementById("edit_album_name");
     const editAlbumNameCounter = document.getElementById("edit_album_name_counter");
 
+    // items
+    const itemName = document.getElementById("item_name");
+    const itemNameCounter = document.getElementById("item_name_counter");
+    const itemDescription = document.getElementById("item_description");
+    const itemDescriptionCounter = document.getElementById("item_description_counter");
+    const editItemName = document.getElementById("edit_item_name");
+    const editItemNameCounter = document.getElementById("edit_item_name_counter");
+    const editItemDescription = document.getElementById("edit_item_description");
+    const editItemDescriptionCounter = document.getElementById("edit_item_description_counter");
+
     function initializeCounter(input, counter, maxLength) {
 
         if (!input || !counter) {
@@ -210,5 +220,29 @@
         editAlbumName,
         editAlbumNameCounter,
         100
+    );
+
+    initializeCounter(
+        itemName,
+        itemNameCounter,
+        100
+    );
+
+    initializeCounter(
+        itemDescription,
+        itemDescriptionCounter,
+        255
+    );
+
+    initializeCounter(
+        editItemName,
+        editItemNameCounter,
+        100
+    );
+
+    initializeCounter(
+        editItemDescription,
+        editItemDescriptionCounter,
+        255
     );
 });

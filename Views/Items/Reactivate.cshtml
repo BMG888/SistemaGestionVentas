@@ -1,12 +1,12 @@
 ﻿@model SistemaGestionVentas.Models.Items
 
 @{
-    ViewBag.Title = "Desactivar producto";
+    ViewBag.Title = "Reactivar producto";
 }
 
-<h2>Desactivar producto</h2>
+<h2>Reactivar producto</h2>
 
-<h3>¿Está seguro de desactivar este producto?</h3>
+<h3>¿Está seguro de reactivar este producto?</h3>
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -31,7 +31,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Desactivar" class="btn btn-default" /> |
+            <input type="submit" value="Reactivar" class="btn btn-default" /> |
             @Html.ActionLink("Atrás", "Details", "Albums", new { id = Model.album_id }, null)
         </div>
     }

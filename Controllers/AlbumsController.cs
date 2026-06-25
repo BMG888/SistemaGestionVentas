@@ -82,7 +82,7 @@ namespace SistemaGestionVentas.Controllers
                 }
                 else
                 {
-                    if (item_active.HasValue)
+                    if (roleId != 0 && roleId != 3 && item_active.HasValue)
                     {
                         itemsQuery = itemsQuery.Where(i => i.item_active == item_active.Value);
                     }

@@ -16,8 +16,7 @@ namespace SistemaGestionVentas.Models
         [Required(ErrorMessage = "El nombre del producto es obligatorio.")]
         [StringLength(100, ErrorMessage = "Máximo 100 caracteres.")]
         public string item_name { get; set; }
-
-        [Required(ErrorMessage = "La imagen es obligatoria.")]
+        
         public string item_url { get; set; }
 
         [Required(ErrorMessage = "La descripción es obligatoria.")]

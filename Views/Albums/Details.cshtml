@@ -37,7 +37,7 @@
 @if (canManage) 
 { 
     <p>
-        @Html.ActionLink("Agregar producto", "Create", "Items")
+        @Html.ActionLink("Agregar producto", "Create", "Items", new { albumId = Model.Album.album_id }, null)
     </p>
 }
 
@@ -90,7 +90,7 @@
     {
     <tr>    
         <td>@item.item_name</td>
-        <td>@item.item_url</td>  
+        <td><img src="@item.item_url" width="200" /></td>  
         @if (canManage)
         {
             <td>@(item.item_active ? "Activo" : "Inactivo")</td>

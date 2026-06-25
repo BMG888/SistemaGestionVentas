@@ -7,9 +7,10 @@
 <h2>Agregar producto</h2>
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.album_id)
 
     <div class="form-horizontal">
         <hr />
@@ -26,7 +27,8 @@
         <div class="form-group">
             @Html.Label("Imagen", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.item_url, new { htmlAttributes = new { @class = "form-control" } })
+                <small class="text-muted">Formatos permitidos: JPG, JPEG, PNG y WEBP.</small>
+                <input type="file" name="imageFile" accept=".jpg,.jpeg,.png,.webp" class="form-control" />
                 @Html.ValidationMessageFor(model => model.item_url, "", new { @class = "text-danger" })
             </div>
         </div>

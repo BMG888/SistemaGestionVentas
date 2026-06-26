@@ -144,17 +144,26 @@ namespace SistemaGestionVentas.Controllers
         [SessionAuthorize]
         public ActionResult Edit(int? id)
         {
+            if (Session["RoleId"] == null || (Convert.ToInt32(Session["RoleId"]) != 1 && Convert.ToInt32(Session["RoleId"]) != 2))
+            {
+                TempData["Error"] = "Acceso denegado.";
+                return RedirectToAction("Index", "Home");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Items items = db.Items.Find(id);
-            if (items == null)
+
+            Items item = db.Items.FirstOrDefault(i => i.item_id == id);
+
+            if (item == null)
             {
-                return HttpNotFound();
+                TempData["Error"] = "Ítem no encontrado.";
+                return RedirectToAction("Index", "Albums");
             }
-            ViewBag.album_id = new SelectList(db.Albums, "album_id", "album_name", items.album_id);
-            return View(items);
+            ViewBag.album_id = new SelectList(db.Albums, "album_id", "album_name", item.album_id);
+            return View(item);
         }
 
         // POST: Items/Edit/5
@@ -163,32 +172,111 @@ namespace SistemaGestionVentas.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SessionAuthorize]
-        public ActionResult Edit([Bind(Include = "item_id,item_name,item_url,item_description,item_active,album_id")] Items items)
+        public ActionResult Edit([Bind(Include = "item_id,item_name,item_url,item_description,album_id")] Items items, HttpPostedFileBase imageFile)
         {
-            if (ModelState.IsValid)
+            if (Session["RoleId"] == null || (Convert.ToInt32(Session["RoleId"]) != 1 && Convert.ToInt32(Session["RoleId"]) != 2))
             {
-                db.Entry(items).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                TempData["Error"] = "Acceso denegado.";
+                return RedirectToAction("Index", "Home");
             }
-            ViewBag.album_id = new SelectList(db.Albums, "album_id", "album_name", items.album_id);
-            return View(items);
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.album_id = new SelectList(db.Albums, "album_id", "album_name", items.album_id);
+                return View(items);
+            }
+
+            try
+            {
+                Albums album = db.Albums.FirstOrDefault(a => a.album_id == items.album_id);
+                if (album == null)
+                {
+                    TempData["Error"] = "Álbum no disponible.";
+                    return RedirectToAction("Index", "Albums");
+                }
+
+                Items originalItem = db.Items.FirstOrDefault(i => i.item_id == items.item_id);
+                if (originalItem == null)
+                {
+                    TempData["Error"] = "Ítem no encontrado.";
+                    return RedirectToAction("Index", "Albums");
+                }
+
+                items.item_name = items.item_name.Trim();
+                items.item_description = items.item_description.Trim();
+                originalItem.item_name = items.item_name;
+                originalItem.item_description = items.item_description;
+                originalItem.album_id = items.album_id;
+
+                if (imageFile != null && imageFile.ContentLength > 0)
+                {
+                    if (!string.IsNullOrWhiteSpace(originalItem.item_url))
+                    {
+                        string oldPath = Server.MapPath(originalItem.item_url);
+                        if (System.IO.File.Exists(oldPath))
+                        {
+                            System.IO.File.Delete(oldPath);
+                        }
+                    }
+
+                    string extension = Path.GetExtension(imageFile.FileName);
+                    string fileName = Guid.NewGuid().ToString() + extension;
+                    string path = Path.Combine(Server.MapPath("~/Images/Items"), fileName);
+                    imageFile.SaveAs(path);
+                    originalItem.item_url = "/Images/Items/" + fileName;
+                }
+
+                db.SaveChanges();
+                TempData["Success"] = "Ítem actualizado correctamente.";
+                return RedirectToAction("Details", new { id = items.item_id });
+            }
+            catch
+            {
+                TempData["Error"] = "No se pudo actualizar el ítem.";
+                ViewBag.album_id = new SelectList(db.Albums, "album_id", "album_name", items.album_id);
+                return View(items);
+            }
         }
 
         // GET: Items/Delete/5
         [SessionAuthorize]
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+                if (roleId != 1 && roleId != 2)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                if (id == null)
+                {
+                    TempData["Error"] = "Ítem no encontrado o no disponible.";
+                    return RedirectToAction("Index", "Albums");
+                }
+
+                Items item = db.Items.Find(id);
+                if (item == null)
+                {
+                    TempData["Error"] = "Ítem no encontrado o no disponible.";
+                    return RedirectToAction("Index", "Albums");
+                }
+
+                if (!item.item_active)
+                {
+                    TempData["Error"] = "El ítem ya se encuentra desactivado.";
+                    return RedirectToAction("Details", new { id = item.item_id });
+                }
+
+                return View(item);
             }
-            Items items = db.Items.Find(id);
-            if (items == null)
+            catch
             {
-                return HttpNotFound();
+                TempData["Error"] = "No se pudo obtener la información.";
+                return RedirectToAction("Index", "Albums");
             }
-            return View(items);
         }
 
         // POST: Items/Delete/5
@@ -197,10 +285,117 @@ namespace SistemaGestionVentas.Controllers
         [SessionAuthorize]
         public ActionResult DeleteConfirmed(int id)
         {
-            Items items = db.Items.Find(id);
-            db.Items.Remove(items);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+                if (roleId != 1 && roleId != 2)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                Items item = db.Items.Find(id);
+                if (item == null)
+                {
+                    TempData["Error"] = "Ítem no encontrado o no disponible.";
+                    return RedirectToAction("Index", "Albums");
+                }
+
+                if (!item.item_active)
+                {
+                    TempData["Error"] = "El ítem ya se encuentra desactivado.";
+                    return RedirectToAction("Details", new { id = item.item_id });
+                }
+
+                item.item_active = false;
+                db.SaveChanges();
+                TempData["Success"] = "Ítem desactivado correctamente.";
+                return RedirectToAction("Details", new { id = item.item_id });
+            }
+            catch
+            {
+                TempData["Error"] = "No se pudo desactivar el ítem.";
+                return RedirectToAction("Index", "Albums");
+            }
+        }
+
+        [SessionAuthorize]
+        public ActionResult Reactivate(int? id)
+        {
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+                if (roleId != 1)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                if (id == null)
+                {
+                    TempData["Error"] = "Ítem no encontrado o no disponible.";
+                    return RedirectToAction("Index", "Albums");
+                }
+
+                Items item = db.Items.Find(id);
+                if (item == null)
+                {
+                    TempData["Error"] = "Ítem no encontrado o no disponible.";
+                    return RedirectToAction("Index", "Albums");
+                }
+
+                if (item.item_active)
+                {
+                    TempData["Error"] = "El ítem ya se encuentra activo.";
+                    return RedirectToAction("Details", new { id = item.item_id });
+                }
+
+                return View(item);
+            }
+            catch
+            {
+                TempData["Error"] = "No se pudo obtener la información.";
+                return RedirectToAction("Index", "Albums");
+            }
+        }
+
+        [HttpPost, ActionName("Reactivate")]
+        [ValidateAntiForgeryToken]
+        [SessionAuthorize]
+        public ActionResult ReactivateConfirmed(int id)
+        {
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+                if (roleId != 1)
+                {
+                    TempData["Error"] = "Acceso denegado.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                Items item = db.Items.Find(id);
+                if (item == null)
+                {
+                    TempData["Error"] = "Ítem no encontrado o no disponible.";
+                    return RedirectToAction("Index", "Albums");
+                }
+
+                if (item.item_active)
+                {
+                    TempData["Error"] = "El ítem ya se encuentra activo.";
+                    return RedirectToAction("Details", new { id = item.item_id });
+                }
+
+                item.item_active = true;
+                db.SaveChanges();
+                TempData["Success"] = "Ítem reactivado correctamente.";
+                return RedirectToAction("Details", new { id = item.item_id });
+            }
+            catch
+            {
+                TempData["Error"] = "No se pudo reactivar el ítem.";
+                return RedirectToAction("Index", "Albums");
+            }
         }
 
         protected override void Dispose(bool disposing)

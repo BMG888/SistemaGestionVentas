@@ -59,13 +59,22 @@
             </div>
         </div>
 
-        @*<div class="form-group">
-                @Html.Label("Imagen del artículo", "item_id", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownList("item_id", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.item_id, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.Label("Imagen del artículo", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.item_id, new { id = "selectedItemId" })
+                <button type="button" id="btnOpenItemSelector" class="btn btn-default">Seleccionar imagen</button>
+                <div id="selectedItemPreview" class="image-selector-preview">
+                    <div class="image-selector-placeholder">
+                        No se ha seleccionado ninguna imagen.
+                    </div>
+                    <img id="selectedItemImage" class="image-selector-image" src="" alt="Imagen seleccionada" />
+                    <div id="selectedItemName" class="image-selector-name">
+                    </div>
                 </div>
-            </div>*@
+                @Html.ValidationMessageFor(model => model.item_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -79,7 +88,24 @@
     @Html.ActionLink("Atrás", "Details", "Users", new { id = ViewBag.UserId }, null)
 </div>
 
+<div id="imageSelectorOverlay" class="image-selector-overlay">
+    <div class="image-selector-modal">
+        <div class="image-selector-header">
+            <h3>Seleccionar imagen</h3>
+            <button type="button" id="btnCloseItemSelector" class="image-selector-close">&times;</button>
+        </div>
+        <div class="image-selector-body">
+            <div id="albumContainer" class="album-selector-container">
+            </div>
+            <hr />
+            <div id="itemContainer" class="item-selector-container">
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/FormValidation.js"></script>
+    <script src="~/Scripts/ImageSelector.js"></script>
 }

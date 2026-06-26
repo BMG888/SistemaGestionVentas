@@ -48,3 +48,24 @@ textarea {
 .character-counter {
     display: block;
 }
+
+/*Selector de imagen en cards*/
+.image-selector-overlay {
+    display: none;
+}
+
+.image-selector-preview {
+    margin-top: 20px;
+}
+
+.image-selector-image {
+    display: none;
+}
+
+.image-selector-name {
+    margin-top: 10px;
+}
+
+.image-selector-placeholder {
+    color: #777;
+}

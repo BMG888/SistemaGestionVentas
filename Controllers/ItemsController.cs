@@ -398,6 +398,54 @@ namespace SistemaGestionVentas.Controllers
             }
         }
 
+        [HttpGet]
+        [SessionAuthorize]
+        public JsonResult GetAlbums()
+        {
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+                if (roleId != 1 && roleId != 2)
+                {
+                    return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                }
+
+                var albums = db.Albums.OrderBy(a => a.album_name).Select(a => new { id = a.album_id, name = a.album_name }).ToList();
+                return Json(new { success = true, albums = albums }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        [SessionAuthorize]
+        public JsonResult GetItems(int albumId)
+        {
+            try
+            {
+                int roleId = Convert.ToInt32(Session["RoleId"]);
+                if (roleId != 1 && roleId != 2)
+                {
+                    return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                }
+
+                bool albumExists = db.Albums.Any(a => a.album_id == albumId);
+                if (!albumExists)
+                {
+                    return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                }
+
+                var items = db.Items.Where(i => i.album_id == albumId).OrderBy(i => i.item_name).Select(i => new { id = i.item_id, name = i.item_name, image = i.item_url }).ToList();
+                return Json(new { success = true, items = items }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

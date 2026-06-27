@@ -64,6 +64,7 @@
             <div class="col-md-10">
                 @Html.HiddenFor(model => model.item_id, new { id = "selectedItemId" })
                 <button type="button" id="btnOpenItemSelector" class="btn btn-default">Seleccionar imagen</button>
+                <button type="button" id="btnRemoveItemSelector" class="btn btn-default" disabled>Quitar imagen</button>
                 <div id="selectedItemPreview" class="image-selector-preview">
                     <div class="image-selector-placeholder">
                         No se ha seleccionado ninguna imagen.

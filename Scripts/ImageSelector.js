@@ -7,14 +7,41 @@
     const selectedItemName = $("#selectedItemName");
     const placeholder = $(".image-selector-placeholder");
     const removeButton = $("#btnRemoveItemSelector");
-    let albumsLoaded = false;
+    const selectedItemImageUrl = $("#selectedItemImageUrl");
+    const selectedItemNameValue = $("#selectedItemNameValue");
+    const cardItem = document.getElementById("card_item") || document.getElementById("edit_card_item");
+
+    // Antes de abrir el selector, recupera la información del álbum e imagen seleccionados anteriormente
+    function restoreSelection(itemId) {
+
+        if (!itemId) {
+            return;
+        }
+
+        $.getJSON("/Items/GetItem", { itemId: itemId }, function (response) {
+            if (!response.success) {
+                return;
+            }
+            $(".image-selector-album[data-id='" + response.item.albumId + "']").trigger("click");
+        });
+    }
+
+    function initializeSelectedItem() {
+
+        if (!selectedItemId.val()) {
+            return;
+        }
+
+        selectedItemImage.attr("src", selectedItemImageUrl.val()).show();
+        selectedItemName.text(selectedItemNameValue.val());
+        placeholder.hide();
+        removeButton.prop("disabled", false);
+    }
 
     // Abrir selector
     $("#btnOpenItemSelector").click(function () {
         overlay.css("display", "flex").hide().fadeIn(200);
-        if (!albumsLoaded) {
-            loadAlbums();
-        }
+        loadAlbums();        
         itemContainer.empty();
     });
 
@@ -43,12 +70,19 @@
                 const card = $("<div>").addClass("image-selector-album").attr("data-id", album.id).text(album.name);
                 albumContainer.append(card);
             });
-        });
-        albumsLoaded = true;
+
+            const selectedItem = selectedItemId.val();
+            if (selectedItem) {
+                restoreSelection(selectedItem);
+            }
+        });        
     }
 
     // Cargar imágenes del álbum
     $(document).on("click", ".image-selector-album", function () {
+
+        $(".image-selector-album").removeClass("image-selector-album-selected");
+        $(this).addClass("image-selector-album-selected");
 
         const albumId = $(this).data("id");
         itemContainer.empty();
@@ -68,10 +102,11 @@
             $.each(response.items, function (index, item) {
 
                 const card = $("<div>").addClass("image-selector-item").attr("data-id", item.id).attr("data-name", item.name).attr("data-image", item.image);
-
                 $("<img>").attr("src", item.image).appendTo(card);
-
                 $("<div>").addClass("image-selector-item-name").text(item.name).appendTo(card);
+                if (item.id == selectedItemId.val()) {
+                    card.addClass("image-selector-item-selected");
+                }
                 itemContainer.append(card);
             });
         });
@@ -80,12 +115,16 @@
     // Seleccionar imagen
     $(document).on("click", ".image-selector-item", function () {
 
+        $(".image-selector-item").removeClass("image-selector-item-selected");
+        $(this).addClass("image-selector-item-selected");
+
         selectedItemId.val($(this).data("id"));
         selectedItemImage.attr("src", $(this).data("image")).show();
         selectedItemName.text($(this).data("name"));        
-        const cardItem = document.getElementById("card_item");
-        cardItem.value = $(this).data("name");
-        cardItem.dispatchEvent(new Event("input"));
+        if (cardItem) {
+            cardItem.value = $(this).data("name");
+            cardItem.dispatchEvent(new Event("input"));
+        }
         placeholder.hide();
         removeButton.prop("disabled", false);
         overlay.fadeOut(200);
@@ -96,10 +135,13 @@
         selectedItemId.val("");
         selectedItemImage.attr("src", "").hide();
         selectedItemName.empty();
-        const cardItem = document.getElementById("card_item");
-        cardItem.value = "";
-        cardItem.dispatchEvent(new Event("input"));
+        if (cardItem) {
+            cardItem.value = "";
+            cardItem.dispatchEvent(new Event("input"));
+        }
         placeholder.show();
         $(this).prop("disabled", true);
     });
+
+    initializeSelectedItem();
 });

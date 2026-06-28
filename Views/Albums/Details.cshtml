@@ -90,7 +90,7 @@
     {
     <tr>    
         <td>@item.item_name</td>
-        <td><img src="@item.item_url" width="200" /></td>  
+        <td><img src="@Url.Content(item.item_url)" alt="Imagen del artículo" class="album-details-image" /></td>  
         @if (canManage)
         {
             <td>@(item.item_active ? "Activo" : "Inactivo")</td>

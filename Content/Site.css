@@ -50,6 +50,7 @@ textarea {
 }
 
 /*Image Selector*/
+/*Menú*/
 .image-selector-overlay {
     position: fixed;
     inset: 0;
@@ -113,9 +114,15 @@ textarea {
     user-select: none;
 }
 
-    .image-selector-album:hover {
-        background: #f5f5f5;
-    }
+.image-selector-album:hover {
+    background: #f5f5f5;
+}
+
+.image-selector-album-selected {
+    background: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+}
 
 /*Items*/
 .item-selector-container {
@@ -151,6 +158,11 @@ textarea {
     text-align: center;
     font-size: .9rem;
     word-break: break-word;
+}
+
+.image-selector-item-selected {
+    border: 3px solid #0d6efd;
+    box-shadow: 0 0 10px rgba(13,110,253,.35);
 }
 
 /*Preview*/
@@ -190,4 +202,41 @@ textarea {
     .item-selector-container {
         grid-template-columns: repeat(auto-fill,minmax(130px,1fr));
     }
+}
+
+/*Details de cards*/
+.card-item-image {
+    width: min(100%, 320px);
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    display: block;
+}
+
+/*Details de albums*/
+.album-details-image {
+    width: min(100%, 200px);
+}
+
+/*Details de items*/
+.item-details-image {
+    width: min(100%, 320px);
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    display: block;
+}
+
+/*Reactivate de items*/
+.item-reactivate-image {
+    width: min(100%, 320px);
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    display: block;
+}
+
+/*Delete de items*/
+.item-delete-image {
+    width: min(100%, 320px);
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    display: block;
 }

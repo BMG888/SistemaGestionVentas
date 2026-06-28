@@ -31,6 +31,19 @@
         <dt>Precio del artículo</dt>
         <dd>@Html.DisplayFor(model => model.Card.card_item_price)</dd>
 
+
+        <dt>Imagen del artículo</dt>
+        <dd>
+            @if (Model.Card.Items != null)
+            {
+                <img src="@Url.Content(Model.Card.Items.item_url)" alt="Imagen del artículo" class="card-item-image" />
+            }
+            else
+            {
+                <span>Sin imagen.</span>
+            }
+        </dd>
+
         <dt>Vigencia</dt>
         <dd>@(Model.Card.card_state ? "Vigente" : "Cancelada")</dd>
 
@@ -39,9 +52,6 @@
             <dt>Estado de la tarjeta</dt>
             <dd>@(Model.Card.card_active ? "Activo" : "Inactivo")</dd>
         }
-
-        @*<dt>Imagen del artículo</dt>
-            <dd>@Html.DisplayFor(model => model.Items.item_name)</dd>*@
     </dl>
 </div>
 

@@ -51,30 +51,21 @@
         </div>
 
         <div class="form-group">
-            @Html.Label("Nombre dirección", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.Label("Ubicación", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <input type="text" name="address_name" class="form-control" />
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("Latitud", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input type="text" name="address_latitude" class="form-control" />
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("Longitud", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input type="text" name="address_longitude" class="form-control" />
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("Dirección completa", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input type="text" name="address_description" class="form-control" />
+                <input type="hidden" id="address_name" name="address_name" value="@ViewBag.AddressName" />
+                <input type="hidden" id="address_latitude" name="address_latitude" value="@ViewBag.AddressLatitude" />
+                <input type="hidden" id="address_longitude" name="address_longitude" value="@ViewBag.AddressLongitude" />
+                <input type="hidden" id="address_description" name="address_description" value="@ViewBag.AddressDescription" />
+                <div id="locationPreview" class="location-preview">
+                    <img id="locationPreviewImage" class="location-preview-image" src="" alt="Vista previa de la ubicación" />
+                    <div id="locationPreviewPlaceholder" class="location-preview-placeholder">
+                        No se ha seleccionado una ubicación.
+                    </div>
+                    <div id="locationPreviewName" class="location-preview-name"></div>
+                    <div id="locationPreviewDescription" class="location-preview-description"></div>
+                </div>
+                <button type="button" id="btnOpenLocationSelector" class="btn btn-default">Agregar ubicación</button>
             </div>
         </div>
 
@@ -88,7 +79,7 @@
         </div>
 
         <div class="form-group">
-            @Html.Label("Contraseña", htmlAttributes: new { @class = "control-label col-md-2" })            
+            @Html.Label("Contraseña", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <small class="text-muted">La contraseña debe contener al menos: 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.</small>
                 @Html.EditorFor(model => model.user_password, new { htmlAttributes = new { @class = "form-control", maxlength = "20", id = "user_password" } })
@@ -124,7 +115,41 @@
     @Html.ActionLink("Atrás", "Index")
 </div>
 
+<div id="locationSelectorOverlay" class="location-selector-overlay">
+    <div class="location-selector-modal">
+        <div class="location-selector-header">
+            <h3>Seleccionar ubicación</h3>
+            <button type="button" id="btnCloseLocationSelector" class="location-selector-close">&times;</button>
+        </div>
+        <div class="location-selector-body">
+            <div class="location-search-container">
+                <label for="locationSearchInput">Buscar dirección</label>
+                <div class="location-search-group">
+                    <input type="text" id="locationSearchInput" class="form-control" placeholder="Ejemplo: Los Sitios, Moravia" />
+                    <button type="button" id="btnSearchLocation" class="btn btn-default">Buscar</button>
+                </div>
+            </div>
+            <div class="location-current-container">
+                <button type="button" id="btnCurrentLocation" class="btn btn-default">Usar mi ubicación actual</button>
+            </div>
+            <div id="leafletMap" class="location-map"></div>
+            <div class="location-selected-data">
+                <h4>Ubicación seleccionada</h4>
+                <div id="selectedLocationName" class="location-selected-name">
+                    Ninguna ubicación seleccionada.
+                </div>
+                <div id="selectedLocationDescription" class="location-selected-description"></div>
+            </div>
+        </div>
+        <div class="location-selector-footer">
+            <button type="button" id="btnCancelLocation" class="btn btn-default">Cancelar</button>
+            <button type="button" id="btnAcceptLocation" class="btn btn-primary">Aceptar</button>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/FormValidation.js"></script>
+    <script src="~/Scripts/Location/LocationSelector.js"></script>
 }

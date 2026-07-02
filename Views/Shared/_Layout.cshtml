@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Distribuidora La Bendición S.A</title>
     @Styles.Render("~/Content/css")
+    <link rel="stylesheet" href="~/Content/leaflet/leaflet.css" />
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -64,6 +65,7 @@
     @Scripts.Render("~/bundles/bootstrap")
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/Scripts/Alerts.js"></script>
+    <script src="~/Scripts/leaflet/leaflet.js"></script>
     @if (TempData["Success"] != null)
     {
         <script>showSuccess(@Html.Raw(Json.Encode(TempData["Success"])));</script>

@@ -162,13 +162,13 @@ namespace SistemaGestionVentas.Controllers
             int actorRole = Convert.ToInt32(Session["RoleId"]);
 
             if (ModelState.IsValid)
-            {                
+            {
                 try
                 {
-                    users.user_name = users.user_name.Trim();
-                    users.user_lastname = users.user_lastname.Trim();
-                    users.user_nickname = users.user_nickname.Trim();
-                    users.user_phone = users.user_phone.Trim();
+                    users.user_name = users.user_name?.Trim();
+                    users.user_lastname = users.user_lastname?.Trim();
+                    users.user_nickname = users.user_nickname?.Trim();
+                    users.user_phone = users.user_phone?.Trim();
                     string email = users.user_email?.Trim(); // elimina los espacios en blanco                    
                     bool emailExists = db.Users.Any(u => u.user_email.ToLower() == email.ToLower()); // busca si existe el correo, comparándolo en minúsculas
 
@@ -179,56 +179,62 @@ namespace SistemaGestionVentas.Controllers
                         {
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
                         }
+                        RestoreAddressData();
                         return View(users);
                     }
 
                     if (users.user_password.Length < 8)
                     {
-                        ModelState.AddModelError("user_password", "La contraseña debe tener mínimo 8 caracteres.");                        
+                        ModelState.AddModelError("user_password", "La contraseña debe tener mínimo 8 caracteres.");
                         if (actorRole == 1)
                         {
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
                         }
+                        RestoreAddressData();
                         return View(users);
                     }
 
                     if (!Regex.IsMatch(users.user_password, "[A-Z]"))
                     {
-                        ModelState.AddModelError("user_password", "La contraseña debe contener al menos una letra mayúscula.");                        
+                        ModelState.AddModelError("user_password", "La contraseña debe contener al menos una letra mayúscula.");
                         if (actorRole == 1)
                         {
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
                         }
+                        RestoreAddressData();
                         return View(users);
                     }
 
                     if (!Regex.IsMatch(users.user_password, "[a-z]"))
                     {
-                        ModelState.AddModelError("user_password", "La contraseña debe contener al menos una letra minúscula.");                        
+                        ModelState.AddModelError("user_password", "La contraseña debe contener al menos una letra minúscula.");
                         if (actorRole == 1)
                         {
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
                         }
+                        RestoreAddressData();
                         return View(users);
                     }
 
                     if (!Regex.IsMatch(users.user_password, "[0-9]"))
                     {
-                        ModelState.AddModelError("user_password", "La contraseña debe contener al menos un número.");                        
+                        ModelState.AddModelError("user_password", "La contraseña debe contener al menos un número.");
                         if (actorRole == 1)
                         {
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
                         }
+                        RestoreAddressData();
                         return View(users);
                     }
 
                     if (!Regex.IsMatch(users.user_password, @"[\W_]"))
                     {
-                        ModelState.AddModelError("user_password", "La contraseña debe contener al menos un símbolo.");                       
+                        ModelState.AddModelError("user_password", "La contraseña debe contener al menos un símbolo.");
                         if (actorRole == 1)
                         {
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
                         }
+                        RestoreAddressData();
                         return View(users);
                     }
 
@@ -272,6 +278,7 @@ namespace SistemaGestionVentas.Controllers
                     {
                         ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
                     }
+                    RestoreAddressData();
                     return View(users);
                 }
             }
@@ -280,6 +287,7 @@ namespace SistemaGestionVentas.Controllers
             {
                 ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
             }
+            RestoreAddressData();
             return View(users);
         }
 
@@ -328,10 +336,10 @@ namespace SistemaGestionVentas.Controllers
             
             if (ModelState.IsValid)
             {
-                users.user_name = users.user_name.Trim();
-                users.user_lastname = users.user_lastname.Trim();
-                users.user_nickname = users.user_nickname.Trim();
-                users.user_phone = users.user_phone.Trim();
+                users.user_name = users.user_name?.Trim();
+                users.user_lastname = users.user_lastname?.Trim();
+                users.user_nickname = users.user_nickname?.Trim();
+                users.user_phone = users.user_phone?.Trim();
                 string email = users.user_email?.Trim();
                 bool emailExists = db.Users.Any(u => u.user_email.ToLower() == email.ToLower() && u.user_id != users.user_id);
 
@@ -342,6 +350,7 @@ namespace SistemaGestionVentas.Controllers
                     {
                         ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
                     }
+                    RestoreAddressData();
                     return View(users);
                 }
                 try
@@ -373,6 +382,7 @@ namespace SistemaGestionVentas.Controllers
                         {
                             TempData["Error"] = "No puede modificar su propio rol.";
                             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
+                            RestoreAddressData();
                             return View(users);
                         }
                         originalUser.role_id = users.role_id;
@@ -399,13 +409,11 @@ namespace SistemaGestionVentas.Controllers
                     }
 
                     TempData["Success"] = "Usuario actualizado correctamente.";
-
                     return RedirectToAction("Details", new { id = users.user_id });
                 }
                 catch
                 {
                     TempData["Error"] = "No se pudo actualizar la información.";
-
                     return RedirectToAction("Details", new { id = users.user_id });
                 }
             }
@@ -414,6 +422,7 @@ namespace SistemaGestionVentas.Controllers
             {
                 ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
             }
+            RestoreAddressData();
             return View(users);
         }
 
@@ -585,6 +594,14 @@ namespace SistemaGestionVentas.Controllers
                 TempData["Error"] = "No se pudo reactivar el usuario.";
                 return RedirectToAction("Index");
             }
+        }
+
+        private void RestoreAddressData()
+        {
+            ViewBag.AddressName = Request["address_name"];
+            ViewBag.AddressLatitude = Request["address_latitude"];
+            ViewBag.AddressLongitude = Request["address_longitude"];
+            ViewBag.AddressDescription = Request["address_description"];
         }
 
         protected override void Dispose(bool disposing)

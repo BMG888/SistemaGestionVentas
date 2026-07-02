@@ -118,8 +118,8 @@ namespace SistemaGestionVentas.Controllers
                     return View(items);
                 }
 
-                items.item_name = items.item_name.Trim();
-                items.item_description = items.item_description.Trim();                
+                items.item_name = items.item_name?.Trim();
+                items.item_description = items.item_description?.Trim();                
                 items.item_active = true;
 
                 string extension = Path.GetExtension(imageFile.FileName);
@@ -202,8 +202,8 @@ namespace SistemaGestionVentas.Controllers
                     return RedirectToAction("Index", "Albums");
                 }
 
-                items.item_name = items.item_name.Trim();
-                items.item_description = items.item_description.Trim();
+                items.item_name = items.item_name?.Trim();
+                items.item_description = items.item_description?.Trim();
                 originalItem.item_name = items.item_name;
                 originalItem.item_description = items.item_description;
                 originalItem.album_id = items.album_id;

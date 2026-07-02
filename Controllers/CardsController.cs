@@ -160,8 +160,8 @@ namespace SistemaGestionVentas.Controllers
 
             try
             {
-                cards.card_payday = cards.card_payday.Trim();
-                cards.card_item = cards.card_item.Trim();
+                cards.card_payday = cards.card_payday?.Trim();
+                cards.card_item = cards.card_item?.Trim();
                 int roleId = Convert.ToInt32(Session["RoleId"]);
 
                 if (roleId == 3)
@@ -291,8 +291,8 @@ namespace SistemaGestionVentas.Controllers
 
                 try
                 {
-                    cards.card_payday = cards.card_payday.Trim();
-                    cards.card_item = cards.card_item.Trim();
+                    cards.card_payday = cards.card_payday?.Trim();
+                    cards.card_item = cards.card_item?.Trim();
                     Cards originalCard = db.Cards.FirstOrDefault(c => c.card_id == cards.card_id);                    
 
                     if (originalCard == null)

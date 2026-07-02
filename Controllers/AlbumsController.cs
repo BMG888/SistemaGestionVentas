@@ -138,7 +138,7 @@ namespace SistemaGestionVentas.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                albums.album_name = albums.album_name.Trim();
+                albums.album_name = albums.album_name?.Trim();
                 bool albumExist = db.Albums.Any(a => a.album_name.ToLower() == albums.album_name.ToLower());
 
                 if (albumExist)
@@ -206,7 +206,7 @@ namespace SistemaGestionVentas.Controllers
 
             if (ModelState.IsValid)
             {
-                albums.album_name = albums.album_name.Trim();
+                albums.album_name = albums.album_name?.Trim();
                 bool albumExist = db.Albums.Any(a => a.album_name == albums.album_name && a.album_id != albums.album_id);
 
                 if (albumExist)

@@ -241,6 +241,23 @@ namespace SistemaGestionVentas.Controllers
                     if (actorRole == 2)
                     {
                         users.role_id = 3;
+                    }                                       
+
+                    decimal latitude;
+                    decimal longitude;
+                    decimal.TryParse(Request["address_latitude"].Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out latitude);
+                    decimal.TryParse(Request["address_longitude"].Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out longitude);
+
+                    if (string.IsNullOrWhiteSpace(Request["address_name"]) || string.IsNullOrWhiteSpace(Request["address_description"]) || latitude == 0 || longitude == 0)
+                    {
+                        ViewBag.AddressError = "Debe seleccionar una ubicación.";
+                        if (actorRole == 1)
+                        {
+                            ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
+                        }
+
+                        RestoreAddressData();
+                        return View(users);
                     }
 
                     users.user_active = true;
@@ -250,18 +267,10 @@ namespace SistemaGestionVentas.Controllers
                     db.SaveChanges();
 
                     Addresses address = new Addresses();
-
                     address.address_name = Request["address_name"];
                     address.address_description = Request["address_description"];
                     address.address_active = true;
                     address.user_id = users.user_id;
-
-                    decimal latitude;
-                    decimal longitude;
-
-                    decimal.TryParse(Request["address_latitude"].Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out latitude);
-                    decimal.TryParse(Request["address_longitude"].Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out longitude);
-
                     address.address_latitude = latitude;
                     address.address_longitude = longitude;
 

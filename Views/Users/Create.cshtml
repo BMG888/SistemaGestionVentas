@@ -7,7 +7,7 @@
 <h2>Crear usuario</h2>
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "userForm" }))
 {
     @Html.AntiForgeryToken()
 
@@ -58,14 +58,15 @@
                 <input type="hidden" id="address_longitude" name="address_longitude" value="@ViewBag.AddressLongitude" />
                 <input type="hidden" id="address_description" name="address_description" value="@ViewBag.AddressDescription" />
                 <div id="locationPreview" class="location-preview">
-                    <img id="locationPreviewImage" class="location-preview-image" src="" alt="Vista previa de la ubicación" />
+                    <div id="locationPreviewName" class="location-preview-name"></div>
+                    <div id="locationPreviewMap" class="location-preview-map"></div>
                     <div id="locationPreviewPlaceholder" class="location-preview-placeholder">
                         No se ha seleccionado una ubicación.
                     </div>
-                    <div id="locationPreviewName" class="location-preview-name"></div>
                     <div id="locationPreviewDescription" class="location-preview-description"></div>
                 </div>
                 <button type="button" id="btnOpenLocationSelector" class="btn btn-default">Agregar ubicación</button>
+                <span class="text-danger">@ViewBag.AddressError</span>
             </div>
         </div>
 

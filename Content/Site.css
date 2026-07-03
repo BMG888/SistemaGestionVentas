@@ -55,13 +55,14 @@ textarea {
     margin-top: 15px;
 }
 
-.location-preview-image {
-    display: none;
+.location-preview-map {
     width: 100%;
     max-width: 350px;
+    height: 180px;
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
+    margin-top: 10px;
 }
 
 .location-preview-placeholder {
@@ -71,13 +72,13 @@ textarea {
 .location-preview-name {
     margin-top: 10px;
     font-weight: 600;
-    font-size: clamp(.95rem, 1vw, 1rem);
+    font-size: clamp(1.05rem, 1.2vw, 1.2rem);
 }
 
 .location-preview-description {
     margin-top: 6px;
     color: #666;
-    font-size: clamp(.85rem, .95vw, .95rem);
+    font-size: clamp(.95rem, 1vw, 1.05rem);
     white-space: pre-wrap;
     word-break: break-word;
 }
@@ -178,6 +179,7 @@ textarea {
 
 .location-selected-name {
     font-weight: 600;
+    font-size: 1.1rem;
 }
 
 .location-selected-description {
@@ -185,6 +187,7 @@ textarea {
     color: #666;
     white-space: pre-wrap;
     word-break: break-word;
+    font-size: .95rem;
 }
 
 .location-selector-footer {

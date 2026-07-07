@@ -198,6 +198,37 @@ textarea {
     border-top: 1px solid #ddd;
 }
 
+.location-suggestions {
+    display: none;
+    margin-top: 6px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.location-suggestion-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: background .15s ease;
+    font-size: clamp(.88rem,.95vw,.95rem);
+}
+
+.location-loading {
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #666;
+}
+
+.location-suggestion-item:hover {
+    background: #f3f3f3;
+}
+
+.location-suggestion-item:not(:last-child) {
+    border-bottom: 1px solid #eee;
+}
+
 @media (max-width:768px) {
 
     .location-selector-modal {

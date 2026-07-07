@@ -11,8 +11,8 @@
           </Key>
           <Property Name="address_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="address_name" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="address_latitude" Type="decimal" Precision="10" Scale="6" />
-          <Property Name="address_longitude" Type="decimal" Precision="10" Scale="6" />
+          <Property Name="address_latitude" Type="decimal" Precision="10" Scale="6" Nullable="false" />
+          <Property Name="address_longitude" Type="decimal" Precision="10" Scale="6" Nullable="false" />
           <Property Name="address_description" Type="nvarchar(max)" Nullable="false" />
           <Property Name="address_active" Type="bit" Nullable="false" />
           <Property Name="user_id" Type="int" Nullable="false" />
@@ -251,8 +251,8 @@
           </Key>
           <Property Name="address_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="address_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="address_latitude" Type="Decimal" Precision="10" Scale="6" />
-          <Property Name="address_longitude" Type="Decimal" Precision="10" Scale="6" />
+          <Property Name="address_latitude" Type="Decimal" Precision="10" Scale="6" Nullable="false" />
+          <Property Name="address_longitude" Type="Decimal" Precision="10" Scale="6" Nullable="false" />
           <Property Name="address_description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="address_active" Type="Boolean" Nullable="false" />
           <Property Name="user_id" Type="Int32" Nullable="false" />

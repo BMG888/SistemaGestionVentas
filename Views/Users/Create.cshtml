@@ -126,8 +126,12 @@
             <div class="location-search-container">
                 <label for="locationSearchInput">Buscar dirección</label>
                 <div class="location-search-group">
-                    <input type="text" id="locationSearchInput" class="form-control" placeholder="Ejemplo: Los Sitios, Moravia" />
+                    <input type="text" id="locationSearchInput" class="form-control" placeholder="Ejemplo: Los Sitios, Moravia" autocomplete="off" />
                     <button type="button" id="btnSearchLocation" class="btn btn-default">Buscar</button>
+                </div>
+                <div id="locationSuggestions" class="location-suggestions"></div>
+                <div id="locationLoading" class="location-loading" style="display:none;">
+                    Buscando ubicaciones...
                 </div>
             </div>
             <div class="location-current-container">

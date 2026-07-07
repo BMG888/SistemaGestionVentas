@@ -264,7 +264,6 @@ namespace SistemaGestionVentas.Controllers
                     users.user_password = PasswordHelper.HashPassword(users.user_password);
 
                     db.Users.Add(users);
-                    db.SaveChanges();
 
                     Addresses address = new Addresses();
                     address.address_name = Request["address_name"];
@@ -321,6 +320,17 @@ namespace SistemaGestionVentas.Controllers
             {
                 return HttpNotFound();
             }
+
+            Addresses address = db.Addresses.FirstOrDefault(a => a.user_id == users.user_id);
+
+            if (address != null)
+            {
+                ViewBag.AddressName = address.address_name;
+                ViewBag.AddressDescription = address.address_description;
+                ViewBag.AddressLatitude = address.address_latitude.ToString(CultureInfo.InvariantCulture);
+                ViewBag.AddressLongitude = address.address_longitude.ToString(CultureInfo.InvariantCulture);
+            }
+
             if (roleId == 1)
             {
                 ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
@@ -396,26 +406,33 @@ namespace SistemaGestionVentas.Controllers
                         }
                         originalUser.role_id = users.role_id;
                     }
-                    db.SaveChanges();
 
-                    var address = db.Addresses.FirstOrDefault(a => a.user_id == users.user_id);
+                    Addresses address = db.Addresses.FirstOrDefault(a => a.user_id == users.user_id);
+
+                    decimal latitude;
+                    decimal longitude;
+                    decimal.TryParse(Request["address_latitude"]?.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out latitude);
+                    decimal.TryParse(Request["address_longitude"]?.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out longitude);
+
+                    if (string.IsNullOrWhiteSpace(Request["address_name"]) || string.IsNullOrWhiteSpace(Request["address_description"]) || latitude == 0 || longitude == 0)
+                    {
+                        ViewBag.AddressError = "Debe seleccionar una ubicación.";
+                        if (roleId == 1)
+                        {
+                            ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_description", users.role_id);
+                        }
+                        RestoreAddressData();
+                        return View(users);
+                    }
 
                     if (address != null)
                     {
                         address.address_name = Request["address_name"];
                         address.address_description = Request["address_description"];
-
-                        decimal latitude;
-                        decimal longitude;
-
-                        decimal.TryParse(Request["address_latitude"].Replace(".", ","), out latitude);
-                        decimal.TryParse(Request["address_longitude"].Replace(".", ","), out longitude);
-
                         address.address_latitude = latitude;
-                        address.address_longitude = longitude;
-
-                        db.SaveChanges();
+                        address.address_longitude = longitude;                        
                     }
+                    db.SaveChanges();
 
                     TempData["Success"] = "Usuario actualizado correctamente.";
                     return RedirectToAction("Details", new { id = users.user_id });

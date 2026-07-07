@@ -16,8 +16,8 @@ namespace SistemaGestionVentas.Models
     {
         public int address_id { get; set; }
         public string address_name { get; set; }
-        public Nullable<decimal> address_latitude { get; set; }
-        public Nullable<decimal> address_longitude { get; set; }
+        public decimal address_latitude { get; set; }
+        public decimal address_longitude { get; set; }
         public string address_description { get; set; }
         public bool address_active { get; set; }
         public int user_id { get; set; }

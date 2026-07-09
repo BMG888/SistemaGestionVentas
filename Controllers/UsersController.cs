@@ -321,7 +321,7 @@ namespace SistemaGestionVentas.Controllers
                 return HttpNotFound();
             }
 
-            Addresses address = db.Addresses.FirstOrDefault(a => a.user_id == users.user_id);
+            Addresses address = db.Addresses.FirstOrDefault(a => a.user_id == users.user_id && a.address_active);
 
             if (address != null)
             {
@@ -330,6 +330,8 @@ namespace SistemaGestionVentas.Controllers
                 ViewBag.AddressLatitude = address.address_latitude.ToString(CultureInfo.InvariantCulture);
                 ViewBag.AddressLongitude = address.address_longitude.ToString(CultureInfo.InvariantCulture);
             }
+
+            ViewBag.AddressHistory = db.Addresses.Where(a => a.user_id == users.user_id).OrderByDescending(a => a.address_active).ThenByDescending(a => a.address_id).ToList();
 
             if (roleId == 1)
             {
@@ -393,7 +395,6 @@ namespace SistemaGestionVentas.Controllers
                     originalUser.user_nickname = users.user_nickname;
                     originalUser.user_phone = users.user_phone;
                     originalUser.user_email = users.user_email;
-                    originalUser.user_active = users.user_active;
 
                     if (roleId == 1)
                     {
@@ -405,17 +406,18 @@ namespace SistemaGestionVentas.Controllers
                             return View(users);
                         }
                         originalUser.role_id = users.role_id;
-                    }
-
-                    Addresses address = db.Addresses.FirstOrDefault(a => a.user_id == users.user_id);
+                    }                    
 
                     decimal latitude;
                     decimal longitude;
                     decimal.TryParse(Request["address_latitude"]?.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out latitude);
                     decimal.TryParse(Request["address_longitude"]?.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out longitude);
 
+                    string addressName = Request["address_name"]?.Trim();
+                    string addressDescription = Request["address_description"]?.Trim();
+
                     if (string.IsNullOrWhiteSpace(Request["address_name"]) || string.IsNullOrWhiteSpace(Request["address_description"]) || latitude == 0 || longitude == 0)
-                    {
+                    {                        
                         ViewBag.AddressError = "Debe seleccionar una ubicación.";
                         if (roleId == 1)
                         {
@@ -425,12 +427,45 @@ namespace SistemaGestionVentas.Controllers
                         return View(users);
                     }
 
-                    if (address != null)
+                    Addresses existingAddress = db.Addresses.FirstOrDefault(a => a.user_id == users.user_id && a.address_name == addressName && a.address_description == addressDescription && a.address_latitude == latitude && a.address_longitude == longitude);
+
+                    var userAddresses = db.Addresses.Where(a => a.user_id == users.user_id).ToList();
+
+                    //Si la dirección seleccionada ya existe
+                    if (existingAddress != null)
                     {
-                        address.address_name = Request["address_name"];
-                        address.address_description = Request["address_description"];
-                        address.address_latitude = latitude;
-                        address.address_longitude = longitude;                        
+                        //Desactiva todas las direcciones del usuario
+                        var addresses = db.Addresses.Where(a => a.user_id == users.user_id).ToList();
+
+                        foreach (var item in userAddresses)
+                        {
+                            item.address_active = false;
+                        }
+
+                        //Activa únicamente la dirección seleccionada
+                        existingAddress.address_active = true;
+                    }
+                    else
+                    {
+                        //Desactiva todas las direcciones actuales
+                        var addresses = db.Addresses.Where(a => a.user_id == users.user_id).ToList();
+
+                        foreach (var item in userAddresses)
+                        {
+                            item.address_active = false;
+                        }
+
+                        //Crea una nueva dirección activa
+                        Addresses newAddress = new Addresses();
+
+                        newAddress.user_id = users.user_id;
+                        newAddress.address_name = addressName;
+                        newAddress.address_description = addressDescription;
+                        newAddress.address_latitude = latitude;
+                        newAddress.address_longitude = longitude;
+                        newAddress.address_active = true;
+
+                        db.Addresses.Add(newAddress);
                     }
                     db.SaveChanges();
 

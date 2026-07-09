@@ -83,7 +83,7 @@ textarea {
     word-break: break-word;
 }
 
-#btnOpenLocationSelector {
+#btnOpenLocationSelector, #btnLocationHistory {
     margin-top: 15px;
 }
 
@@ -249,6 +249,98 @@ textarea {
     }
 
     .location-selector-footer .btn {
+        width: 100%;
+    }
+}
+
+/*LocationHistory*/
+.location-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.location-history-modal {
+    max-width: 900px;
+}
+
+.location-history-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background: white;
+}
+
+.location-history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.location-history-description {
+    margin-bottom: 12px;
+}
+
+.location-history-map {
+    width: 100%;
+    min-height: 220px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
+
+#locationHistoryContainer {
+    max-height: 550px;
+    overflow-y: auto;
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.badge-success {
+    background: #28a745;
+    color: white;
+}
+
+.badge-default {
+    background: #6c757d;
+    color: white;
+}
+
+@media (max-width: 768px) {
+
+    .location-history-modal {
+        width: 95%;
+        max-width: 95%;
+        margin: 10px;
+    }
+
+    .location-history-card {
+        padding: 12px;
+    }
+
+    .location-history-map {
+        height: 180px;
+    }
+
+    .location-history-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .location-history-header .badge {
+        align-self: flex-start;
+    }
+
+    .btnUseOldLocation {
         width: 100%;
     }
 }

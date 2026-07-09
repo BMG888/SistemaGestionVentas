@@ -67,7 +67,13 @@
                     </div>
                     <div id="locationPreviewDescription" class="location-preview-description"></div>
                 </div>
-                <button type="button" id="btnOpenLocationSelector" class="btn btn-default">Cambiar ubicación</button>
+                <div class="location-buttons">
+                    <button type="button" id="btnOpenLocationSelector" class="btn btn-default">Cambiar ubicación</button>
+                    @if (((List<SistemaGestionVentas.Models.Addresses>)ViewBag.AddressHistory).Count > 1)
+                    {
+                        <button type="button" id="btnLocationHistory" class="btn btn-info">Historial de ubicaciones</button>
+                    }
+                </div>              
                 <span class="text-danger">@ViewBag.AddressError</span>
             </div>
         </div>
@@ -146,8 +152,51 @@
     </div>
 </div>
 
+<div id="locationHistoryOverlay" class="location-selector-overlay">
+    <div class="location-selector-modal location-history-modal">
+        <div class="location-selector-header">
+            <h3>Historial de ubicaciones</h3>
+            <button type="button" id="btnCloseLocationHistory" class="location-selector-close">&times;</button>
+        </div>
+        <div class="location-selector-body">
+            <div id="locationHistoryContainer">
+                @foreach (var address in (List<SistemaGestionVentas.Models.Addresses>)ViewBag.AddressHistory)
+                {
+                    <div class="location-history-card" data-id="@address.address_id" data-name="@address.address_name" data-description="@address.address_description" data-latitude="@address.address_latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-longitude="@address.address_longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-active="@address.address_active">
+                        <div class="location-history-header">
+                            <strong>@address.address_name</strong>
+                            @if (address.address_active)
+                            {
+                                <span class="badge badge-success">Activa</span> 
+                            }
+                            else
+                            {
+                                <span class="badge badge-default">Inactiva</span>
+                            }
+                        </div>
+                        <div class="location-history-description">
+                            @address.address_description
+                        </div>
+                        <div class="location-history-map"
+                             id="historyMap_@address.address_id">
+                        </div>
+                        @if (!address.address_active)
+                        {
+                            <button type="button" class="btn btn-primary btnUseOldLocation">Utilizar esta ubicación</button>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="location-selector-footer">
+            <button type="button" id="btnCloseLocationHistoryFooter" class="btn btn-default">Cerrar</button>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/FormValidation.js"></script>
     <script src="~/Scripts/Location/LocationSelector.js"></script>
+    <script src="~/Scripts/Location/LocationHistory.js"></script>
 }

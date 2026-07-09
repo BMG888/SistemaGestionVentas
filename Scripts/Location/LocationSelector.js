@@ -452,5 +452,28 @@
             }
         });
 
+    window.LocationSelectorAPI = {
+        applyLocation: function (name, description, lat, lng) {
+            console.log("applyLocation recibió:", name, description, lat, lng);
+            selectedName = name;
+            selectedDescription = description;
+            selectedLatitude = lat;
+            selectedLongitude = lng;
+
+            hiddenAddressName.value = selectedName;
+            hiddenLatitude.value = selectedLatitude;
+            hiddenLongitude.value = selectedLongitude;
+            hiddenDescription.value = selectedDescription;
+
+            previewPlaceholder.style.display = "none";
+            previewName.textContent = selectedName;
+            previewDescription.textContent = selectedDescription;
+            initPreviewMap(selectedLatitude, selectedLongitude);
+            console.log("previewName ahora dice:", previewName.textContent);
+
+            btnOpen.textContent = "Cambiar ubicación";
+        }
+    };
+
     initializeExistingLocation();
 });

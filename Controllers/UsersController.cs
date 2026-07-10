@@ -92,6 +92,16 @@ namespace SistemaGestionVentas.Controllers
                     return RedirectToAction("Index");
                 }
 
+                Addresses address = db.Addresses.FirstOrDefault(a => a.user_id == users.user_id && a.address_active);
+
+                if (address != null)
+                {
+                    ViewBag.AddressName = address.address_name;
+                    ViewBag.AddressDescription = address.address_description;
+                    ViewBag.AddressLatitude = address.address_latitude.ToString(CultureInfo.InvariantCulture);
+                    ViewBag.AddressLongitude = address.address_longitude.ToString(CultureInfo.InvariantCulture);
+                }
+
                 var cardsQuery = db.Cards.Include(c => c.Frequencies).Where(c => c.user_id == users.user_id);
 
                 if (!string.IsNullOrWhiteSpace(card_payday))

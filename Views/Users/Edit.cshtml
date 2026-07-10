@@ -164,7 +164,7 @@
                 {
                     <div class="location-history-card" data-id="@address.address_id" data-name="@address.address_name" data-description="@address.address_description" data-latitude="@address.address_latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-longitude="@address.address_longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-active="@address.address_active">
                         <div class="location-history-header">
-                            <strong>@address.address_name</strong>
+                            <strong class="location-history-name">@address.address_name</strong>
                             @if (address.address_active)
                             {
                                 <span class="badge badge-success">Activa</span> 

@@ -66,14 +66,13 @@
                 selectedLatitude = parseFloat(card.dataset.latitude);
                 selectedLongitude = parseFloat(card.dataset.longitude);
 
-                console.log("Datos del historial:", selectedName, selectedDescription, selectedLatitude, selectedLongitude);
-                console.log("¿Existe LocationSelectorAPI?", window.LocationSelectorAPI);
-
                 if (window.LocationSelectorAPI) {
                     window.LocationSelectorAPI.applyLocation(selectedName, selectedDescription, selectedLatitude, selectedLongitude);
-                    console.log("applyLocation ejecutado");
                 }
 
+                buttons.forEach(function (btn) {
+                    btn.style.display = "";
+                });
                 button.style.display = "none";
 
                 closeHistory();

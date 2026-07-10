@@ -31,17 +31,34 @@
         <dt>Número de teléfono</dt>
         <dd>@Html.DisplayFor(model => model.User.user_phone)</dd>
 
-        <dt>Dirección</dt>
-        <dd>@(Model.User.Addresses.FirstOrDefault() != null? Model.User.Addresses.FirstOrDefault().address_name: "")</dd>
+        <dt>Ubicación</dt>
+        <dd>
+            <div id="locationPreview" class="location-preview">
+                @if (ViewBag.AddressLatitude != null)
+                {
+                    <div id="locationPreviewName" class="location-preview-name">@ViewBag.AddressName</div>
+                    <div id="locationPreviewMap" class="location-preview-map" data-latitude="@ViewBag.AddressLatitude" data-longitude="@ViewBag.AddressLongitude"></div>
+                    <div id="locationPreviewDescription" class="location-preview-description">@ViewBag.AddressDescription</div> }
+                else
+                {
+                    <div id="locationPreviewPlaceholder" class="location-preview-placeholder">
+                        No se encontró una ubicación.
+                    </div>
+                }
+            </div>
 
-        <dt>Latitud</dt>
-        <dd>@(Model.User.Addresses.FirstOrDefault() != null? Model.User.Addresses.FirstOrDefault().address_latitude.ToString() : "")</dd>
-
-        <dt>Longitud</dt>
-        <dd>@(Model.User.Addresses.FirstOrDefault() != null? Model.User.Addresses.FirstOrDefault().address_longitude.ToString() : "")</dd>
-
-        <dt>Dirección exacta</dt>
-        <dd>@(Model.User.Addresses.FirstOrDefault() != null? Model.User.Addresses.FirstOrDefault().address_description: "")</dd>
+            @if (ViewBag.AddressLatitude != null)
+            {
+                <div class="location-external-buttons">
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=@ViewBag.AddressLatitude,@ViewBag.AddressLongitude" target="_blank" rel="noopener" class="btn btn-default">
+                        Abrir Google Maps
+                    </a>
+                    <a id="btnWazeLink" href="https://waze.com/ul?ll=@ViewBag.AddressLatitude,@ViewBag.AddressLongitude&navigate=yes" target="_blank" rel="noopener" class="btn btn-default">
+                        Abrir Waze
+                    </a>
+                </div>
+            }
+        </dd>
 
         <dt>Correo electrónico</dt>
         <dd>@Html.DisplayFor(model => model.User.user_email)</dd>
@@ -113,8 +130,8 @@
             <div>
                 <input type="submit" value="Buscar" class="btn btn-primary" />
                 <a href="@Url.Action("Details", "Users", new { id = Model.User.user_id })" class="btn btn-default">Limpiar</a>
-            </div>            
-        </div>       
+            </div>
+        </div>
     </div>
 
     <br />
@@ -191,3 +208,8 @@
         @Html.ActionLink("Atrás", "Index")
     }
 </p>
+
+@section Scripts {
+    <script src="~/Scripts/Location/LocationDetailsPreview.js"></script>
+    <script src="~/Scripts/Location/LocationExternalApps.js"></script>
+}

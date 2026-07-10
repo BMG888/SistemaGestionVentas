@@ -24,24 +24,38 @@ textarea {
 }
 
 /*sweetalert*/
+.swal2-popup {
+    width: 80% !important;
+    max-width: 450px !important;
+    padding: 1.25em !important;
+}
+
 .swal2-title {
-    font-size: clamp(1.4rem, 2vw, 2rem) !important;
+    font-size: clamp(1.3rem, 4vw, 2rem) !important;
 }
 
 .swal2-html-container {
-    font-size: clamp(1rem, 1.5vw, 1.3rem) !important;
+    font-size: clamp(0.95rem, 2.5vw, 1.3rem) !important;
     line-height: 1.6 !important;
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
 }
 
-.swal2-popup {
-    width: 80% !important;
-    max-width: 450px !important;
+.swal2-confirm, .swal2-cancel {
+    font-size: clamp(0.9rem, 2.2vw, 1.1rem) !important;
+    padding: 0.6em 1.4em !important;
 }
 
-.swal2-confirm, .swal2-cancel {
-    font-size: 1.1rem !important;
+.swal2-icon {
+    width: clamp(3.5em, 12vw, 5em) !important;
+    height: clamp(3.5em, 12vw, 5em) !important;
+}
+
+@media (max-width: 400px) {
+    .swal2-popup {
+        width: 92% !important;
+        padding: 1em !important;
+    }
 }
 
 /*Contadores*/
@@ -58,7 +72,7 @@ textarea {
 .location-preview-map {
     width: 100%;
     max-width: 350px;
-    height: 180px;
+    height: clamp(150px, 40vw, 180px);
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
@@ -72,13 +86,13 @@ textarea {
 .location-preview-name {
     margin-top: 10px;
     font-weight: 600;
-    font-size: clamp(1.05rem, 1.2vw, 1.2rem);
+    font-size: clamp(1.45rem, 1.6vw, 1.65rem);
 }
 
 .location-preview-description {
     margin-top: 6px;
     color: #666;
-    font-size: clamp(.95rem, 1vw, 1.05rem);
+    font-size: clamp(1.3rem, 1.4vw, 1.45rem);
     white-space: pre-wrap;
     word-break: break-word;
 }
@@ -88,8 +102,7 @@ textarea {
 }
 
 @media (max-width:768px) {
-
-    .location-preview-image {
+    .location-preview-map {
         max-width: 100%;
     }
 }
@@ -140,6 +153,8 @@ textarea {
 .location-selector-body {
     padding: 20px;
     overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
 .location-search-container {
@@ -179,7 +194,7 @@ textarea {
 
 .location-selected-name {
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: clamp(1.4rem, 1.6vw, 1.55rem);
 }
 
 .location-selected-description {
@@ -187,7 +202,7 @@ textarea {
     color: #666;
     white-space: pre-wrap;
     word-break: break-word;
-    font-size: .95rem;
+    font-size: clamp(1.2rem, 1.3vw, 1.3rem);
 }
 
 .location-selector-footer {
@@ -281,8 +296,14 @@ textarea {
     margin-bottom: 10px;
 }
 
+.location-history-name {
+    font-size: clamp(1.45rem, 1.6vw, 1.65rem);
+}
+
 .location-history-description {
     margin-bottom: 12px;
+    font-size: clamp(1.3rem, 1.4vw, 1.45rem);
+    color: #666;
 }
 
 .location-history-map {
@@ -290,18 +311,14 @@ textarea {
     min-height: 220px;
     border-radius: 8px;
     border: 1px solid #ddd;
+    overflow: hidden;
     margin-bottom: 12px;
-}
-
-#locationHistoryContainer {
-    max-height: 550px;
-    overflow-y: auto;
 }
 
 .badge {
     padding: 6px 12px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: clamp(11px, 1.2vw, 12px);
 }
 
 .badge-success {
@@ -315,7 +332,6 @@ textarea {
 }
 
 @media (max-width: 768px) {
-
     .location-history-modal {
         width: 95%;
         max-width: 95%;
@@ -327,7 +343,8 @@ textarea {
     }
 
     .location-history-map {
-        height: 180px;
+        height: clamp(160px, 45vw, 220px);
+        min-height: 0;
     }
 
     .location-history-header {
@@ -343,6 +360,31 @@ textarea {
     .btnUseOldLocation {
         width: 100%;
     }
+}
+
+@media (max-width: 400px) {
+    .location-history-card {
+        padding: 10px;
+    }
+
+    .location-history-modal {
+        margin: 6px;
+    }
+}
+
+/*Details*/
+.location-external-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.location-external-buttons .btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 /*Image Selector*/
@@ -392,12 +434,15 @@ textarea {
 .image-selector-body {
     padding: 20px;
     overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
 /*Álbumes*/
 .album-selector-container {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 12px;
 }
 
@@ -424,7 +469,8 @@ textarea {
 .item-selector-container {
     margin-top: 20px;
     display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(170px,1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 180px));
+    justify-content: center;
     gap: 18px;
 }
 
@@ -435,6 +481,8 @@ textarea {
     overflow: hidden;
     transition: .2s;
     background: #fff;
+    display: flex;
+    flex-direction: column;
 }
 
 .image-selector-item:hover {
@@ -447,13 +495,20 @@ textarea {
     aspect-ratio: 1;
     object-fit: cover;
     display: block;
+    flex: 0 0 auto;
 }
 
 .image-selector-item-name {
     padding: 10px;
     text-align: center;
-    font-size: .9rem;
+    font-size: clamp(.82rem, 1.5vw, .9rem);
     word-break: break-word;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .image-selector-item-selected {
@@ -477,6 +532,7 @@ textarea {
 .image-selector-name {
     margin-top: 8px;
     font-weight: 600;
+    font-size: clamp(.95rem, 1.5vw, 1.05rem);
 }
 
 .image-selector-placeholder {
@@ -485,7 +541,6 @@ textarea {
 
 /*Responsive*/
 @media (max-width:768px) {
-
     .image-selector-modal {
         width: 100%;
         max-height: 95vh;
@@ -496,7 +551,23 @@ textarea {
     }
 
     .item-selector-container {
-        grid-template-columns: repeat(auto-fill,minmax(130px,1fr));
+        grid-template-columns: repeat(auto-fill, minmax(120px, 150px));
+        gap: 12px;
+    }
+}
+
+@media (max-width:400px) {
+    .item-selector-container {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 130px));
+        gap: 10px;
+    }
+
+    .image-selector-header {
+        padding: 12px 16px;
+    }
+
+    .image-selector-body {
+        padding: 12px;
     }
 }
 

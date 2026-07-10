@@ -248,6 +248,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\leaflet\leaflet.js" />
+    <Content Include="Scripts\Location\LocationDetailsPreview.js" />
+    <Content Include="Scripts\Location\LocationExternalApps.js" />
     <Content Include="Scripts\Location\LocationHistory.js" />
     <Content Include="Scripts\Location\LocationSelector.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />

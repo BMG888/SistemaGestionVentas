@@ -1,6 +1,13 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 78px;
     padding-bottom: 20px;
+    background-color: #f0f1f3;
+}
+
+@media (max-width: 767px) {
+    body {
+        padding-top: 66px;
+    }
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -21,6 +28,148 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+/*Tipografía base*/
+body {
+    font-family: 'Work Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Manrope', sans-serif;
+}
+
+/*Navbar*/
+.navbar-inverse {
+    background-color: #353f55;
+    border-color: #2b3346;
+}
+
+.navbar-inverse .navbar-header {
+    min-height: 74px;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    padding-top: 22px;
+    padding-bottom: 22px;
+}
+
+/*Navbar - links principales (izquierda)*/
+.navbar-inverse .navbar-nav > li > a {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.4rem;
+    color: #8ecae6;
+    transition: font-size .18s ease, color .18s ease;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+    font-size: 1.5rem;
+    color: #ffffff;
+    background-color: transparent;
+}
+
+/*Navbar - links secundarios (derecha: sesión, usuario, contraseña)*/
+.navbar-inverse .navbar-nav.navbar-right > li > a {
+    font-size: 1.2rem;
+}
+
+.navbar-inverse .navbar-nav.navbar-right > li > a:hover,
+.navbar-inverse .navbar-nav.navbar-right > li > a:focus {
+    font-size: 1.28rem;
+    color: #ffffff;
+}
+
+.navbar-inverse .navbar-toggle {
+    border-color: #4c5a7a;
+}
+
+.navbar-inverse .navbar-toggle .icon-bar {
+    background-color: #8ecae6;
+}
+
+/*Título de marca*/
+.brand-title {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    height: auto !important;
+    padding: 10px 15px !important;
+    line-height: 1.2;
+}
+
+.brand-title-top {
+    font-family: 'Work Sans', sans-serif;
+    font-size: clamp(.85rem, 1.6vw, .95rem);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #8ecae6;
+    font-weight: 500;
+}
+
+.brand-title-main {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+    color: #ffffff;
+}
+
+.brand-title-sa {
+    color: #e8ce27;
+    font-weight: 700;
+}
+
+/*Footer*/
+.site-footer {
+    background-color: #353f55;
+    color: #e9ecf2;
+    margin-top: 40px;
+    padding: 28px 20px 18px;
+    border-radius: 14px 14px 0 0;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    text-align: center;
+}
+
+.footer-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(1rem, 1.8vw, 1.15rem);
+}
+
+.footer-item i {
+    color: #8ecae6;
+    font-size: 1.3rem;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,.12);
+    font-size: clamp(.85rem, 1.4vw, .95rem);
+    color: #b7c2d6;
+}
+
+.footer-bottom p {
+    margin: 0;
+}
+
+@media (max-width: 576px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .brand-title-main {
+        font-size: 1.2rem;
+    }
 }
 
 /*sweetalert*/

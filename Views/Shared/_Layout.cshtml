@@ -5,6 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Distribuidora La Bendición S.A</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Poppins:wght@400;500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/Content/bootstrap_icons/bootstrap-icons.css" />
     @Styles.Render("~/Content/css")
     <link rel="stylesheet" href="~/Content/leaflet/leaflet.css" />
     @Scripts.Render("~/bundles/modernizr")
@@ -18,7 +22,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Distribuidora La Bendición S.A", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <a class="navbar-brand brand-title" href="@Url.Action("Index", "Home")">
+                    <span class="brand-title-top">Distribuidora</span>
+                    <span class="brand-title-main">La Bendición <span class="brand-title-sa">S.A</span></span>
+                </a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -26,7 +33,6 @@
                     @if (Session["UserId"] != null)
                     {
                         int roleId = Convert.ToInt32(Session["RoleId"]);
-
                         if (roleId == 3)
                         {
                             <li>@Html.ActionLink("Perfil", "Details", "Users", new { id = Session["UserId"] }, null)</li>
@@ -55,12 +61,26 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Desarrollado por Bryan Méndez Garita</p>
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-item">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Mauricio Méndez Orozco</span>
+                </div>
+                <div class="footer-item">
+                    <i class="bi bi-telephone-fill"></i>
+                    <span>+506 8820-1600</span>
+                </div>
+                <div class="footer-item">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    <span>Opera principalmente en San José, Costa Rica</span>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; @DateTime.Now.Year - Desarrollado por Bryan Méndez Garita</p>
+            </div>
         </footer>
     </div>
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -70,12 +90,10 @@
     {
         <script>showSuccess(@Html.Raw(Json.Encode(TempData["Success"])));</script>
     }
-
     @if (TempData["Error"] != null)
     {
         <script>showError(@Html.Raw(Json.Encode(TempData["Error"])));</script>
     }
-
     @if (TempData["Warning"] != null)
     {
         <script>showWarning(@Html.Raw(Json.Encode(TempData["Warning"])));</script>

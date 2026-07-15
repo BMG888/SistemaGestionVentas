@@ -1,31 +1,143 @@
 ﻿@{
     ViewBag.Title = "Distribuidora La Bendición S.A";
+    var carouselItems = ViewBag.CarouselItems as List<SistemaGestionVentas.Models.Items>;
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+<div class="home-hero-box">
+    @if (carouselItems != null && carouselItems.Count > 0)
+    {
+        <div class="peek-carousel" id="peekCarousel">
+            @if (carouselItems.Count > 1)
+            {
+                <button type="button" class="peek-arrow peek-arrow-left" id="peekPrev" aria-label="Anterior">&#10094;</button>
+            }
+            <div class="peek-carousel-viewport">
+                <div class="peek-carousel-track" id="peekTrack">
+                    @for (int i = 0; i < carouselItems.Count; i++)
+                    {
+                        <div class="peek-slide" data-index="@i">
+                            <div class="peek-slide-card peek-card-@(i % 4 + 1)">
+                                <img src="@Url.Content(carouselItems[i].item_url)" alt="@carouselItems[i].item_name" class="peek-slide-image" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            @if (carouselItems.Count > 1)
+            {
+                <button type="button" class="peek-arrow peek-arrow-right" id="peekNext" aria-label="Siguiente">&#10095;</button>
+            }
+        </div>
+        if (carouselItems.Count > 1)
+        {
+            <div class="peek-dots" id="peekDots">
+                @for (int i = 0; i < carouselItems.Count; i++)
+                {
+                    <span class="peek-dot @(i == 0 ? "peek-dot-active" : "")" data-index="@i"></span>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <div class="home-carousel-empty">
+            No hay artículos disponibles en este momento.
+        </div>
+    }
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+<div class="home-intro-box">
+    <h2 class="home-presentation-title">
+        Todo lo que necesitás, <span class="home-title-accent">a un plazo que se ajusta a vos</span>
+    </h2>
+    <p class="home-presentation-text">
+        En Distribuidora La Bendición S.A. llevamos años llegando directo a la puerta de nuestros clientes,
+        con atención cercana y de confianza en cada visita. Sabemos que no siempre es el momento de pagar
+        todo de una vez, por eso construimos un sistema de venta pensado para adaptarse a tu bolsillo, con
+        seguimiento personalizado en cada pago. Todo con la facilidad de pagar a plazos, sin complicaciones.
+    </p>
+    <ul class="home-category-list">
+        <li><i class="bi bi-bag-fill"></i> Ropa de hombre y mujer</li>
+        <li><i class="bi bi-lightning-charge-fill"></i> Electrodomésticos</li>
+        <li><i class="bi bi-house-gear-fill"></i> Muebles a medida</li>
+        <li><i class="bi bi-controller"></i> Consolas y videojuegos</li>
+        <li><i class="bi bi-phone-fill"></i> Celulares (excepto iPhone)</li>
+        <li><i class="bi bi-tv-fill"></i> Pantallas</li>
+        <li><i class="bi bi-three-dots"></i> Y más</li>
+    </ul>
+    <p class="home-catalog-closing">Explorá nuestro catálogo y encontrá justo lo que buscás.</p>
+    <a href="@Url.Action("Index", "Albums")" class="btn-system btn-system-neutral">Ver productos</a>
+</div>
+
+<div class="home-section">
+    <h2 class="home-section-title">¿Por qué elegirnos?</h2>
+    <div class="why-us-grid">
+        <div class="why-us-card">
+            <i class="bi bi-people-fill"></i>
+            <h3>Atención personalizada</h3>
+            <p>Te acompañamos durante todo el proceso, cara a cara.</p>
+        </div>
+        <div class="why-us-card">
+            <i class="bi bi-calendar-week"></i>
+            <h3>Frecuencia de pago a tu ritmo</h3>
+            <p>Elegís cada cuánto pagar, según lo que mejor te acomode.</p>
+        </div>
+        <div class="why-us-card">
+            <i class="bi bi-eye-fill"></i>
+            <h3>Seguimiento transparente</h3>
+            <p>Consultá el estado de tus pagos cuando quieras, desde el sistema.</p>
+        </div>
+        <div class="why-us-card">
+            <i class="bi bi-grid-fill"></i>
+            <h3>Variedad de productos</h3>
+            <p>Ropa, electrodomésticos, muebles a medida, tecnología y más.</p>
+        </div>
     </div>
 </div>
+
+<div class="home-section">
+    <h2 class="home-section-title">¿Cómo funciona?</h2>
+    <div class="how-it-works">
+        <div class="how-step">
+            <div class="how-step-number"><i class="bi bi-search"></i></div>
+            <h3>Explorá o consultá</h3>
+            <p>Mirá el catálogo de productos disponibles, o llamá directamente a Mauricio si buscás algo que no esté en fotos.</p>
+        </div>
+        <div class="how-step">
+            <div class="how-step-number"><i class="bi bi-house-door-fill"></i></div>
+            <h3>Coordinamos una visita</h3>
+            <p>Te visitamos para mostrarte el producto y coordinar la compra.</p>
+        </div>
+        <div class="how-step">
+            <div class="how-step-number"><i class="bi bi-calendar2-check-fill"></i></div>
+            <h3>Elegís cada cuánto pagar</h3>
+            <p>El monto se calcula según el precio del artículo, pero vos decidís la frecuencia de pago.</p>
+        </div>
+        <div class="how-step">
+            <div class="how-step-number"><i class="bi bi-person-plus-fill"></i></div>
+            <h3>Se abre tu cuenta</h3>
+            <p>Creamos tu perfil en el sistema, junto con la tarjeta de tu compra.</p>
+        </div>
+        <div class="how-step">
+            <div class="how-step-number"><i class="bi bi-graph-up-arrow"></i></div>
+            <h3>Le das seguimiento a tus pagos</h3>
+            <p>Desde tu perfil podés ver el estado de tus tarjetas y cobros en todo momento.</p>
+        </div>
+    </div>
+</div>
+
+@if (Session["UserId"] == null)
+{
+    <div class="home-cta-box">
+        <i class="bi bi-person-circle"></i>
+        <div class="home-cta-text">
+            <h2>¿Ya sos cliente?</h2>
+            <p>Accedé a tu perfil para consultar tus tarjetas y el estado de tus cobros.</p>
+        </div>
+        <a href="@Url.Action("Login", "Auth")" class="btn-system btn-system-neutral">Iniciar sesión</a>
+    </div>
+}
+
+@section Scripts {
+    <script src="~/Scripts/Home/PeekCarousel.js"></script>
+}

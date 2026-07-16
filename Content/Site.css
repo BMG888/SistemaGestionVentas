@@ -65,26 +65,26 @@ h1, h2, h3, h4, h5, h6 {
 /*Navbar - links principales (izquierda)*/
 .navbar-inverse .navbar-nav > li > a {
     font-family: 'Poppins', sans-serif;
-    font-size: 1.4rem;
+    font-size: 14px;
     color: #8ecae6;
     transition: font-size .18s ease, color .18s ease;
 }
 
 .navbar-inverse .navbar-nav > li > a:hover,
 .navbar-inverse .navbar-nav > li > a:focus {
-    font-size: 1.5rem;
+    font-size: 15px;
     color: #ffffff;
     background-color: transparent;
 }
 
 /*Navbar - links secundarios (derecha: sesión, usuario, contraseña)*/
 .navbar-inverse .navbar-nav.navbar-right > li > a {
-    font-size: 1.2rem;
+    font-size: 12px;
 }
 
 .navbar-inverse .navbar-nav.navbar-right > li > a:hover,
 .navbar-inverse .navbar-nav.navbar-right > li > a:focus {
-    font-size: 1.28rem;
+    font-size: 12.8px;
     color: #ffffff;
 }
 
@@ -108,7 +108,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .brand-title-top {
     font-family: 'Work Sans', sans-serif;
-    font-size: clamp(.85rem, 1.6vw, .95rem);
+    font-size: clamp(8.5px, 1.6vw, 9.5px);
     letter-spacing: .14em;
     text-transform: uppercase;
     color: #8ecae6;
@@ -118,7 +118,7 @@ h1, h2, h3, h4, h5, h6 {
 .brand-title-main {
     font-family: 'Manrope', sans-serif;
     font-weight: 800;
-    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+    font-size: clamp(16px, 3.2vw, 21px);
     color: #ffffff;
 }
 
@@ -148,12 +148,12 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: clamp(1.15rem, 2vw, 1.3rem);
+    font-size: clamp(11.5px, 2vw, 13px);
 }
 
 .footer-item i {
     color: #8ecae6;
-    font-size: 1.45rem;
+    font-size: 14.5px;
 }
 
 .footer-bottom {
@@ -161,7 +161,7 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 18px;
     padding-top: 14px;
     border-top: 1px solid rgba(255,255,255,.12);
-    font-size: clamp(1rem, 1.6vw, 1.1rem);
+    font-size: clamp(10px, 1.6vw, 11px);
     color: #b7c2d6;
 }
 
@@ -319,7 +319,7 @@ h1, h2, h3, h4, h5, h6 {
 .home-presentation-title {
     font-family: 'Manrope', sans-serif;
     font-weight: 800;
-    font-size: clamp(2rem, 4vw, 2.9rem);
+    font-size: clamp(20px, 4vw, 29px);
     line-height: 1.3;
     margin-top: 0;
     margin-bottom: 22px;
@@ -332,7 +332,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .home-presentation-text {
     font-family: 'Work Sans', sans-serif;
-    font-size: clamp(1.25rem, 2.2vw, 1.4rem);
+    font-size: clamp(12.5px, 2.2vw, 14px);
     line-height: 1.75;
     margin: 0 0 28px;
 }
@@ -351,18 +351,18 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     gap: 12px;
     font-family: 'Work Sans', sans-serif;
-    font-size: clamp(1.2rem, 2vw, 1.35rem);
+    font-size: clamp(12px, 2vw, 13.5px);
 }
 
 .home-category-list i {
-    font-size: 1.5rem;
+    font-size: 15px;
     color: #c96a3a;
     flex: 0 0 auto;
 }
 
 .home-catalog-closing {
     font-family: 'Work Sans', sans-serif;
-    font-size: clamp(1.25rem, 2.2vw, 1.4rem);
+    font-size: clamp(12.5px, 2.2vw, 14px);
     margin-bottom: 24px;
     color: #2b2420;
 }
@@ -376,7 +376,7 @@ h1, h2, h3, h4, h5, h6 {
         grid-template-columns: 1fr;
     }
 
-    .btn-system {
+    .home-intro-box .btn-system {
         width: 100%;
     }
 }
@@ -389,7 +389,7 @@ h1, h2, h3, h4, h5, h6 {
 .home-section-title {
     font-family: 'Manrope', sans-serif;
     font-weight: 800;
-    font-size: clamp(1.7rem, 3.2vw, 2.2rem);
+    font-size: clamp(17px, 3.2vw, 22px);
     color: #2b2420;
     text-align: center;
     margin-bottom: 28px;
@@ -417,7 +417,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .why-us-card i {
-    font-size: 2.2rem;
+    font-size: 22px;
     color: #c96a3a;
     margin-bottom: 14px;
     display: block;
@@ -426,14 +426,14 @@ h1, h2, h3, h4, h5, h6 {
 .why-us-card h3 {
     font-family: 'Manrope', sans-serif;
     font-weight: 700;
-    font-size: clamp(1.3rem, 2.2vw, 1.45rem);
+    font-size: clamp(13px, 2.2vw, 14.5px);
     color: #2b2420;
     margin: 0 0 10px;
 }
 
 .why-us-card p {
     font-family: 'Work Sans', sans-serif;
-    font-size: clamp(1.2rem, 2vw, 1.35rem);
+    font-size: clamp(12px, 2vw, 13.5px);
     color: #55524d;
     line-height: 1.6;
     margin: 0;
@@ -463,21 +463,21 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 15px;
     margin: 0 auto 16px;
 }
 
 .how-step h3 {
     font-family: 'Manrope', sans-serif;
     font-weight: 700;
-    font-size: clamp(1.25rem, 2.1vw, 1.4rem);
+    font-size: clamp(12.5px, 2.1vw, 14px);
     color: #2b2420;
     margin: 0 0 10px;
 }
 
 .how-step p {
     font-family: 'Work Sans', sans-serif;
-    font-size: clamp(1.2rem, 2vw, 1.35rem);
+    font-size: clamp(12px, 2vw, 13.5px);
     color: #55524d;
     line-height: 1.6;
     margin: 0;
@@ -498,7 +498,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .home-cta-box i {
-    font-size: 3.2rem;
+    font-size: 32px;
     color: #8ecae6;
     flex: 0 0 auto;
 }
@@ -510,13 +510,13 @@ h1, h2, h3, h4, h5, h6 {
 .home-cta-text h2 {
     font-family: 'Manrope', sans-serif;
     font-weight: 800;
-    font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+    font-size: clamp(14px, 2.6vw, 18px);
     margin: 0 0 8px;
 }
 
 .home-cta-text p {
     font-family: 'Work Sans', sans-serif;
-    font-size: clamp(1.2rem, 2vw, 1.35rem);
+    font-size: clamp(12px, 2vw, 13.5px);
     margin: 0;
 }
 
@@ -540,18 +540,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .swal2-title {
-    font-size: clamp(1.3rem, 4vw, 2rem) !important;
+    font-size: clamp(13px, 4vw, 20px) !important;
 }
 
 .swal2-html-container {
-    font-size: clamp(0.95rem, 2.5vw, 1.3rem) !important;
+    font-size: clamp(9.5px, 2.5vw, 13px) !important;
     line-height: 1.6 !important;
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
 }
 
 .swal2-confirm, .swal2-cancel {
-    font-size: clamp(0.9rem, 2.2vw, 1.1rem) !important;
+    font-size: clamp(9px, 2.2vw, 11px) !important;
     padding: 0.6em 1.4em !important;
 }
 
@@ -565,11 +565,6 @@ h1, h2, h3, h4, h5, h6 {
         width: 92% !important;
         padding: 1em !important;
     }
-}
-
-/*Contadores*/
-.character-counter {
-    display: block;
 }
 
 /*Sistema de botones*/
@@ -634,6 +629,224 @@ h1, h2, h3, h4, h5, h6 {
     color: #2b2420;
 }
 
+/*Formularios*/
+.form-group label {
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 600;
+    font-size: clamp(14px, 1.8vw, 16px);
+    margin-bottom: 8px;
+}
+
+.form-control {
+    font-size: clamp(13px, 1.8vw, 15px);
+    height: auto;
+    padding: 10px 14px;
+}
+
+.character-counter {
+    font-size: clamp(11px, 1.4vw, 13px);
+    display: block;
+}
+
+.form-control {
+    border-radius: 12px;
+    border: 1px solid #e5ded9;
+    background-color: #f0f1f3;
+    box-shadow: inset 0 2px 5px rgba(43,36,32,.12);
+    transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+.form-control:focus {
+    border-color: #2f6e73;
+    background-color: #ffffff;
+    box-shadow: inset 0 2px 5px rgba(43,36,32,.08), 0 0 0 3px rgba(47,110,115,.18);
+    outline: none;
+}
+
+/*Título estándar de vistas*/
+.page-title {
+    color: #2f6e73;
+}
+
+/*Login*/
+.auth-wrapper {
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+    max-width: 100%;
+    margin: 40px 0;
+    flex-wrap: wrap;
+}
+
+.auth-box {
+    flex: 1 1 380px;
+    border-radius: 8px;
+    padding: 34px;
+    box-shadow: 0 10px 30px rgba(53,63,85,.12), 0 2px 6px rgba(53,63,85,.08);
+}
+
+.auth-form-box {
+    background-color: #ffffff;
+    color: #2b2420;
+}
+
+.auth-form-box h2 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: clamp(18px, 3.4vw, 23px);
+    color: #2f6e73;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 40px;
+}
+
+.auth-submit {
+    margin-top: 14px;
+    font-size: clamp(13px, 1.8vw, 15px);
+    padding: 11px 28px;
+}
+
+.password-field-group {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.password-field-group .form-control {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.password-field-group .toggle-password {
+    flex: 0 0 auto;
+    font-size: clamp(12px, 1.6vw, 14px);
+    padding: 10px 18px;
+    white-space: nowrap;
+}
+
+.auth-error {
+    display: block;
+    margin-top: 14px;
+}
+
+.auth-info-box {
+    background-color: #2f6e73;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-info-box h2 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: clamp(18px, 2.6vw, 23px);
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.auth-info-box p {
+    font-family: 'Work Sans', sans-serif;
+    font-size: clamp(14px, 1.6vw, 16px);
+    line-height: 1.7;
+    margin: 0 0 18px;
+}
+
+.auth-contact-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    margin-bottom: 22px;
+}
+
+.auth-contact-info i {
+    font-size: 17px;
+}
+
+.auth-contact-info a {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.auth-contact-info a:hover {
+    color: #e9ecf2;
+    text-decoration: none;
+}
+
+.btn-whatsapp {
+    background-color: #25D366;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+}
+
+.btn-whatsapp:hover,
+.btn-whatsapp:focus {
+    color: #ffffff;
+}
+
+@media (max-width: 767px) {
+    .auth-wrapper {
+        margin: 24px auto;
+        gap: 18px;
+    }
+
+    .auth-box {
+        padding: 26px 22px;
+    }
+}
+
+@media (max-width: 400px) {
+    .password-field-group {
+        flex-direction: column;
+    }
+
+    .password-field-group .toggle-password {
+        width: 100%;
+    }
+}
+
+/*Change Password*/
+.single-box-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.single-form-box {
+    width: 100%;
+    max-width: 520px;
+    background-color: #ffffff;
+}
+
+.single-form-box .page-title {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: clamp(18px, 3.4vw, 23px);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 32px;
+}
+
+.form-hint {
+    display: block;
+    margin: 4px 0 8px;
+    font-size: clamp(11px, 1.4vw, 13px);
+}
+
+@media (max-width: 767px) {
+    .single-box-wrapper {
+        margin: 24px 0;
+    }
+
+    .single-form-box {
+        padding: 26px 22px;
+    }
+}
+
 /*Users*/
 /*Location Selector*/
 .location-preview {
@@ -657,13 +870,13 @@ h1, h2, h3, h4, h5, h6 {
 .location-preview-name {
     margin-top: 10px;
     font-weight: 600;
-    font-size: clamp(1.45rem, 1.6vw, 1.65rem);
+    font-size: clamp(14.5px, 1.6vw, 16.5px);
 }
 
 .location-preview-description {
     margin-top: 6px;
     color: #666;
-    font-size: clamp(1.3rem, 1.4vw, 1.45rem);
+    font-size: clamp(13px, 1.4vw, 14.5px);
     white-space: pre-wrap;
     word-break: break-word;
 }
@@ -710,7 +923,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .location-selector-header h3 {
     margin: 0;
-    font-size: clamp(1.1rem,2vw,1.4rem);
+    font-size: clamp(11px, 2vw, 14px);
 }
 
 .location-selector-close {
@@ -765,7 +978,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .location-selected-name {
     font-weight: 600;
-    font-size: clamp(1.4rem, 1.6vw, 1.55rem);
+    font-size: clamp(14px, 1.6vw, 15.5px);
 }
 
 .location-selected-description {
@@ -773,7 +986,7 @@ h1, h2, h3, h4, h5, h6 {
     color: #666;
     white-space: pre-wrap;
     word-break: break-word;
-    font-size: clamp(1.2rem, 1.3vw, 1.3rem);
+    font-size: clamp(12px, 1.3vw, 13px);
 }
 
 .location-selector-footer {
@@ -798,7 +1011,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 10px 12px;
     cursor: pointer;
     transition: background .15s ease;
-    font-size: clamp(.88rem,.95vw,.95rem);
+    font-size: clamp(8.8px, .95vw, 9.5px);
 }
 
 .location-loading {
@@ -868,12 +1081,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .location-history-name {
-    font-size: clamp(1.45rem, 1.6vw, 1.65rem);
+    font-size: clamp(14.5px, 1.6vw, 16.5px);
 }
 
 .location-history-description {
     margin-bottom: 12px;
-    font-size: clamp(1.3rem, 1.4vw, 1.45rem);
+    font-size: clamp(13px, 1.4vw, 14.5px);
     color: #666;
 }
 
@@ -991,7 +1204,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .image-selector-header h3 {
     margin: 0;
-    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-size: clamp(11px, 2vw, 14px);
 }
 
 .image-selector-close {
@@ -1072,7 +1285,7 @@ h1, h2, h3, h4, h5, h6 {
 .image-selector-item-name {
     padding: 10px;
     text-align: center;
-    font-size: clamp(.82rem, 1.5vw, .9rem);
+    font-size: clamp(8.2px, 1.5vw, 9px);
     word-break: break-word;
     background: #f8f9fa;
     border-top: 1px solid #eee;
@@ -1103,7 +1316,7 @@ h1, h2, h3, h4, h5, h6 {
 .image-selector-name {
     margin-top: 8px;
     font-weight: 600;
-    font-size: clamp(.95rem, 1.5vw, 1.05rem);
+    font-size: clamp(9.5px, 1.5vw, 10.5px);
 }
 
 .image-selector-placeholder {

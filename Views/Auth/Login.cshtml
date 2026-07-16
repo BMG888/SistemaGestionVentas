@@ -3,39 +3,53 @@
     ViewBag.Title = "Iniciar sesión";
 }
 
-<h2>Iniciar sesión</h2>
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-group">
-        <label>Correo electrónico</label>
-        @Html.TextBoxFor(model => model.user_email, new { @class = "form-control", maxlength = "150", id = "login_email" })
-        <small id="login_email_counter" class="text-muted character-counter">150 caracteres restantes</small>
-        @Html.ValidationMessageFor(model => model.user_email, "", new { @class = "text-danger" })
+<div class="auth-wrapper">
+    <div class="auth-box auth-form-box">
+        <h2>Iniciar sesión</h2>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label>Correo electrónico</label>
+                @Html.TextBoxFor(model => model.user_email, new { @class = "form-control", maxlength = "150", id = "login_email" })
+                <small id="login_email_counter" class="text-muted character-counter">150 caracteres restantes</small>
+                @Html.ValidationMessageFor(model => model.user_email, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <div class="password-field-group">
+                    @Html.PasswordFor(model => model.user_password, new { @class = "form-control", maxlength = "20", id = "login_password" })
+                    <button type="button" class="btn-system btn-system-neutral toggle-password" data-target="login_password">Mostrar</button>
+                </div>
+                <small id="login_password_counter" class="text-muted character-counter">20 caracteres restantes</small>
+                @Html.ValidationMessageFor(model => model.user_password, "", new { @class = "text-danger" })
+            </div>
+            <input type="submit" value="Iniciar sesión" class="btn-system btn-system-success auth-submit" />
+            <span class="text-danger auth-error">
+                @ViewBag.Error
+            </span>
+        }
     </div>
 
-    <div class="form-group">
-        <label>Contraseña</label>
-        <div style="display:flex; gap:10px;">
-            @Html.PasswordFor(model => model.user_password, new { @class = "form-control", maxlength = "20", id = "login_password" })
-            <button type="button" class="btn btn-default toggle-password" data-target="login_password">Mostrar</button>
+    <div class="auth-box auth-info-box">
+        <h2>¿Primera vez ingresando?</h2>
+        <p>
+            Tu contraseña es proporcionada por tu agente de ventas al momento de crear tu cuenta.
+            Ingresá con el correo que brindaste y la contraseña que te compartió.
+        </p>
+        <p>
+            Si tenés algún problema para iniciar sesión, o no recordás tu contraseña, comunicate
+            directamente con Mauricio, tu agente de ventas.
+        </p>
+        <div class="auth-contact-info">
+            <i class="bi bi-telephone-fill"></i>
+            <a href="tel:+50688201600">+506 8820-1600</a>
         </div>
-        <small id="login_password_counter" class="text-muted character-counter">20 caracteres restantes</small>
-        @Html.ValidationMessageFor(model => model.user_password, "", new { @class = "text-danger" })
+        <a href="https://wa.me/50688201600" target="_blank" rel="noopener" class="btn-system btn-whatsapp">
+            <i class="bi bi-whatsapp"></i> Escribir por WhatsApp
+        </a>
     </div>
-    <br />
-
-    <input type="submit" value="Iniciar sesión" class="btn btn-primary" />
-
-    <br />
-    <br />
-
-    <span class="text-danger">
-        @ViewBag.Error
-    </span>
-}
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

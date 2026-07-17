@@ -22,6 +22,7 @@ body {
     display: flex;
     flex-direction: column;
     flex: 1 0 auto;
+    min-width: 0;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -629,6 +630,198 @@ h1, h2, h3, h4, h5, h6 {
     color: #2b2420;
 }
 
+.btn-system-filter {
+    background-color: #d7dade;
+    color: #2b2420;
+}
+
+.btn-system-filter:hover,
+.btn-system-filter:focus {
+    color: #2b2420;
+}
+
+.btn-system-sm {
+    padding: 6px 12px;
+    font-size: clamp(10.5px, 1.3vw, 12px);
+    margin: 3px 3px 3px 0;
+    white-space: nowrap;
+}
+
+/*Caja de filtros*/
+.filter-box {
+    background-color: #2f6e73;
+    border-radius: 8px;
+    padding: 24px 24px 18px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(53,63,85,.12), 0 2px 6px rgba(53,63,85,.08);
+}
+
+.filter-box label {
+    color: #ffffff;
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 600;
+    font-size: clamp(13px, 1.6vw, 15px);
+    margin-bottom: 6px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter-label-spacer {
+    display: block;
+}
+
+.filter-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.filter-field {
+    flex: 1 1 160px;
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-field-actions {
+    flex: 1 1 100%;
+    align-items: center;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+
+@media (max-width: 767px) {
+    .filter-box .row > div {
+        margin-bottom: 14px;
+    }
+
+    .filter-field {
+        flex: 1 1 100%;
+    }
+
+    .filter-field-actions {
+        flex: 1 1 100%;
+    }
+
+    .filter-buttons {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .filter-buttons .btn-system {
+        flex: none;
+        width: auto;
+        min-width: 160px;
+    }
+
+    .filter-label-spacer {
+        display: none;
+    }
+}
+
+/*Tablas*/
+.table-box {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    border-radius: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-shadow: 0 10px 30px rgba(53,63,85,.12), 0 2px 6px rgba(53,63,85,.08);
+    margin-bottom: 24px;
+}
+
+.system-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    background-color: #ffffff;
+    table-layout: fixed;
+}
+
+.system-table th {
+    background-color: #553a35;
+    color: #ffffff;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: clamp(12px, 1.6vw, 14px);
+    padding: 14px 16px;
+    text-align: left;
+    border: 1px solid #6b4b44;
+    text-align: center;
+}
+
+.system-table td {
+    padding: 12px 16px;
+    font-size: clamp(12px, 1.6vw, 14px);
+    border: 1px solid #e5ded9;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.system-table tr:nth-child(even) td {
+    background-color: #faf8f6;
+}
+
+.table-actions {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    justify-content: center;
+}
+
+.system-table th:last-child,
+.system-table td:last-child {
+    width: 300px;
+}
+
+@media (max-width: 900px) {
+    .table-box {
+        overflow-x: auto;
+    }
+
+    .system-table {
+        min-width: 700px;
+    }
+}
+
+/*Paginación*/
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination-wrapper .pagination > li > a,
+.pagination-wrapper .pagination > li > span {
+    color: #2f6e73;
+    border-color: #d7e4e5;
+}
+
+.pagination-wrapper .pagination > li.active > a,
+.pagination-wrapper .pagination > li.active > span {
+    background-color: #2f6e73;
+    border-color: #2f6e73;
+    color: #ffffff;
+}
+
+.pagination-wrapper .pagination > li > a:hover,
+.pagination-wrapper .pagination > li > a:focus {
+    background-color: #e3edee;
+    color: #2f6e73;
+}
+
 /*Formularios*/
 .form-group label {
     font-family: 'Work Sans', sans-serif;
@@ -666,6 +859,18 @@ h1, h2, h3, h4, h5, h6 {
 /*Título estándar de vistas*/
 .page-title {
     color: #2f6e73;
+    font-weight: 800;
+}
+
+.page-title-centered {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: clamp(32px, 5.5vw, 42px);
+}
+
+.index-actions {
+    text-align: center;
+    margin-bottom: 24px;
 }
 
 /*Login*/

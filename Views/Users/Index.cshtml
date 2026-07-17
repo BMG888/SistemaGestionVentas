@@ -5,122 +5,132 @@
     ViewBag.Title = "Usuarios";
 }
 
-<h2>Usuarios</h2>
+<h2 class="page-title page-title-centered">Usuarios</h2>
 
-<p>
-    @Html.ActionLink("Registrar usuario", "Create", null, new { @class = "btn btn-default" })
+<p class="index-actions">
+    @Html.ActionLink("Registrar usuario", "Create", null, new { @class = "btn-system btn-system-neutral" })
 </p>
 
-@using (Html.BeginForm("Index", "Users", FormMethod.Get))
-{
-    <div class="row">
+<div class="filter-box">
+    @using (Html.BeginForm("Index", "Users", FormMethod.Get))
+    {
+        <div class="filter-grid">
+            <div class="filter-field">
+                <label>Nombre</label>
+                <input type="text" name="user_name" value="@Request["user_name"]" class="form-control" />
+            </div>
 
-        <div class="col-md-2">
-            <label>Nombre</label>
-            <input type="text" name="user_name" value="@Request["user_name"]" class="form-control" />
-        </div>
+            <div class="filter-field">
+                <label>Apellido</label>
+                <input type="text" name="user_lastname" value="@Request["user_lastname"]" class="form-control" />
+            </div>
 
-        <div class="col-md-2">
-            <label>Apellido</label>
-            <input type="text" name="user_lastname" value="@Request["user_lastname"]" class="form-control" />
-        </div>
+            <div class="filter-field">
+                <label>Apodo</label>
+                <input type="text" name="user_nickname" value="@Request["user_nickname"]" class="form-control" />
+            </div>
 
-        <div class="col-md-2">
-            <label>Apodo</label>
-            <input type="text" name="user_nickname" value="@Request["user_nickname"]" class="form-control" />
-        </div>
+            <div class="filter-field">
+                <label>Estado</label>
+                <select name="user_active" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="true" @(Request["user_active"] == "true" ? "selected" : "")>Activo</option>
+                    <option value="false" @(Request["user_active"] == "false" ? "selected" : "")>Inactivo</option>
+                </select>
+            </div>
 
-        <div class="col-md-2">
-            <label>Estado</label>
-            <select name="user_active" class="form-control">
-                <option value="">Todos</option>
-                <option value="true" @(Request["user_active"] == "true" ? "selected" : "")>Activo</option>
-                <option value="false" @(Request["user_active"] == "false" ? "selected" : "")>Inactivo</option>
-            </select>
-        </div>
+            <div class="filter-field">
+                <label>Rol</label>
+                @Html.DropDownList("role_id", (SelectList)ViewBag.role_id, "Todos", new { @class = "form-control" })
+            </div>
 
-        <div class="col-md-2">
-            <label>Rol</label>
-            @Html.DropDownList("role_id", (SelectList)ViewBag.role_id, "Todos", new { @class = "form-control" })
-        </div>
-
-        <div class="col-md-2">
-            <label>&nbsp;</label>
-            <div>
-                <input type="submit" value="Buscar" class="btn btn-primary" />
-                <a href="@Url.Action("Index")" class="btn btn-default">Limpiar</a>
+            <div class="filter-field filter-field-actions">
+                <label class="filter-label-spacer">&nbsp;</label>
+                <div class="filter-buttons">
+                    <input type="submit" value="Buscar" class="btn-system btn-system-filter" />
+                    <a href="@Url.Action("Index")" class="btn-system btn-system-filter">Limpiar</a>
+                </div>
             </div>
         </div>
-    </div>
-    <hr />
-}
-
-<table class="table">
-    <tr>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Apodo</th>
-        <th>Activo</th>
-        <th>Tipo de usuario</th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.user_name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.user_lastname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.user_nickname)
-            </td>
-            <td>
-                @(item.user_active ? "Activo" : "Inactivo")
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Roles.role_description)
-            </td>
-            <td>
-                @{
-                    int roleId = Convert.ToInt32(Session["RoleId"]);
-                    int currentUserId = Convert.ToInt32(Session["UserId"]);
-                    bool canDeactivate = item.user_id != currentUserId && !(roleId == 2 && item.role_id == 1);
-                }
-
-                @Html.ActionLink("Editar", "Edit", new { id = item.user_id }) |
-                @Html.ActionLink("Ver más", "Details", new { id = item.user_id })
-
-                @if (item.user_active)
-                {
-                    if (canDeactivate)
-                    {
-                        @: |
-                        @Html.ActionLink("Desactivar", "Delete", new { id = item.user_id })
-                    }
-                }
-                else
-                {
-                    if (roleId == 1)
-                    {
-                        @: |
-                        @Html.ActionLink("Reactivar", "Reactivate", new { id = item.user_id })
-                    }
-                }
-            </td>
-        </tr>
     }
+</div>
 
-</table>
+<div class="table-box">
+    <table class="table system-table">
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Apodo</th>
+            <th>Tipo de usuario</th>
+            <th>Activo</th>
+            <th></th>
+        </tr>
 
-@Html.PagedListPager(Model, page => Url.Action("Index", new
+        @foreach (var item in Model)
         {
-            page,
-            user_name = Request["user_name"],
-            user_lastname = Request["user_lastname"],
-            user_nickname = Request["user_nickname"],
-            user_active = Request["user_active"],
-            role_id = Request["role_id"]
-        }))
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.user_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.user_lastname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.user_nickname)
+                </td>                
+                <td>
+                    @Html.DisplayFor(modelItem => item.Roles.role_description)
+                </td>
+                <td>
+                    @if (item.user_active)
+                    {
+                        <span class="badge badge-success">Activo</span> 
+                    }
+                    else
+                    {
+                        <span class="badge badge-default">Inactivo</span>
+                    }
+                </td>
+                <td>
+                    @{
+                        int roleId = Convert.ToInt32(Session["RoleId"]);
+                        int currentUserId = Convert.ToInt32(Session["UserId"]);
+                        bool canDeactivate = item.user_id != currentUserId && !(roleId == 2 && item.role_id == 1);
+                    }
+                    <div class="table-actions">
+                        @Html.ActionLink("Editar", "Edit", new { id = item.user_id }, new { @class = "btn-system btn-system-neutral btn-system-sm" })
+                        @Html.ActionLink("Ver más", "Details", new { id = item.user_id }, new { @class = "btn-system btn-system-neutral btn-system-sm" })
+
+                        @if (item.user_active)
+                        {
+                            if (canDeactivate)
+                            {
+                                @Html.ActionLink("Desactivar", "Delete", new { id = item.user_id }, new { @class = "btn-system btn-system-danger btn-system-sm" })
+                            }
+                        }
+                        else
+                        {
+                            if (roleId == 1)
+                            {
+                                @Html.ActionLink("Reactivar", "Reactivate", new { id = item.user_id }, new { @class = "btn-system btn-system-success btn-system-sm" })
+                            }
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<div class="pagination-wrapper">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new
+    {
+        page,
+        user_name = Request["user_name"],
+        user_lastname = Request["user_lastname"],
+        user_nickname = Request["user_nickname"],
+        user_active = Request["user_active"],
+        role_id = Request["role_id"]
+    }))
+</div>

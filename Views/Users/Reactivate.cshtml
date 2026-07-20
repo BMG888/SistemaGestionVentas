@@ -1,41 +1,52 @@
 ﻿@model SistemaGestionVentas.Models.Users
-
 @{
     ViewBag.Title = "Reactivar usuario";
 }
 
-<h2>Reactivar usuario</h2>
+<h2 class="page-title page-title-centered page-title-success">Reactivar usuario</h2>
 
-<h3>¿Está seguro de reactivar a este usuario?</h3>
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Nombre</dt>
-        <dd>@Html.DisplayFor(model => model.user_name)</dd>
+<div class="single-box-wrapper">
+    <div class="auth-box single-form-box">
 
-        <dt>Apellido</dt>
-        <dd>@Html.DisplayFor(model => model.user_lastname)</dd>
-
-        <dt>Apodo</dt>
-        <dd>@Html.DisplayFor(model => model.user_nickname)</dd>
-
-        <dt>Número telefónico</dt>
-        <dd>@Html.DisplayFor(model => model.user_phone)</dd>
-
-        <dt>Correo electrónico</dt>
-        <dd>@Html.DisplayFor(model => model.user_email)</dd>
-
-        <dt>Tipo de usuario</dt>
-        <dd>@Html.DisplayFor(model => model.Roles.role_description)</dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Reactivar" class="btn btn-default" /> |
-            @Html.ActionLink("Atrás", "Index")
+        <div class="warning-box warning-box-success">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>¿Está seguro de reactivar a este usuario?</span>
         </div>
-    }
+
+        <div class="info-list">
+            <div class="info-row">
+                <div class="info-label">Nombre</div>
+                <div class="info-value">@Html.DisplayFor(model => model.user_name)</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Apellido</div>
+                <div class="info-value">@Html.DisplayFor(model => model.user_lastname)</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Apodo</div>
+                <div class="info-value">@Html.DisplayFor(model => model.user_nickname)</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Número telefónico</div>
+                <div class="info-value">@Html.DisplayFor(model => model.user_phone)</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Correo electrónico</div>
+                <div class="info-value">@Html.DisplayFor(model => model.user_email)</div>
+            </div>
+            <div class="info-row info-row-last">
+                <div class="info-label">Tipo de usuario</div>
+                <div class="info-value">@Html.DisplayFor(model => model.Roles.role_description)</div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-page-actions-row">
+                <input type="submit" value="Reactivar" class="btn-system btn-system-success" />
+                @Html.ActionLink("Atrás", "Index", null, new { @class = "btn-system btn-system-neutral" })
+            </div>
+        }
+    </div>
 </div>

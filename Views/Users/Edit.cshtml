@@ -4,114 +4,127 @@
     ViewBag.Title = "Editar usuario";
 }
 
-<h2>Editar usuario</h2>
+<h2 class="page-title page-title-centered">Editar usuario</h2>
 
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.user_id)
-
-        <div class="form-group">
-            @Html.Label("Nombre", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.user_name, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "edit_user_name" } })
-                <small id="edit_user_name_counter" class="text-muted character-counter">100 caracteres restantes</small>
-                @Html.ValidationMessageFor(model => model.user_name, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("Apellido", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.user_lastname, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "edit_user_lastname" } })
-                <small id="edit_user_lastname_counter" class="text-muted character-counter">100 caracteres restantes</small>
-                @Html.ValidationMessageFor(model => model.user_lastname, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("Apodo", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.user_nickname, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "edit_user_nickname" } })
-                <small id="edit_user_nickname_counter" class="text-muted character-counter">100 caracteres restantes</small>
-                @Html.ValidationMessageFor(model => model.user_nickname, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("Número telefónico", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.user_phone, new { htmlAttributes = new { @class = "form-control", maxlength = "20", id = "edit_user_phone" } })
-                <small id="edit_user_phone_counter" class="text-muted character-counter">20 caracteres restantes</small>
-                @Html.ValidationMessageFor(model => model.user_phone, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("Ubicación", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input type="hidden" id="address_name" name="address_name" value="@ViewBag.AddressName" />
-                <input type="hidden" id="address_latitude" name="address_latitude" value="@ViewBag.AddressLatitude" />
-                <input type="hidden" id="address_longitude" name="address_longitude" value="@ViewBag.AddressLongitude" />
-                <input type="hidden" id="address_description" name="address_description" value="@ViewBag.AddressDescription" />
-                <div id="locationPreview" class="location-preview">
-                    <div id="locationPreviewName" class="location-preview-name"></div>
-                    <div id="locationPreviewMap" class="location-preview-map"></div>
-                    <div id="locationPreviewPlaceholder" class="location-preview-placeholder">
-                        No se ha seleccionado una ubicación.
-                    </div>
-                    <div id="locationPreviewDescription" class="location-preview-description"></div>
-                </div>
-                <div class="location-buttons">
-                    <button type="button" id="btnOpenLocationSelector" class="btn btn-default">Cambiar ubicación</button>
-                    @if (((List<SistemaGestionVentas.Models.Addresses>)ViewBag.AddressHistory).Count > 1)
-                    {
-                        <button type="button" id="btnLocationHistory" class="btn btn-info">Historial de ubicaciones</button>
-                    }
-                </div>              
-                <span class="text-danger">@ViewBag.AddressError</span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("Correo eléctronico", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.user_email, new { htmlAttributes = new { @class = "form-control", maxlength = "150", id = "edit_user_email" } })
-                <small id="edit_user_email_counter" class="text-muted character-counter">150 caracteres restantes</small>
-                @Html.ValidationMessageFor(model => model.user_email, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        @if (Convert.ToInt32(Session["RoleId"]) == 1 && Model.user_id != Convert.ToInt32(Session["UserId"]))
+<div class="form-page-wrapper">
+    <div class="auth-box form-page-box">
+        @using (Html.BeginForm())
         {
-            <div class="form-group">
-                @Html.Label("Tipo de usuario", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownList("role_id", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.role_id, "", new { @class = "text-danger" })
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.user_id)
+
+                <div class="form-group">
+                    @Html.Label("Nombre", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.user_name, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "edit_user_name" } })
+                        <small id="edit_user_name_counter" class="text-muted character-counter">100 caracteres restantes</small>
+                        <div class="validation-space">
+                            @Html.ValidationMessageFor(model => model.user_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Apellido", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.user_lastname, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "edit_user_lastname" } })
+                        <small id="edit_user_lastname_counter" class="text-muted character-counter">100 caracteres restantes</small>
+                        <div class="validation-space">
+                            @Html.ValidationMessageFor(model => model.user_lastname, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Apodo", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.user_nickname, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "edit_user_nickname" } })
+                        <small id="edit_user_nickname_counter" class="text-muted character-counter">100 caracteres restantes</small>
+                        <div class="validation-space">
+                            @Html.ValidationMessageFor(model => model.user_nickname, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Número telefónico", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.user_phone, new { htmlAttributes = new { @class = "form-control", maxlength = "20", id = "edit_user_phone" } })
+                        <small id="edit_user_phone_counter" class="text-muted character-counter">20 caracteres restantes</small>
+                        <div class="validation-space">
+                            @Html.ValidationMessageFor(model => model.user_phone, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group form-group-full">
+                    @Html.Label("Ubicación", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="hidden" id="address_name" name="address_name" value="@ViewBag.AddressName" />
+                        <input type="hidden" id="address_latitude" name="address_latitude" value="@ViewBag.AddressLatitude" />
+                        <input type="hidden" id="address_longitude" name="address_longitude" value="@ViewBag.AddressLongitude" />
+                        <input type="hidden" id="address_description" name="address_description" value="@ViewBag.AddressDescription" />
+                        <div id="locationPreview" class="location-preview">
+                            <div id="locationPreviewName" class="location-preview-name"></div>
+                            <div id="locationPreviewMap" class="location-preview-map"></div>
+                            <div id="locationPreviewPlaceholder" class="location-preview-placeholder">
+                                No se ha seleccionado una ubicación.
+                            </div>
+                            <div id="locationPreviewDescription" class="location-preview-description"></div>
+                        </div>
+                        <div class="location-buttons">
+                            <button type="button" id="btnOpenLocationSelector" class="btn-system btn-system-neutral">Cambiar ubicación</button>
+                            @if (((List<SistemaGestionVentas.Models.Addresses>)ViewBag.AddressHistory).Count > 1)
+                            {
+                                <button type="button" id="btnLocationHistory" class="btn-system btn-system-neutral">Historial de ubicaciones</button>
+                            }
+                        </div>
+                        <div class="validation-space">
+                            <span class="text-danger">@ViewBag.AddressError</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group form-group-full">
+                    @Html.Label("Correo eléctronico", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.user_email, new { htmlAttributes = new { @class = "form-control", maxlength = "150", id = "edit_user_email" } })
+                        <small id="edit_user_email_counter" class="text-muted character-counter">150 caracteres restantes</small>
+                        <div class="validation-space">
+                            @Html.ValidationMessageFor(model => model.user_email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                @if (Convert.ToInt32(Session["RoleId"]) == 1 && Model.user_id != Convert.ToInt32(Session["UserId"]))
+                {
+                    <div class="form-group form-group-full">
+                        @Html.Label("Tipo de usuario", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("role_id", null, htmlAttributes: new { @class = "form-control" })
+                            <div class="validation-space">
+                                @Html.ValidationMessageFor(model => model.role_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="form-page-actions-row">
+                    <input type="submit" value="Actualizar" class="btn-system btn-system-success" />
+                    @Html.ActionLink("Atrás", "Index", null, new { @class = "btn-system btn-system-neutral" })
+                </div>
+
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="validation-space">
+                        <span class="text-danger">@ViewBag.Error</span>
+                    </div>
                 </div>
             </div>
         }
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Actualizar" class="btn btn-default" />
-            </div>
-        </div>
-
-        <span class="text-danger">
-            @ViewBag.Error
-        </span>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Atrás", "Index")
 </div>
 
 <div id="locationSelectorOverlay" class="location-selector-overlay">
@@ -125,7 +138,7 @@
                 <label for="locationSearchInput">Buscar dirección</label>
                 <div class="location-search-group">
                     <input type="text" id="locationSearchInput" class="form-control" placeholder="Ejemplo: Los Sitios, Moravia" autocomplete="off" />
-                    <button type="button" id="btnSearchLocation" class="btn btn-default">Buscar</button>
+                    <button type="button" id="btnSearchLocation" class="btn-system btn-system-neutral">Buscar</button>
                 </div>
                 <div id="locationSuggestions" class="location-suggestions"></div>
                 <div id="locationLoading" class="location-loading" style="display:none;">
@@ -133,7 +146,7 @@
                 </div>
             </div>
             <div class="location-current-container">
-                <button type="button" id="btnCurrentLocation" class="btn btn-default">Usar mi ubicación actual</button>
+                <button type="button" id="btnCurrentLocation" class="btn-system btn-system-neutral">Usar mi ubicación actual</button>
             </div>
             <div id="leafletMap" class="location-map"></div>
             <div class="location-selected-data">
@@ -146,8 +159,8 @@
             </div>
         </div>
         <div class="location-selector-footer">
-            <button type="button" id="btnCancelLocation" class="btn btn-default">Cancelar</button>
-            <button type="button" id="btnAcceptLocation" class="btn btn-primary">Aceptar</button>
+            <button type="button" id="btnAcceptLocation" class="btn-system btn-system-success">Aceptar</button>
+            <button type="button" id="btnCancelLocation" class="btn-system btn-system-neutral">Cancelar</button>
         </div>
     </div>
 </div>
@@ -167,7 +180,7 @@
                             <strong class="location-history-name">@address.address_name</strong>
                             @if (address.address_active)
                             {
-                                <span class="badge badge-success">Activa</span> 
+                                <span class="badge badge-success">Activa</span>
                             }
                             else
                             {
@@ -182,14 +195,14 @@
                         </div>
                         @if (!address.address_active)
                         {
-                            <button type="button" class="btn btn-primary btnUseOldLocation">Utilizar esta ubicación</button>
+                            <button type="button" class="btn-system btn-system-neutral btnUseOldLocation">Utilizar esta ubicación</button>
                         }
                     </div>
                 }
             </div>
         </div>
         <div class="location-selector-footer">
-            <button type="button" id="btnCloseLocationHistoryFooter" class="btn btn-default">Cerrar</button>
+            <button type="button" id="btnCloseLocationHistoryFooter" class="btn-system btn-system-neutral">Cerrar</button>
         </div>
     </div>
 </div>

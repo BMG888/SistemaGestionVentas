@@ -58,7 +58,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group form-group-full">
                     @Html.Label("Ubicación", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         <input type="hidden" id="address_name" name="address_name" value="@ViewBag.AddressName" />
@@ -80,7 +80,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group form-group-full">
                     @Html.Label("Correo eléctronico", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.user_email, new { htmlAttributes = new { @class = "form-control", maxlength = "150", id = "user_email" } })
@@ -91,7 +91,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group form-group-full">
                     @Html.Label("Contraseña", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         <small class="text-muted form-hint">La contraseña debe contener al menos: 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.</small>
@@ -105,7 +105,7 @@
 
                 @if (Convert.ToInt32(Session["RoleId"]) == 1)
                 {
-                    <div class="form-group">
+                    <div class="form-group form-group-full">
                         @Html.Label("Tipo de usuario", htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
                             @Html.DropDownList("role_id", null, htmlAttributes: new { @class = "form-control" })
@@ -116,10 +116,10 @@
                     </div>
                 }
 
-            <div class="form-page-actions-row">
-                <input type="submit" value="Registrar" class="btn-system btn-system-success" />
-                @Html.ActionLink("Atrás", "Index", null, new { @class = "btn-system btn-system-neutral" })
-            </div>
+                <div class="form-page-actions-row">
+                    <input type="submit" value="Registrar" class="btn-system btn-system-success" />
+                    @Html.ActionLink("Atrás", "Index", null, new { @class = "btn-system btn-system-neutral" })
+                </div>
 
                 <div class="col-md-offset-2 col-md-10">
                     <div class="validation-space">
@@ -142,7 +142,7 @@
                 <label for="locationSearchInput">Buscar dirección</label>
                 <div class="location-search-group">
                     <input type="text" id="locationSearchInput" class="form-control" placeholder="Ejemplo: Los Sitios, Moravia" autocomplete="off" />
-                    <button type="button" id="btnSearchLocation" class="btn btn-default">Buscar</button>
+                    <button type="button" id="btnSearchLocation" class="btn-system btn-system-neutral">Buscar</button>
                 </div>
                 <div id="locationSuggestions" class="location-suggestions"></div>
                 <div id="locationLoading" class="location-loading" style="display:none;">
@@ -150,7 +150,7 @@
                 </div>
             </div>
             <div class="location-current-container">
-                <button type="button" id="btnCurrentLocation" class="btn btn-default">Usar mi ubicación actual</button>
+                <button type="button" id="btnCurrentLocation" class="btn-system btn-system-neutral">Usar mi ubicación actual</button>
             </div>
             <div id="leafletMap" class="location-map"></div>
             <div class="location-selected-data">
@@ -162,8 +162,8 @@
             </div>
         </div>
         <div class="location-selector-footer">
-            <button type="button" id="btnCancelLocation" class="btn btn-default">Cancelar</button>
-            <button type="button" id="btnAcceptLocation" class="btn btn-primary">Aceptar</button>
+            <button type="button" id="btnAcceptLocation" class="btn-system btn-system-success">Aceptar</button>
+            <button type="button" id="btnCancelLocation" class="btn-system btn-system-neutral">Cancelar</button>
         </div>
     </div>
 </div>

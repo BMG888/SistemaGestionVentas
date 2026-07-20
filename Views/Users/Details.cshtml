@@ -1,213 +1,235 @@
 ﻿@model SistemaGestionVentas.Models.ViewModels.UserDetailsViewModel
 @using PagedList.Mvc
 
-@{
-    ViewBag.Title = "Información";
-}
+@{ ViewBag.Title = "Información"; }
 
-@{
-    int roleId = Convert.ToInt32(Session["RoleId"]);
-    int currentUserId = Convert.ToInt32(Session["UserId"]);
-    bool canManage = roleId != 3 && currentUserId != Model.User.user_id;
-}
+@{ int roleId = Convert.ToInt32(Session["RoleId"]);
+                int currentUserId = Convert.ToInt32(Session["UserId"]);
+                bool canManage = roleId != 3 && currentUserId != Model.User.user_id; }
 
-<h2>Información</h2>
+<h2 class="page-title page-title-centered">Información</h2>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Nombre</dt>
-        <dd>@Html.DisplayFor(model => model.User.user_name)</dd>
+<div class="details-box">
+    <div class="details-grid">
 
-        <dt>Apellido</dt>
-        <dd>@Html.DisplayFor(model => model.User.user_lastname)</dd>
+        <div class="details-info-column">
+            <div class="details-row">
+                <div class="details-label"><i class="bi bi-person-fill"></i> Nombre completo</div>
+                <div class="details-value">@Model.User.user_name @Model.User.user_lastname</div>
+            </div>
 
-        @if (roleId != 3)
-        {
-            <dt>Apodo</dt>
-            <dd>@Html.DisplayFor(model => model.User.user_nickname)</dd>
-        }
+            @if (roleId != 3)
+            {
+<div class="details-row">
+    <div class="details-label"><i class="bi bi-emoji-smile-fill"></i> Apodo</div>
+    <div class="details-value">@Html.DisplayFor(model => model.User.user_nickname)</div>
+</div>            }
 
-        <dt>Número de teléfono</dt>
-        <dd>@Html.DisplayFor(model => model.User.user_phone)</dd>
+            <div class="details-row">
+                <div class="details-label"><i class="bi bi-telephone-fill"></i> Número telefónico</div>
+                <div class="details-value">@Html.DisplayFor(model => model.User.user_phone)</div>
+            </div>
 
-        <dt>Ubicación</dt>
-        <dd>
+            <div class="details-row">
+                <div class="details-label"><i class="bi bi-envelope-fill"></i> Correo electrónico</div>
+                <div class="details-value">@Html.DisplayFor(model => model.User.user_email)</div>
+            </div>
+
+            @if (roleId != 3)
+            {
+<div class="details-row">
+    <div class="details-label"><i class="bi bi-toggle-on"></i> Estado</div>
+    <div class="details-value">@(Model.User.user_active ? "Activo" : "Inactivo")</div>
+</div>
+
+                <div class="details-row details-row-last">
+                    <div class="details-label"><i class="bi bi-person-badge-fill"></i> Tipo de usuario</div>
+                    <div class="details-value">@Html.DisplayFor(model => model.User.Roles.role_description)</div>
+                </div>}
+        </div>
+
+        <div class="details-location-column">
+            <div class="details-label details-location-label"><i class="bi bi-geo-alt-fill"></i> Ubicación</div>
+
             <div id="locationPreview" class="location-preview">
                 @if (ViewBag.AddressLatitude != null)
                 {
-                    <div id="locationPreviewName" class="location-preview-name">@ViewBag.AddressName</div>
+    <div id="locationPreviewName" class="location-preview-name">@ViewBag.AddressName</div>
                     <div id="locationPreviewMap" class="location-preview-map" data-latitude="@ViewBag.AddressLatitude" data-longitude="@ViewBag.AddressLongitude"></div>
-                    <div id="locationPreviewDescription" class="location-preview-description">@ViewBag.AddressDescription</div> }
-                else
-                {
+                                    <div id="locationPreviewDescription" class="location-preview-description">@ViewBag.AddressDescription</div> }
+                                else
+                                {
                     <div id="locationPreviewPlaceholder" class="location-preview-placeholder">
                         No se encontró una ubicación.
-                    </div>
-                }
+                    </div>}
             </div>
 
             @if (ViewBag.AddressLatitude != null)
             {
-                <div class="location-external-buttons">
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=@ViewBag.AddressLatitude,@ViewBag.AddressLongitude" target="_blank" rel="noopener" class="btn btn-default">
-                        Abrir Google Maps
-                    </a>
-                    <a id="btnWazeLink" href="https://waze.com/ul?ll=@ViewBag.AddressLatitude,@ViewBag.AddressLongitude&navigate=yes" target="_blank" rel="noopener" class="btn btn-default">
-                        Abrir Waze
-                    </a>
-                </div>
-            }
-        </dd>
-
-        <dt>Correo electrónico</dt>
-        <dd>@Html.DisplayFor(model => model.User.user_email)</dd>
-
-        @if (roleId != 3)
+<div class="location-external-buttons">
+    <a href="https://www.google.com/maps/dir/?api=1&destination=@ViewBag.AddressLatitude,@ViewBag.AddressLongitude" target="_blank" rel="noopener" class="btn-system btn-system-neutral">
+        Abrir Google Maps
+    </a>
+    <a id="btnWazeLink" href="https://waze.com/ul?ll=@ViewBag.AddressLatitude,@ViewBag.AddressLongitude&navigate=yes" target="_blank" rel="noopener" class="btn-system btn-system-neutral">
+        Abrir Waze
+    </a>
+</div>            }
+        </div>
+    </div>
+    <p class="details-actions">
+        @if (canManage)
         {
-            <dt>Estado</dt>
-            <dd>@(Model.User.user_active ? "Activo" : "Inactivo")</dd>
-
-            <dt>Tipo de usuario</dt>
-            <dd>@Html.DisplayFor(model => model.User.Roles.role_description)</dd>
-        }
-    </dl>
+@Html.ActionLink("Editar", "Edit", new { id = Model.User.user_id }, new { @class = "btn-system btn-system-neutral" })}
+    </p>
 </div>
-<p>
-    @if (canManage)
-    {
-        @Html.ActionLink("Editar", "Edit", new { id = Model.User.user_id })
-    }
-</p>
 
-<h3>Tarjetas del usuario</h3>
+<h3 class="section-title">Tarjetas</h3>
 
 @if (canManage)
 {
-    <p>
-        @Html.ActionLink("Registrar tarjeta", "Create", "Cards", new { userId = Model.User.user_id }, null)
+    <p class="index-actions">
+        @Html.ActionLink("Registrar tarjeta", "Create", "Cards", new { userId = Model.User.user_id }, new { @class = "btn-system btn-system-neutral" })
     </p>
 }
 
-@using (Html.BeginForm("Details", "Users", FormMethod.Get))
-{
-    @Html.Hidden("id", Model.User.user_id)
-
-    <div class="row">
-
-        <div class="col-md-3">
-            <label>Día de pago</label>
-            <input type="text" name="card_payday" value="@Model.CardPaydayFilter" class="form-control" maxlength="50" />
-        </div>
-
-        <div class="col-md-2">
-            <label>Periodicidad</label>
-            @Html.DropDownList("frequency_id", (SelectList)ViewBag.frequency_id, "Todas", new { @class = "form-control" })
-        </div>
-
-        <div class="col-md-2">
-            <label>Estado</label>
-            <select name="card_state" class="form-control">
-                <option value="">Todos</option>
-                <option value="true" @(Request["card_state"] == "true" ? "selected" : "")>Vigente</option>
-                <option value="false" @(Request["card_state"] == "false" ? "selected" : "")>Cancelada</option>
-            </select>
-        </div>
-
-        @if (Convert.ToInt32(Session["RoleId"]) != 3)
-        {
-            <div class="col-md-2">
-                <label>Activo</label>
-                <select name="card_active" class="form-control">
-                    <option value="">Todos</option>
-                    <option value="true" @(Request["card_active"] == "true" ? "selected" : "")>Activo</option>
-                    <option value="false" @(Request["card_active"] == "false" ? "selected" : "")>Inactivo</option>
-                </select>
-            </div>}
-
-        <div class="col-md-2">
-            <label>&nbsp;</label>
-            <div>
-                <input type="submit" value="Buscar" class="btn btn-primary" />
-                <a href="@Url.Action("Details", "Users", new { id = Model.User.user_id })" class="btn btn-default">Limpiar</a>
-            </div>
-        </div>
-    </div>
-
-    <br />
-}
-
-<table class="table">
-    <tr>
-        <th>Día de pago</th>
-        <th>Periodicidad</th>
-        <th>Artículo</th>
-        <th>Precio del artículo</th>
-        <th>Estado</th>
-        @if (roleId != 3)
-        {
-            <th>Activo</th>
-        }
-        <th></th>
-    </tr>
-
-    @foreach (var card in Model.Cards)
+<div class="filter-box">
+    @using (Html.BeginForm("Details", "Users", FormMethod.Get))
     {
-        <tr>
-            <td>@card.card_payday</td>
-            <td>@card.Frequencies.frequency_description</td>
-            <td>@card.card_item</td>
-            <td>@card.card_item_price</td>
-            <td>@(card.card_state ? "Vigente" : "Cancelada")</td>
+        @Html.Hidden("id", Model.User.user_id)
+
+        <div class="filter-grid">
+            <div class="filter-field">
+                <label>Día de pago</label>
+                <input type="text" name="card_payday" value="@Model.CardPaydayFilter" class="form-control" maxlength="50" />
+            </div>
+
+            <div class="filter-field">
+                <label>Periodicidad</label>
+                @Html.DropDownList("frequency_id", (SelectList)ViewBag.frequency_id, "Todas", new { @class = "form-control" })
+            </div>
+
+            <div class="filter-field">
+                <label>Estado</label>
+                <select name="card_state" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="true" @(Request["card_state"] == "true" ? "selected" : "")>Vigente</option>
+                    <option value="false" @(Request["card_state"] == "false" ? "selected" : "")>Cancelada</option>
+                </select>
+            </div>
+
             @if (roleId != 3)
             {
-                <td>@(card.card_active ? "Activo" : "Inactivo")</td>
+                <div class="filter-field">
+                    <label>Activo</label>
+                    <select name="card_active" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="true" @(Request["card_active"] == "true" ? "selected" : "")>Activo</option>
+                        <option value="false" @(Request["card_active"] == "false" ? "selected" : "")>Inactivo</option>
+                    </select>
+                </div>
             }
 
-            <td>
+            <div class="filter-field filter-field-actions">
+                <label class="filter-label-spacer">&nbsp;</label>
+                <div class="filter-buttons">
+                    <input type="submit" value="Buscar" class="btn-system btn-system-filter" />
+                    <a href="@Url.Action("Details", "Users", new { id = Model.User.user_id })" class="btn-system btn-system-filter">Limpiar</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="card-list">
+    @foreach (var card in Model.Cards)
+    {
+        <div class="card-item">
+            <div class="card-content">
+                <div class="card-badges">
+                    @if (card.card_state)
+                    {
+                        <span class="badge badge-vigente">Vigente</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-cancelada">Cancelada</span>
+                    }
+
+                    @if (roleId != 3)
+                    {
+                        if (card.card_active)
+                        {
+                            <span class="badge badge-success">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-default">Inactivo</span>
+                        }
+                    }
+                </div>
+
+                <div class="card-info-row">
+                    <span class="card-info-label">Día de pago</span>
+                    <span class="card-info-value">@card.card_payday</span>
+                </div>
+                <div class="card-info-row">
+                    <span class="card-info-label">Periodicidad</span>
+                    <span class="card-info-value">@card.Frequencies.frequency_description</span>
+                </div>
+                <div class="card-info-row">
+                    <span class="card-info-label">Artículo</span>
+                    <span class="card-info-value">@card.card_item</span>
+                </div>
+                <div class="card-info-row card-info-row-last">
+                    <span class="card-info-label">Precio del artículo</span>
+                    <span class="card-info-value">@card.card_item_price</span>
+                </div>
+            </div>
+
+            <div class="card-actions">
                 @if (canManage)
                 {
-                    @Html.ActionLink("Editar", "Edit", "Cards", new { id = card.card_id }, null) @: |
+                    @Html.ActionLink("Editar", "Edit", "Cards", new { id = card.card_id }, new { @class = "btn-system btn-system-neutral btn-system-sm" })
                 }
-                @Html.ActionLink("Ver cobros", "Details", "Cards", new { id = card.card_id }, null)
+                @Html.ActionLink("Ver cobros", "Details", "Cards", new { id = card.card_id }, new { @class = "btn-system btn-system-neutral btn-system-sm" })
+
                 @if (card.card_active)
                 {
                     if (canManage)
                     {
-                        @: |
-                        @Html.ActionLink("Desactivar", "Delete", "Cards", new { id = card.card_id }, null)
+                        @Html.ActionLink("Desactivar", "Delete", "Cards", new { id = card.card_id }, new { @class = "btn-system btn-system-danger btn-system-sm" })
                     }
                 }
                 else
                 {
                     if (roleId == 1)
                     {
-                        @: |
-                        @Html.ActionLink("Reactivar", "Reactivate", "Cards", new { id = card.card_id }, null)
+                        @Html.ActionLink("Reactivar", "Reactivate", "Cards", new { id = card.card_id }, new { @class = "btn-system btn-system-success btn-system-sm" })
                     }
                 }
-            </td>
-        </tr>
+            </div>
+        </div>
     }
+</div>
 
-</table>
-
-@Html.PagedListPager(Model.Cards, page => Url.Action("Details", new
-{
-    id = Model.User.user_id,
-    page,
-    card_payday = Request["card_payday"],
-    frequency_id = Request["frequency_id"],
-    card_state = Request["card_state"],
-    card_active = Request["card_active"]
-}))
-
-<p>
-    @if (roleId != 3)
+<div class="pagination-wrapper">
+    @Html.PagedListPager(Model.Cards, page => Url.Action("Details", new
     {
-        @Html.ActionLink("Atrás", "Index")
-    }
-</p>
+        id = Model.User.user_id,
+        page,
+        card_payday = Request["card_payday"],
+        frequency_id = Request["frequency_id"],
+        card_state = Request["card_state"],
+        card_active = Request["card_active"]
+    }))
+</div>
+
+@if (roleId != 3)
+{
+    <div class="back-only-row">
+        @Html.ActionLink("Atrás", "Index", null, new { @class = "btn-system btn-system-neutral" })
+    </div>
+}
 
 @section Scripts {
     <script src="~/Scripts/Location/LocationDetailsPreview.js"></script>

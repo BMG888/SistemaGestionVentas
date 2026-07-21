@@ -5,7 +5,7 @@
     const selectedItemId = $("#selectedItemId");
     const selectedItemImage = $("#selectedItemImage");
     const selectedItemName = $("#selectedItemName");
-    const placeholder = $(".image-selector-placeholder");
+    const placeholder = $(".image-preview-placeholder");
     const removeButton = $("#btnRemoveItemSelector");
     const selectedItemImageUrl = $("#selectedItemImageUrl");
     const selectedItemNameValue = $("#selectedItemNameValue");
@@ -29,19 +29,20 @@
     function initializeSelectedItem() {
 
         if (!selectedItemId.val()) {
+            removeButton.hide();
             return;
         }
 
         selectedItemImage.attr("src", selectedItemImageUrl.val()).show();
         selectedItemName.text(selectedItemNameValue.val());
         placeholder.hide();
-        removeButton.prop("disabled", false);
+        removeButton.show();
     }
 
     // Abrir selector
     $("#btnOpenItemSelector").click(function () {
         overlay.css("display", "flex").hide().fadeIn(200);
-        loadAlbums();        
+        loadAlbums();
         itemContainer.empty();
     });
 
@@ -75,7 +76,7 @@
             if (selectedItem) {
                 restoreSelection(selectedItem);
             }
-        });        
+        });
     }
 
     // Cargar imágenes del álbum
@@ -120,13 +121,13 @@
 
         selectedItemId.val($(this).data("id"));
         selectedItemImage.attr("src", $(this).data("image")).show();
-        selectedItemName.text($(this).data("name"));        
+        selectedItemName.text($(this).data("name"));
         if (cardItem) {
             cardItem.value = $(this).data("name");
             cardItem.dispatchEvent(new Event("input"));
         }
         placeholder.hide();
-        removeButton.prop("disabled", false);
+        removeButton.show();
         overlay.fadeOut(200);
     });
 
@@ -140,7 +141,7 @@
             cardItem.dispatchEvent(new Event("input"));
         }
         placeholder.show();
-        $(this).prop("disabled", true);
+        $(this).hide();
     });
 
     initializeSelectedItem();

@@ -1,49 +1,49 @@
 ﻿@model SistemaGestionVentas.Models.Collections
-
 @{
     ViewBag.Title = "Registrar cobro";
 }
 
-<h2>Registrar cobro</h2>
+<h2 class="page-title page-title-centered">Registrar cobro</h2>
 
+<div class="form-page-wrapper">
+    <div class="auth-box form-page-box">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.card_id)
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+                <div class="form-group">
+                    @Html.Label("Monto", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <small class="text-muted form-hint">Solo se permiten números.</small>
+                        @Html.EditorFor(model => model.collection_amount, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                        <div class="validation-space">
+                            @Html.ValidationMessageFor(model => model.collection_amount, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
 
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.card_id)
-        <div class="form-group">
-            @Html.Label("Monto", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <small class="text-muted">Solo se permiten números.</small>
-                @Html.EditorFor(model => model.collection_amount, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
-                @Html.ValidationMessageFor(model => model.collection_amount, "", new { @class = "text-danger" })
+                <div class="form-group form-group-full">
+                    @Html.Label("Nota", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <small class="text-muted form-hint">Si el monto es "0" o es un ajuste, la nota es obligatoria.</small>
+                        @Html.TextAreaFor(model => model.collection_note, new { @class = "form-control", maxlength = "255", id = "collection_note" })
+                        <small id="collection_note_counter" class="text-muted character-counter">255 caracteres restantes</small>
+                        <div class="validation-space">
+                            @Html.ValidationMessageFor(model => model.collection_note, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-page-actions-row">
+                    <input type="submit" value="Registrar" class="btn-system btn-system-success" />
+                    @Html.ActionLink("Atrás", "Details", "Cards", new { id = Model.card_id }, new { @class = "btn-system btn-system-neutral" })
+                </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("Nota", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <small class="text-muted">Si el monto es "0" o es un ajuste, la nota es obligatoria.</small>
-                @Html.EditorFor(model => model.collection_note, new { htmlAttributes = new { @class = "form-control", maxlength = "255", id = "collection_note" } })
-                <small id="collection_note_counter" class="text-muted character-counter">255 caracteres restantes</small>
-                @Html.ValidationMessageFor(model => model.collection_note, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Registrar" class="btn btn-default" />
-            </div>
-        </div>
+        }
     </div>
-}
-
-<div>
-    @Html.ActionLink("Atrás", "Details", "Cards", new { id = Model.card_id }, null)
 </div>
 
 @section Scripts {

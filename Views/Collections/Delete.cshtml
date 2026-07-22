@@ -1,51 +1,64 @@
 ﻿@model SistemaGestionVentas.Models.Collections
-
 @{
     ViewBag.Title = "Desactivar cobro";
 }
 
-<h2>Desactivar cobro</h2>
+<h2 class="page-title page-title-centered page-title-danger">Desactivar cobro</h2>
 
-<h3>¿Está seguro de desactivar este cobro?</h3>
-<h3>Este cobro no podrá ser reactivado una vez se desactiva.</h3>
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Fecha y hora</dt>
-        <dd>@Model.collection_date.ToString("dd/MM/yyyy HH:mm")</dd>
+<div class="single-box-wrapper">
+    <div class="auth-box single-form-box">
 
-        <dt>Monto cobrado</dt>
-        <dd>@Html.DisplayFor(model => model.collection_amount)</dd>
+        <div class="warning-box warning-box-danger">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <div class="warning-box-text">
+                <span>¿Está seguro de desactivar este cobro?</span>
+                <span>Este cobro no podrá ser reactivado una vez se desactive.</span>
+            </div>
+        </div>
 
-        <dt>Saldo restante</dt>
-        <dd>@Html.DisplayFor(model => model.collection_balance)</dd>
+        <div class="info-list">
+            <div class="info-row">
+                <div class="info-label">Fecha y hora</div>
+                <div class="info-value">@Model.collection_date.ToString("dd/MM/yyyy HH:mm")</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Monto cobrado</div>
+                <div class="info-value">@Html.DisplayFor(model => model.collection_amount)</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Saldo restante</div>
+                <div class="info-value">@Html.DisplayFor(model => model.collection_balance)</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Nota del cobrador</div>
+                <div class="info-value">@Html.DisplayFor(model => model.collection_note)</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Nombre del cobrador</div>
+                <div class="info-value">@($"{Model.Users.user_name} {Model.Users.user_lastname}")</div>
+            </div>
+            <div class="info-row info-row-last">
+                <div class="info-label">Estado del cobro</div>
+                <div class="info-value">@(Model.collection_active ? "Activo" : "Inactivo")</div>
+            </div>
+        </div>
 
-        <dt>Nota del cobrador</dt>
-        <dd>@Html.DisplayFor(model => model.collection_note)</dd>
-
-        <dt>Nombre del cobrador</dt>
-        <dd>@($"{Model.Users.user_name} {Model.Users.user_lastname}")</dd>
-
-        <dt>Estado del cobro</dt>
-        <dd>@(Model.collection_active ? "Activo" : "Inactivo")</dd>
-    </dl>
-
-    @if (Model.collection_active)
-    {
-        using (Html.BeginForm())
+        @if (Model.collection_active)
         {
-            @Html.AntiForgeryToken()
-
-            <div class="form-actions no-color">
-                <input type="submit" value="Desactivar" class="btn btn-default" /> |
-                @Html.ActionLink("Atrás", "Details", "Cards", new { id = Model.card_id }, null)
+            using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-page-actions-row">
+                    <input type="submit" value="Desactivar" class="btn-system btn-system-danger" />
+                    @Html.ActionLink("Atrás", "Details", "Cards", new { id = Model.card_id }, new { @class = "btn-system btn-system-neutral" })
+                </div>
+            }
+        }
+        else
+        {
+            <div class="back-only-row">
+                @Html.ActionLink("Atrás", "Details", "Cards", new { id = Model.card_id }, new { @class = "btn-system btn-system-neutral" })
             </div>
         }
-    }
-    else
-    {
-        <div class="form-actions no-color">
-            @Html.ActionLink("Atrás", "Details", "Cards", new { id = Model.card_id }, null)
-        </div>
-    }
+    </div>
 </div>

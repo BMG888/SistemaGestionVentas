@@ -1,43 +1,52 @@
 ﻿@model SistemaGestionVentas.Models.Cards
-
 @{
     ViewBag.Title = "Desactivar tarjeta";
 }
 
-<h2>Desactivar tarjeta</h2>
+<h2 class="page-title page-title-centered page-title-danger">Desactivar tarjeta</h2>
 
-<h3>¿Está seguro de desactivar esta tarjeta?</h3>
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Día de pago</dt>
-        <dd>@Html.DisplayFor(model => model.card_payday)</dd>
+<div class="single-box-wrapper">
+    <div class="auth-box single-form-box">
 
-        <dt>Monto por pagar</dt>
-        <dd>@Html.DisplayFor(model => model.card_payment_amount)</dd>
-
-        <dt>Frecuencia de pago</dt>
-        <dd>@Html.DisplayFor(model => model.Frequencies.frequency_description)</dd>
-
-        <dt>Descripción del artículo</dt>
-        <dd>@Html.DisplayFor(model => model.card_item)</dd>
-
-        <dt>Precio del artículo</dt>
-        <dd>@Html.DisplayFor(model => model.card_item_price)</dd>
-
-        <dt>Vigencia</dt>
-        <dd>@Html.DisplayFor(model => model.card_state)</dd>
-
-        @*<dt>Imagen del artículo</dt>
-        <dd>@Html.DisplayFor(model => model.Items.item_name)</dd>*@        
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Desactivar" class="btn btn-default" /> |
-            @Html.ActionLink("Atrás", "Details", "Users", new { id = Model.user_id }, null)
+        <div class="warning-box warning-box-danger">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>¿Está seguro de desactivar esta tarjeta?</span>
         </div>
-    }
+
+        <div class="info-list">
+            <div class="info-row">
+                <div class="info-label">Día de pago</div>
+                <div class="info-value">@Html.DisplayFor(model => model.card_payday)</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Monto por cobro</div>
+                <div class="info-value">@Html.DisplayFor(model => model.card_payment_amount)</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Frecuencia de pago</div>
+                <div class="info-value">@Html.DisplayFor(model => model.Frequencies.frequency_description)</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Descripción del artículo</div>
+                <div class="info-value">@Html.DisplayFor(model => model.card_item)</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Precio del artículo</div>
+                <div class="info-value">@Html.DisplayFor(model => model.card_item_price)</div>
+            </div>
+            <div class="info-row info-row-last">
+                <div class="info-label">Estado</div>
+                <div class="info-value">@(Model.card_state ? "Vigente" : "Cancelada")</div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-page-actions-row">
+                <input type="submit" value="Desactivar" class="btn-system btn-system-danger" />
+                @Html.ActionLink("Atrás", "Details", "Users", new { id = Model.user_id }, new { @class = "btn-system btn-system-neutral" })
+            </div>
+        }
+    </div>
 </div>

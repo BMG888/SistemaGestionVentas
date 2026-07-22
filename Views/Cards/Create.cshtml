@@ -67,21 +67,17 @@
                         @Html.Label("Imagen del artículo", htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
                             @Html.HiddenFor(model => model.item_id, new { id = "selectedItemId" })
-
                             <div id="selectedItemPreview" class="image-preview-box">
                                 <div class="image-preview-placeholder">
                                     <i class="bi bi-image"></i>
                                     <span>No se ha seleccionado ninguna imagen.</span>
                                 </div>
                                 <img id="selectedItemImage" class="image-preview-img" src="" alt="Imagen seleccionada" />
-                            </div>
-                            <div id="selectedItemName" class="image-selector-name"></div>
-
+                            </div>                            
                             <div class="item-selector-buttons">
                                 <button type="button" id="btnOpenItemSelector" class="btn-system btn-system-neutral">Seleccionar imagen</button>
                                 <button type="button" id="btnRemoveItemSelector" class="btn-system btn-system-neutral">Quitar imagen</button>
                             </div>
-
                             <div class="validation-space">
                                 @Html.ValidationMessageFor(model => model.item_id, "", new { @class = "text-danger" })
                             </div>

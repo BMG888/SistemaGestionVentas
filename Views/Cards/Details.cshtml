@@ -1,163 +1,186 @@
 ﻿@model SistemaGestionVentas.Models.ViewModels.CardDetailsViewModel
 @using PagedList.Mvc
-
 @{
     ViewBag.Title = "Información de la tarjeta y cobros";
 }
-
 @{
     int roleId = Convert.ToInt32(Session["RoleId"]);
     int currentUserId = Convert.ToInt32(Session["UserId"]);
     bool canManageCards = roleId != 3 && currentUserId != Model.Card.Users.user_id;
 }
 
-<h2>Información de la tarjeta y cobros</h2>
+<h2 class="page-title page-title-centered">Información de la tarjeta y cobros</h2>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Día de pago</dt>
-        <dd>@Html.DisplayFor(model => model.Card.card_payday)</dd>
+<div class="details-box">
+    <div class="details-grid">
 
-        <dt>Monto por pagar</dt>
-        <dd>@Html.DisplayFor(model => model.Card.card_payment_amount)</dd>
-
-        <dt>Frecuencia de pago</dt>
-        <dd>@Html.DisplayFor(model => model.Card.Frequencies.frequency_description)</dd>
-
-        <dt>Descripción del artículo</dt>
-        <dd>@Html.DisplayFor(model => model.Card.card_item)</dd>
-
-        <dt>Precio del artículo</dt>
-        <dd>@Html.DisplayFor(model => model.Card.card_item_price)</dd>
-
-
-        <dt>Imagen del artículo</dt>
-        <dd>
-            @if (Model.Card.Items != null)
+        <div class="details-info-column">
+            <div class="details-row">
+                <div class="details-label"><i class="bi bi-calendar-event-fill"></i> Día de pago</div>
+                <div class="details-value">@Html.DisplayFor(model => model.Card.card_payday)</div>
+            </div>
+            <div class="details-row">
+                <div class="details-label"><i class="bi bi-cash-coin"></i> Monto por cobro</div>
+                <div class="details-value">@Html.DisplayFor(model => model.Card.card_payment_amount)</div>
+            </div>
+            <div class="details-row">
+                <div class="details-label"><i class="bi bi-arrow-repeat"></i> Frecuencia de pago</div>
+                <div class="details-value">@Html.DisplayFor(model => model.Card.Frequencies.frequency_description)</div>
+            </div>
+            <div class="details-row">
+                <div class="details-label"><i class="bi bi-tag-fill"></i> Precio del artículo</div>
+                <div class="details-value">@Html.DisplayFor(model => model.Card.card_item_price)</div>
+            </div>
+            <div class="details-row">
+                <div class="details-label"><i class="bi bi-clipboard-check-fill"></i> Estado</div>
+                <div class="details-value">@(Model.Card.card_state ? "Vigente" : "Cancelada")</div>
+            </div>
+            @if (roleId != 3)
             {
-                <img src="@Url.Content(Model.Card.Items.item_url)" alt="Imagen del artículo" class="card-item-image" />
+                <div class="details-row details-row-last">
+                    <div class="details-label"><i class="bi bi-toggle-on"></i> Estado de la tarjeta</div>
+                    <div class="details-value">@(Model.Card.card_active ? "Activo" : "Inactivo")</div>
+                </div>
             }
-            else
-            {
-                <span>Sin imagen.</span>
-            }
-        </dd>
-
-        <dt>Vigencia</dt>
-        <dd>@(Model.Card.card_state ? "Vigente" : "Cancelada")</dd>
-
-        @if (roleId != 3)
-        {
-            <dt>Estado de la tarjeta</dt>
-            <dd>@(Model.Card.card_active ? "Activo" : "Inactivo")</dd>
-        }
-    </dl>
-</div>
-
-@if (canManageCards)
-{
-    <p>
-        @Html.ActionLink("Editar", "Edit", new { id = Model.Card.card_id })
-    </p>
-}
-
-<h3>Cobros de la tarjeta</h3>
-
-@if (canManageCards && Model.Card.card_state)
-{
-    <p>
-        @Html.ActionLink("Registrar cobro", "Create", "Collections", new { cardId = Model.Card.card_id }, null)
-    </p>
-}
-
-@using (Html.BeginForm("Details", "Cards", FormMethod.Get))
-{
-    @Html.Hidden("id", Model.Card.card_id)
-    <div class="row">
-        <div class="col-md-3">
-            <label>Fecha</label>
-            <input type="date" name="collection_date" value="@(Model.CollectionDateFilter?.ToString("yyyy-MM-dd"))" class="form-control" />
         </div>
 
-        @if (roleId != 3)
-        {
-            <div class="col-md-3">
-                <label>Cobrador</label>
-                @Html.DropDownList("user_id", (SelectList)ViewBag.user_id, "Todos", new { @class = "form-control" })
+        <div class="details-location-column">
+            <div class="details-row">
+                <div class="details-label"><i class="bi bi-file-text-fill"></i> Descripción</div>
+                <div class="details-value">@Html.DisplayFor(model => model.Card.card_item)</div>
             </div>
-
-            <div class="col-md-2">
-                <label>Activo</label>
-                <select name="collection_active" class="form-control">
-                    <option value="">Todos</option>
-                    <option value="true" @(Request["collection_active"] == "true" ? "selected" : "")>Activo</option>
-                    <option value="false" @(Request["collection_active"] == "false" ? "selected" : "")>Inactivo</option>
-                </select>
-            </div>
-        }
-
-        <div class="col-md-2">
-            <label>&nbsp;</label>
-            <div>
-                <input type="submit" value="Buscar" class="btn btn-primary" />
-                <a href="@Url.Action("Details","Cards", new { id = Model.Card.card_id })" class="btn btn-default">Limpiar</a>
+            <div class="details-label details-location-label"><i class="bi bi-image"></i> Imagen del artículo</div>
+            <div class="card-details-image-box">
+                @if (Model.Card.Items != null)
+                {
+                    <img src="@Url.Content(Model.Card.Items.item_url)" alt="Imagen del artículo" class="card-details-image" />
+                }
+                else
+                {
+                    <div class="card-details-image-placeholder">
+                        <i class="bi bi-image"></i>
+                        <span>Sin imagen.</span>
+                    </div>
+                }
             </div>
         </div>
     </div>
-    <br />
+
+    @if (canManageCards)
+    {
+        <div class="details-actions">
+            @Html.ActionLink("Editar", "Edit", new { id = Model.Card.card_id }, new { @class = "btn-system btn-system-neutral" })
+        </div>
+    }
+</div>
+
+<h3 class="section-title">Cobros de la tarjeta</h3>
+
+@if (canManageCards && Model.Card.card_state)
+{
+    <p class="index-actions">
+        @Html.ActionLink("Registrar cobro", "Create", "Collections", new { cardId = Model.Card.card_id }, new { @class = "btn-system btn-system-neutral" })
+    </p>
 }
 
-<table class="table">
-    <tr>
-        <th>Fecha</th>
-        <th>Monto</th>
-        <th>Saldo</th>
-        @if (roleId != 3)
-        {
-            <th>Cobrador</th>
-            <th>Activo</th>
-        }
-        <th></th>
-    </tr>
-
-    @{ int? ultimoCobroActivoId = Model.Collections.Where(c => c.collection_active).OrderByDescending(c => c.collection_id).Select(c => (int?)c.collection_id).FirstOrDefault(); }
-    @foreach (var collection in Model.Collections)
+<div class="filter-box">
+    @using (Html.BeginForm("Details", "Cards", FormMethod.Get))
     {
-        <tr>
-            <td>@collection.collection_date.ToString("dd/MM/yyyy")</td>
-            <td>@collection.collection_amount</td>
-            <td>@collection.collection_balance</td>
+        @Html.Hidden("id", Model.Card.card_id)
+
+        <div class="filter-grid">
+            <div class="filter-field">
+                <label>Fecha</label>
+                <input type="date" name="collection_date" value="@(Model.CollectionDateFilter?.ToString("yyyy-MM-dd"))" class="form-control" />
+            </div>
+
             @if (roleId != 3)
             {
-                <td>@($"{collection.Users.user_name} {collection.Users.user_lastname}")</td>
-                <td>@(collection.collection_active ? "Activo" : "Inactivo")</td>
+                <div class="filter-field">
+                    <label>Cobrador</label>
+                    @Html.DropDownList("user_id", (SelectList)ViewBag.user_id, "Todos", new { @class = "form-control" })
+                </div>
+
+                <div class="filter-field">
+                    <label>Activo</label>
+                    <select name="collection_active" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="true" @(Request["collection_active"] == "true" ? "selected" : "")>Activo</option>
+                        <option value="false" @(Request["collection_active"] == "false" ? "selected" : "")>Inactivo</option>
+                    </select>
+                </div>
             }
 
-            <td>
-                @Html.ActionLink("Ver nota", "Details", "Collections", new { id = collection.collection_id }, null)
-
-                @if (canManageCards && collection.collection_active && collection.collection_note != "Se modificó el precio del producto." && collection.collection_id == ultimoCobroActivoId)
-                {
-                    @: |
-                    @Html.ActionLink("Desactivar", "Delete", "Collections", new { id = collection.collection_id }, null)
-                }
-
-            </td>
-        </tr>
+            <div class="filter-field filter-field-actions">
+                <label class="filter-label-spacer">&nbsp;</label>
+                <div class="filter-buttons">
+                    <input type="submit" value="Buscar" class="btn-system btn-system-filter" />
+                    <a href="@Url.Action("Details","Cards", new { id = Model.Card.card_id })" class="btn-system btn-system-filter">Limpiar</a>
+                </div>
+            </div>
+        </div>
     }
+</div>
 
-</table>
+<div class="table-box">
+    <table class="table system-table">
+        <tr>
+            <th>Fecha</th>
+            <th>Monto</th>
+            <th>Saldo</th>
+            @if (roleId != 3)
+            {
+                <th>Cobrador</th>
+                <th>Activo</th>
+            }
+            <th></th>
+        </tr>
+        @{ int? ultimoCobroActivoId = Model.Collections.Where(c => c.collection_active).OrderByDescending(c => c.collection_id).Select(c => (int?)c.collection_id).FirstOrDefault(); }
+        @foreach (var collection in Model.Collections)
+        {
+            <tr>
+                <td>@collection.collection_date.ToString("dd/MM/yyyy")</td>
+                <td>@collection.collection_amount</td>
+                <td>@collection.collection_balance</td>
+                @if (roleId != 3)
+                {
+                    <td>@($"{collection.Users.user_name} {collection.Users.user_lastname}")</td>
+                    <td>
+                        @if (collection.collection_active)
+                        {
+                            <span class="badge badge-success">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-default">Inactivo</span>
+                        }
+                    </td>
+                }
+                <td>
+                    <div class="table-actions">
+                        @Html.ActionLink("Ver nota", "Details", "Collections", new { id = collection.collection_id }, new { @class = "btn-system btn-system-neutral btn-system-sm" })
+                        @if (canManageCards && collection.collection_active && collection.collection_note != "Se modificó el precio del producto." && collection.collection_id == ultimoCobroActivoId)
+                        {
+                            @Html.ActionLink("Desactivar", "Delete", "Collections", new { id = collection.collection_id }, new { @class = "btn-system btn-system-danger btn-system-sm" })
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
 
-@Html.PagedListPager(Model.Collections, page => Url.Action("Details", new
-{
-    id = Model.Card.card_id,
-    page,
-    collection_date = Request["collection_date"],
-    collector_user_id = Request["collector_user_id"],
-    collection_active = Request["collection_active"]
-}))
+<div class="pagination-wrapper">
+    @Html.PagedListPager(Model.Collections, page => Url.Action("Details", new
+             {
+                 id = Model.Card.card_id,
+                 page,
+                 collection_date = Request["collection_date"],
+                 collector_user_id = Request["collector_user_id"],
+                 collection_active = Request["collection_active"]
+             }))
+</div>
 
-<p>
-    @Html.ActionLink("Atrás", "Details", "Users", new { id = Model.Card.user_id }, null)
-</p>
+<div class="back-only-row">
+    @Html.ActionLink("Atrás", "Details", "Users", new { id = Model.Card.user_id }, new { @class = "btn-system btn-system-neutral" })
+</div>

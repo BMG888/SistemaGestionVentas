@@ -22,26 +22,41 @@ namespace SistemaGestionVentas.Controllers
         {
             int? roleId = Session["RoleId"] != null ? Convert.ToInt32(Session["RoleId"]) : (int?)null;
             var albums = db.Albums.AsQueryable();
-            
+
             if (roleId == null || roleId == 3)
             {
                 albums = albums.Where(a => a.album_active);
             }
-          
+
             if (!string.IsNullOrWhiteSpace(album_name))
             {
                 albums = albums.Where(a => a.album_name.Contains(album_name));
             }
-            
+
             if ((roleId == 1 || roleId == 2) && album_active.HasValue)
             {
                 albums = albums.Where(a => a.album_active == album_active.Value);
             }
 
-            int pageSize = 10;
+            int pageSize = 9;
             int pageNumber = page ?? 1;
+            var pagedAlbums = albums.OrderBy(a => a.album_name).ToPagedList(pageNumber, pageSize);
 
-            return View(albums.OrderBy(a => a.album_name).ToPagedList(pageNumber, pageSize));
+            // Para cada álbum de la página actual, traemos hasta 4 imágenes activas y el conteo total
+            var albumPreviewImages = new Dictionary<int, List<string>>();
+            var albumImageCounts = new Dictionary<int, int>();
+
+            foreach (var album in pagedAlbums)
+            {
+                var albumItems = db.Items.Where(i => i.album_id == album.album_id && i.item_active);
+                albumPreviewImages[album.album_id] = albumItems.OrderBy(i => i.item_name).Take(4).Select(i => i.item_url).ToList();
+                albumImageCounts[album.album_id] = albumItems.Count();
+            }
+
+            ViewBag.AlbumPreviewImages = albumPreviewImages;
+            ViewBag.AlbumImageCounts = albumImageCounts;
+
+            return View(pagedAlbums);
         }
 
         // GET: Albums/Details/5

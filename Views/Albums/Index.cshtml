@@ -1,98 +1,131 @@
 ﻿@model PagedList.IPagedList<SistemaGestionVentas.Models.Albums>
 @using PagedList.Mvc
-
-@{ ViewBag.Title = "Lista de álbumes";
+@{
+    ViewBag.Title = "Lista de álbumes";
     int? roleId = Session["RoleId"] != null ? Convert.ToInt32(Session["RoleId"]) : (int?)null;
-    bool canManage = roleId == 1 || roleId == 2; }
+    bool canManage = roleId == 1 || roleId == 2;
+    var previewImages = (Dictionary<int, List<string>>)ViewBag.AlbumPreviewImages;
+    var imageCounts = (Dictionary<int, int>)ViewBag.AlbumImageCounts;
+}
 
-<h2>Álbumes</h2>
+<h2 class="page-title page-title-centered">Álbumes</h2>
 
 @if (canManage)
 {
-    <p>
-        @Html.ActionLink("Crear álbum", "Create")
+    <p class="index-actions">
+        @Html.ActionLink("Crear álbum", "Create", null, new { @class = "btn-system btn-system-neutral" })
     </p>
 }
 
-@using (Html.BeginForm("Index", "Albums", FormMethod.Get))
-{
-    <div class="row">
-
-        <div class="col-md-3">
-            <label>Nombre</label>
-            <input type="text" name="album_name" value="@Request["album_name"]" class="form-control" />
-        </div>
-
-        @if (canManage)
-        {
-            <div class="col-md-2">
-                <label>Estado</label>
-                <select name="album_active" class="form-control">
-                    <option value="">Todos</option>
-                    <option value="true" @(Request["album_active"] == "true" ? "selected" : "")>Activo</option>
-                    <option value="false" @(Request["album_active"] == "false" ? "selected" : "")>Inactivo</option>
-                </select>
+<div class="filter-box">
+    @using (Html.BeginForm("Index", "Albums", FormMethod.Get))
+    {
+        <div class="filter-grid">
+            <div class="filter-field">
+                <label>Nombre</label>
+                <input type="text" name="album_name" value="@Request["album_name"]" class="form-control" />
             </div>
-        }
 
-        <div class="col-md-2">
-            <label>&nbsp;</label>
-            <div>
-                <input type="submit" value="Buscar" class="btn btn-primary" />
-                <a href="@Url.Action("Index")" class="btn btn-default">Limpiar</a>
+            @if (canManage)
+            {
+                <div class="filter-field">
+                    <label>Estado</label>
+                    <select name="album_active" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="true" @(Request["album_active"] == "true" ? "selected" : "")>Activo</option>
+                        <option value="false" @(Request["album_active"] == "false" ? "selected" : "")>Inactivo</option>
+                    </select>
+                </div>
+            }
+
+            <div class="filter-field filter-field-actions">
+                <label class="filter-label-spacer">&nbsp;</label>
+                <div class="filter-buttons">
+                    <input type="submit" value="Buscar" class="btn-system btn-system-filter" />
+                    <a href="@Url.Action("Index")" class="btn-system btn-system-filter">Limpiar</a>
+                </div>
             </div>
         </div>
+    }
+</div>
 
-    </div>
-    <hr />
-}
-
-<table class="table">
-    <tr>
-        <th>Nombre</th>
-        @if (canManage)
-        {
-            <th>Estado</th>
-        }
-        <th></th>
-    </tr>
-
+<div class="album-grid">
     @foreach (var item in Model)
     {
-        <tr>
-            <td>@Html.DisplayFor(modelItem => item.album_name)</td>
-            @if (canManage)
-            {
-                <td> @(item.album_active ? "Activo" : "Inactivo")</td>
-            }    
-        <td>
-            @if (canManage)
-            {
-                @Html.ActionLink("Editar", "Edit", new { id = item.album_id })
-                @: |
-            }
-            @Html.ActionLink("Ver fotos", "Details", new { id = item.album_id })
+        var images = previewImages.ContainsKey(item.album_id) ? previewImages[item.album_id] : new List<string>();
+        var count = imageCounts.ContainsKey(item.album_id) ? imageCounts[item.album_id] : 0;
 
-            @if (canManage)
-            {
-                if (item.album_active)
+        <div class="album-card">
+            <div class="album-card-header">
+                <h3 class="album-card-name">@item.album_name</h3>
+                @if (canManage)
                 {
-                    @: |
-                    @Html.ActionLink("Desactivar", "Delete", new { id = item.album_id }) 
+                    if (item.album_active)
+                    {
+                        <span class="badge badge-success">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-default">Inactivo</span>
+                    }
                 }
-                else if (roleId == 1)
-                {
-                    @: |
-                    @Html.ActionLink("Reactivar", "Reactivate", new { id = item.album_id })}
-                }
-        </td>
-        </tr>
+            </div>
+
+            <div class="album-collage-wrapper">
+                <div class="album-collage collage-count-@images.Count">
+                    @if (images.Count == 0)
+                    {
+                        <div class="album-collage-empty">
+                            <i class="bi bi-images"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var img in images)
+                        {
+                            <div class="collage-cell">
+                                <img src="@Url.Content(img)" alt="@item.album_name" />
+                            </div>
+                        }
+                    }
+                </div>
+
+                <div class="album-overlay">
+                    <div class="album-overlay-actions">
+                        @if (canManage)
+                        {
+                            @Html.ActionLink("Editar", "Edit", new { id = item.album_id }, new { @class = "btn-system btn-system-neutral" })
+                        }
+                        @Html.ActionLink("Ver fotos", "Details", new { id = item.album_id }, new { @class = "btn-system btn-system-neutral" })
+                        @if (canManage)
+                        {
+                            if (item.album_active)
+                            {
+                                @Html.ActionLink("Desactivar", "Delete", new { id = item.album_id }, new { @class = "btn-system btn-system-danger" })
+                            }
+                            else if (roleId == 1)
+                            {
+                                @Html.ActionLink("Reactivar", "Reactivate", new { id = item.album_id }, new { @class = "btn-system btn-system-success" })
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="album-photo-count">@count @(count == 1 ? "foto" : "fotos")</div>
+        </div>
     }
-</table>
+</div>
 
-@Html.PagedListPager(Model, page => Url.Action("Index", new
-{
-    page,
-    album_name = Request["album_name"],
-    album_active = Request["album_active"]
-}))
+<div class="pagination-wrapper">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new
+             {
+                 page,
+                 album_name = Request["album_name"],
+                 album_active = Request["album_active"]
+             }))
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/Albums/AlbumCardOverlay.js"></script>
+}

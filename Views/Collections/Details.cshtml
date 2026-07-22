@@ -1,40 +1,45 @@
 ﻿@model SistemaGestionVentas.Models.Collections
-
 @{
     ViewBag.Title = "Información del cobro y nota";
 }
-
 @{
     int roleId = Convert.ToInt32(Session["RoleId"]);
 }
 
-<h2>Información del cobro y nota</h2>
+<h2 class="page-title page-title-centered">Información del cobro y nota</h2>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Fecha y hora</dt>
-        <dd>@Model.collection_date.ToString("dd/MM/yyyy HH:mm")</dd>
-
-        <dt>Monto cobrado</dt>
-        <dd>@Html.DisplayFor(model => model.collection_amount)</dd>
-
-        <dt>Saldo restante</dt>
-        <dd>@Html.DisplayFor(model => model.collection_balance)</dd>
-
-        <dt>Nota del cobrador</dt>
-        <dd>@Html.DisplayFor(model => model.collection_note)</dd>
-
-        <dt>Nombre del cobrador</dt>
-        <dd>@($"{Model.Users.user_name} {Model.Users.user_lastname}")</dd>
-
+<div class="details-box details-box-single">
+    <div class="details-info-column">
+        <div class="details-row">
+            <div class="details-label"><i class="bi bi-clock-fill"></i> Fecha y hora</div>
+            <div class="details-value">@Model.collection_date.ToString("dd/MM/yyyy HH:mm")</div>
+        </div>
+        <div class="details-row">
+            <div class="details-label"><i class="bi bi-cash-coin"></i> Monto cobrado</div>
+            <div class="details-value">@Html.DisplayFor(model => model.collection_amount)</div>
+        </div>
+        <div class="details-row">
+            <div class="details-label"><i class="bi bi-wallet2"></i> Saldo restante</div>
+            <div class="details-value">@Html.DisplayFor(model => model.collection_balance)</div>
+        </div>
+        <div class="details-row details-row-inline">
+            <div class="details-label"><i class="bi bi-file-text-fill"></i> Nota del cobrador</div>
+            <div class="details-value">@Html.DisplayFor(model => model.collection_note)</div>
+        </div>
+        <div class="details-row @(roleId == 3 ? "details-row-last" : "")">
+            <div class="details-label"><i class="bi bi-person-fill"></i> Nombre del cobrador</div>
+            <div class="details-value">@($"{Model.Users.user_name} {Model.Users.user_lastname}")</div>
+        </div>
         @if (roleId != 3)
         {
-            <dt>Estado del cobro</dt>
-            <dd>@(Model.collection_active ? "Activo" : "Inactivo")</dd>
+            <div class="details-row details-row-last">
+                <div class="details-label"><i class="bi bi-toggle-on"></i> Estado del cobro</div>
+                <div class="details-value">@(Model.collection_active ? "Activo" : "Inactivo")</div>
+            </div>
         }
-    </dl>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Atrás", "Details", "Cards", new { id = Model.card_id }, null)
-</p>
+
+<div class="back-only-row">
+    @Html.ActionLink("Atrás", "Details", "Cards", new { id = Model.card_id }, new { @class = "btn-system btn-system-neutral" })
+</div>

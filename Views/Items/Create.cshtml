@@ -1,60 +1,82 @@
 ﻿@model SistemaGestionVentas.Models.Items
-
 @{
     ViewBag.Title = "Agregar producto";
 }
 
-<h2>Agregar producto</h2>
+<h2 class="page-title page-title-centered">Agregar producto</h2>
 
+<div class="form-page-wrapper">
+    <div class="auth-box form-page-box">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.album_id)
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.album_id)
+            <div class="form-horizontal card-form-columns">
 
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.Label("Nombre del producto", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.item_name, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "item_name" } })
-                <small id="item_name_counter" class="text-muted character-counter">100 caracteres restantes</small>
-                @Html.ValidationMessageFor(model => model.item_name, "", new { @class = "text-danger" })
+                <div class="card-form-left">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        @Html.Label("Nombre del producto", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.item_name, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "item_name" } })
+                            <small id="item_name_counter" class="text-muted character-counter">100 caracteres restantes</small>
+                            <div class="validation-space">
+                                @Html.ValidationMessageFor(model => model.item_name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Descripción del producto", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(model => model.item_description, new { @class = "form-control", maxlength = "255", id = "item_description" })
+                            <small id="item_description_counter" class="text-muted character-counter">255 caracteres restantes</small>
+                            <div class="validation-space">
+                                @Html.ValidationMessageFor(model => model.item_description, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-form-right">
+                    <div class="form-group">
+                        @Html.Label("Imagen", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <small class="text-muted form-hint">Formatos permitidos: JPG, JPEG, PNG y WEBP.</small>
+
+                            <div id="itemImagePreview" class="image-preview-box">
+                                <div class="image-preview-placeholder">
+                                    <i class="bi bi-image"></i>
+                                    <span>No se ha seleccionado ninguna imagen.</span>
+                                </div>
+                                <img id="itemImagePreviewImg" class="image-preview-img" src="" alt="Vista previa" />
+                            </div>
+
+                            <div class="item-file-input-wrapper">
+                                <input type="file" id="imageFileInput" name="imageFile" accept=".jpg,.jpeg,.png,.webp" class="form-control" />
+                            </div>
+
+                            <div class="validation-space">
+                                @Html.ValidationMessageFor(model => model.item_url, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-page-actions-row">
+                    <input type="submit" value="Agregar" class="btn-system btn-system-success" />
+                    @Html.ActionLink("Atrás", "Details", "Albums", new { id = Model.album_id }, new { @class = "btn-system btn-system-neutral" })
+                </div>
+
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("Imagen", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <small class="text-muted">Formatos permitidos: JPG, JPEG, PNG y WEBP.</small>
-                <input type="file" name="imageFile" accept=".jpg,.jpeg,.png,.webp" class="form-control" />
-                @Html.ValidationMessageFor(model => model.item_url, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("Descripción del producto", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.item_description, new { htmlAttributes = new { @class = "form-control", maxlength = "255", id = "item_description" } })
-                <small id="item_description_counter" class="text-muted character-counter">255 caracteres restantes</small>
-                @Html.ValidationMessageFor(model => model.item_description, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Agregar" class="btn btn-default" />
-            </div>
-        </div>
+        }
     </div>
-}
-
-<div>
-    @Html.ActionLink("Atrás", "Details", "Albums", new { id = Model.album_id }, null)
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/FormValidation.js"></script>
+    <script src="~/Scripts/Items/ItemImagePreview.js"></script>
 }

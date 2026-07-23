@@ -1,6 +1,6 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
 
-    const cards = document.querySelectorAll(".album-card");
+    const cards = document.querySelectorAll(".album-card, .item-card");
 
     function closeAll(except) {
         cards.forEach(function (card) {
@@ -11,7 +11,7 @@
     }
 
     cards.forEach(function (card) {
-        const collageWrapper = card.querySelector(".album-collage-wrapper");
+        const collageWrapper = card.querySelector(".album-collage-wrapper, .item-image-wrapper");
 
         collageWrapper.addEventListener("click", function (e) {
             if (e.target.closest(".album-overlay-actions")) {
@@ -28,7 +28,7 @@
     });
 
     document.addEventListener("click", function (e) {
-        if (!e.target.closest(".album-card")) {
+        if (!e.target.closest(".album-card, .item-card")) {
             closeAll(null);
         }
     });

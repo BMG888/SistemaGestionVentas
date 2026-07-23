@@ -1,135 +1,143 @@
 ﻿@model SistemaGestionVentas.Models.ViewModels.AlbumDetailsViewModel
 @using PagedList.Mvc
-
 @{
     ViewBag.Title = "Productos";
 }
-
 @{
     int roleId = Session["RoleId"] != null ? Convert.ToInt32(Session["RoleId"]) : 0;
     bool canManage = roleId == 1 || roleId == 2;
 }
 
-<h2>Productos</h2>
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Nombre del álbum</dt>
-        <dd>@Html.DisplayFor(model => model.Album.album_name)</dd>
+<h2 class="page-title page-title-centered">Productos</h2>
 
+<div class="details-box details-box-single">
+    <div class="details-info-column">
+        <div class="details-row @(canManage ? "" : "details-row-last")">
+            <div class="details-label"><i class="bi bi-collection-fill"></i> Nombre del álbum</div>
+            <div class="details-value">@Html.DisplayFor(model => model.Album.album_name)</div>
+        </div>
         @if (canManage)
         {
-            <dt>Estado</dt>
-            <dd>@(Model.Album.album_active ? "Activo" : "Inactivo")</dd>
-        }        
+            <div class="details-row details-row-last">
+                <div class="details-label"><i class="bi bi-toggle-on"></i> Estado</div>
+                <div class="details-value">@(Model.Album.album_active ? "Activo" : "Inactivo")</div>
+            </div>
+        }
+    </div>
 
-    </dl>
+    @if (canManage)
+    {
+        <div class="details-actions">
+            @Html.ActionLink("Editar álbum", "Edit", new { id = Model.Album.album_id }, new { @class = "btn-system btn-system-filter" })
+        </div>
+    }
 </div>
+
+<h3 class="section-title">Fotos del álbum</h3>
 
 @if (canManage)
 {
-    <p>
-        @Html.ActionLink("Editar álbum", "Edit", new { id = Model.Album.album_id })
+    <p class="index-actions">
+        @Html.ActionLink("Agregar producto", "Create", "Items", new { albumId = Model.Album.album_id }, new { @class = "btn-system btn-system-neutral" })
     </p>
 }
 
-<h3>Fotos del álbum</h3>
-@if (canManage) 
-{ 
-    <p>
-        @Html.ActionLink("Agregar producto", "Create", "Items", new { albumId = Model.Album.album_id }, null)
-    </p>
-}
-
-@using (Html.BeginForm("Details", "Albums", FormMethod.Get))
-{
-    @Html.Hidden("id", Model.Album.album_id)
-
-    <div class="row">
-
-        <div class="col-md-3">
-            <label>Nombre</label>
-            <input type="text" name="item_name" value="@Model.ItemNameFilter" class="form-control" />
-        </div>
-
-        @if (canManage)
-        {
-            <div class="col-md-2">
-                <label>Estado</label>
-                <select name="item_active" class="form-control">
-                    <option value="">Todos</option>
-                    <option value="true" @(Request["item_active"] == "true" ? "selected" : "")>Activo</option>
-                    <option value="false" @(Request["item_active"] == "false" ? "selected" : "")>Inactivo</option>
-                </select>
-            </div>
-        }
-
-        <div class="col-md-2">
-            <label>&nbsp;</label>
-            <div>
-                <input type="submit" value="Buscar" class="btn btn-primary" />
-                <a href="@Url.Action("Details", new { id = Model.Album.album_id })" class="btn btn-default">Limpiar</a>
-            </div>
-        </div>
-    </div>
-    <br />
-}
-
-<table class="table">
-    <tr>        
-        <th>Nombre</th>
-        <th>Imagen</th>  
-        @if (canManage)
-        {
-            <th>Activo</th>
-        }        
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model.Items)
+<div class="filter-box">
+    @using (Html.BeginForm("Details", "Albums", FormMethod.Get))
     {
-    <tr>    
-        <td>@item.item_name</td>
-        <td><img src="@Url.Content(item.item_url)" alt="Imagen del artículo" class="album-details-image" /></td>  
-        @if (canManage)
-        {
-            <td>@(item.item_active ? "Activo" : "Inactivo")</td>
-        }    
+        @Html.Hidden("id", Model.Album.album_id)
 
-        <td>
+        <div class="filter-grid">
+            <div class="filter-field">
+                <label>Nombre</label>
+                <input type="text" name="item_name" value="@Model.ItemNameFilter" class="form-control" />
+            </div>
+
             @if (canManage)
             {
-                @Html.ActionLink("Editar", "Edit", "Items", new { id = item.item_id }, null)
-                @: |
+                <div class="filter-field">
+                    <label>Estado</label>
+                    <select name="item_active" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="true" @(Request["item_active"] == "true" ? "selected" : "")>Activo</option>
+                        <option value="false" @(Request["item_active"] == "false" ? "selected" : "")>Inactivo</option>
+                    </select>
+                </div>
             }
-            @Html.ActionLink("Descripción", "Details", "Items", new { id = item.item_id }, null)
+
+            <div class="filter-field filter-field-actions">
+                <label class="filter-label-spacer">&nbsp;</label>
+                <div class="filter-buttons">
+                    <input type="submit" value="Buscar" class="btn-system btn-system-filter" />
+                    <a href="@Url.Action("Details", new { id = Model.Album.album_id })" class="btn-system btn-system-filter">Limpiar</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="item-grid">
+    @foreach (var item in Model.Items)
+    {
+    <div class="item-card">
+        <div class="item-card-header">
+            <span class="item-card-name">@item.item_name</span>
             @if (canManage)
             {
                 if (item.item_active)
                 {
-                    @: |
-                    @Html.ActionLink("Desactivar", "Delete", "Items", new { id = item.item_id }, null)
+                    <span class="badge badge-success">Activo</span>
                 }
-                else if (roleId == 1)
+                else
                 {
-                    @: |
-                    @Html.ActionLink("Reactivar", "Reactivate", "Items", new { id = item.item_id }, null)
+                    <span class="badge badge-default">Inactivo</span>
                 }
             }
-        </td>
-    </tr>
+        </div>
+
+        <div class="item-image-wrapper">
+            <img src="@Url.Content(item.item_url)" alt="@item.item_name" class="item-card-image" />
+
+            <div class="album-overlay">
+                <div class="album-overlay-bg"></div>
+                <div class="album-overlay-actions">
+                    @if (canManage)
+                    {
+                        @Html.ActionLink("Editar", "Edit", "Items", new { id = item.item_id }, new { @class = "btn-system btn-system-neutral" })
+                    }
+                    @Html.ActionLink("Descripción", "Details", "Items", new { id = item.item_id }, new { @class = "btn-system btn-system-neutral" })
+                    @if (canManage)
+                    {
+                        if (item.item_active)
+                        {
+                            @Html.ActionLink("Desactivar", "Delete", "Items", new { id = item.item_id }, new { @class = "btn-system btn-system-danger" })
+                        }
+                        else if (roleId == 1)
+                        {
+                            @Html.ActionLink("Reactivar", "Reactivate", "Items", new { id = item.item_id }, new { @class = "btn-system btn-system-success" })
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
     }
+</div>
 
-</table>
+<div class="pagination-wrapper">
+    @Html.PagedListPager(Model.Items, page => Url.Action("Details", new
+             {
+                 id = Model.Album.album_id,
+                 page,
+                 item_name = Request["item_name"],
+                 item_active = Request["item_active"]
+             }))
+</div>
 
-@Html.PagedListPager(Model.Items, page => Url.Action("Details", new
-{
-    id = Model.Album.album_id,
-    page,
-    item_name = Request["item_name"],
-    item_active = Request["item_active"]
-}))
+<div class="back-only-row">
+    @Html.ActionLink("Atrás", "Index", null, new { @class = "btn-system btn-system-neutral" })
+</div>
 
-<p>
-    @Html.ActionLink("Atrás", "Index")
-</p>
+@section Scripts {
+    <script src="~/Scripts/Albums/AlbumCardOverlay.js"></script>
+}

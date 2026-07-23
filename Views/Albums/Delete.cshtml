@@ -1,29 +1,36 @@
 ﻿@model SistemaGestionVentas.Models.Albums
-
 @{
     ViewBag.Title = "Desactivar álbum";
 }
 
-<h2>Desactivar álbum</h2>
+<h2 class="page-title page-title-centered page-title-danger">Desactivar álbum</h2>
 
-<h3>¿Está seguro de desactivar este álbum?</h3>
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Nombre del álbum</dt>
-        <dd>@Html.DisplayFor(model => model.album_name)</dd>
+<div class="single-box-wrapper">
+    <div class="auth-box single-form-box">
 
-        <dt>Estado</dt>
-        <dd>@(Model.album_active ? "Activo" : "Inactivo")</dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Desactivar" class="btn btn-default" /> |
-            @Html.ActionLink("Atrás", "Index")
+        <div class="warning-box warning-box-danger">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>¿Está seguro de desactivar este álbum?</span>
         </div>
-    }
+
+        <div class="info-list">
+            <div class="info-row">
+                <div class="info-label">Nombre del álbum</div>
+                <div class="info-value">@Html.DisplayFor(model => model.album_name)</div>
+            </div>
+            <div class="info-row info-row-last">
+                <div class="info-label">Estado</div>
+                <div class="info-value">@(Model.album_active ? "Activo" : "Inactivo")</div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-page-actions-row">
+                <input type="submit" value="Desactivar" class="btn-system btn-system-danger" />
+                @Html.ActionLink("Atrás", "Index", null, new { @class = "btn-system btn-system-neutral" })
+            </div>
+        }
+    </div>
 </div>

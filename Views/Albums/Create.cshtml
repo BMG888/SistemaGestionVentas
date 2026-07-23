@@ -1,38 +1,35 @@
 ﻿@model SistemaGestionVentas.Models.Albums
-
 @{
     ViewBag.Title = "Crear álbum";
 }
 
-<h2>Crear álbum</h2>
+<h2 class="page-title page-title-centered">Crear álbum</h2>
 
+<div class="single-box-wrapper">
+    <div class="auth-box single-form-box">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.Label("Nombre del álbum", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.album_name, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "album_name" } })
+                        <small id="album_name_counter" class="text-muted character-counter">100 caracteres restantes</small>
+                        <div class="validation-space">
+                            @Html.ValidationMessageFor(model => model.album_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.Label("Nombre del álbum", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.album_name, new { htmlAttributes = new { @class = "form-control", maxlength = "100", id = "album_name" } })
-                <small id="album_name_counter" class="text-muted character-counter">100 caracteres restantes</small>
-                @Html.ValidationMessageFor(model => model.album_name, "", new { @class = "text-danger" })
+                <div class="form-page-actions-row">
+                    <input type="submit" value="Crear" class="btn-system btn-system-success" />
+                    @Html.ActionLink("Atrás", "Index", null, new { @class = "btn-system btn-system-neutral" })
+                </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Crear" class="btn btn-default" />
-            </div>
-        </div>
+        }
     </div>
-}
-
-<div>
-    @Html.ActionLink("Atrás", "Index")
 </div>
 
 @section Scripts {

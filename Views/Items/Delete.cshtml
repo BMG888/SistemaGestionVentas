@@ -1,38 +1,52 @@
 ﻿@model SistemaGestionVentas.Models.Items
-
 @{
     ViewBag.Title = "Desactivar producto";
 }
 
-<h2>Desactivar producto</h2>
+<h2 class="page-title page-title-centered page-title-danger">Desactivar producto</h2>
 
-<h3>¿Está seguro de desactivar este producto?</h3>
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Nombre del producto</dt>
-        <dd>@Html.DisplayFor(model => model.item_name)</dd>
+<div class="single-box-wrapper">
+    <div class="auth-box single-form-box">
 
-        <dt>Imagen</dt>
-        <dd><img src="@Url.Content(Model.item_url)" alt="Imagen del artículo" class="item-delete-image" /></dd>
-
-        <dt>Descripción del producto</dt>
-        <dd>@Html.DisplayFor(model => model.item_description)</dd>
-
-        <dt>Álbum</dt>
-        <dd>@Html.DisplayFor(model => model.Albums.album_name)</dd>
-
-        <dt>Estado</dt>
-        <dd>@(Model.item_active ? "Activo" : "Inactivo")</dd>
-    </dl>
-
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Desactivar" class="btn btn-default" /> |
-            @Html.ActionLink("Atrás", "Details", "Albums", new { id = Model.album_id }, null)
+        <div class="warning-box warning-box-danger">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>¿Está seguro de desactivar este producto?</span>
         </div>
-    }
+
+        <div class="info-list">
+            <div class="info-row">
+                <div class="info-label">Nombre del producto</div>
+                <div class="info-value">@Html.DisplayFor(model => model.item_name)</div>
+            </div>
+            <div class="info-row info-row-inline">
+                <div class="info-label">Imagen</div>
+                <div class="info-value">
+                    <div class="info-image-box">
+                        <img src="@Url.Content(Model.item_url)" alt="Imagen del artículo" />
+                    </div>
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Descripción del producto</div>
+                <div class="info-value">@Html.DisplayFor(model => model.item_description)</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Álbum</div>
+                <div class="info-value">@Html.DisplayFor(model => model.Albums.album_name)</div>
+            </div>
+            <div class="info-row info-row-last">
+                <div class="info-label">Estado</div>
+                <div class="info-value">@(Model.item_active ? "Activo" : "Inactivo")</div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-page-actions-row">
+                <input type="submit" value="Desactivar" class="btn-system btn-system-danger" />
+                @Html.ActionLink("Atrás", "Details", "Albums", new { id = Model.album_id }, new { @class = "btn-system btn-system-neutral" })
+            </div>
+        }
+    </div>
 </div>

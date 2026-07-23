@@ -103,7 +103,7 @@ namespace SistemaGestionVentas.Controllers
                     }
                 }
 
-                int pageSize = 5;
+                int pageSize = 16;
                 var viewModel = new AlbumDetailsViewModel
                 {
                     Album = album,

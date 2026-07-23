@@ -1,43 +1,72 @@
 ﻿@model SistemaGestionVentas.Models.Items
-
 @{
     ViewBag.Title = "Información";
 }
-
 @{
     int roleId = Session["RoleId"] != null ? Convert.ToInt32(Session["RoleId"]) : 0;
     bool canManage = roleId == 1 || roleId == 2;
 }
 
-<h2>Información</h2>
+<h2 class="page-title page-title-centered">Información</h2>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Nombre del producto</dt>
-        <dd>@Html.DisplayFor(model => model.item_name)</dd>
+<div class="details-box details-box-single">
+    <div class="item-details-layout">
 
-        <dt>Imagen</dt>
-        <dd><img src="@Url.Content(Model.item_url)" alt="Imagen del artículo" class="item-details-image" /></dd>
+        <div class="item-details-image-column">
+            <div class="item-large-image-box" id="itemLargeImageTrigger">
+                <img src="@Url.Content(Model.item_url)" alt="@Model.item_name" />
+                <button type="button" class="item-expand-btn" id="btnExpandImage" aria-label="Ampliar imagen">
+                    <i class="bi bi-arrows-fullscreen"></i>
+                </button>
+            </div>
+        </div>
 
-        <dt>Descripción del producto</dt>
-        <dd>@Html.DisplayFor(model => model.item_description)</dd>
+        <div class="details-info-column">
+            <div class="details-row">
+                <div class="details-label"><i class="bi bi-tag-fill"></i> Nombre del producto</div>
+                <div class="details-value">@Html.DisplayFor(model => model.item_name)</div>
+            </div>
+            <div class="details-row">
+                <div class="details-label"><i class="bi bi-file-text-fill"></i> Descripción del producto</div>
+                <div class="details-value">@Html.DisplayFor(model => model.item_description)</div>
+            </div>
+            <div class="details-row @(canManage ? "" : "details-row-last")">
+                <div class="details-label"><i class="bi bi-collection-fill"></i> Álbum</div>
+                <div class="details-value">@Html.DisplayFor(model => model.Albums.album_name)</div>
+            </div>
+            @if (canManage)
+            {
+                <div class="details-row details-row-last">
+                    <div class="details-label"><i class="bi bi-toggle-on"></i> Estado</div>
+                    <div class="details-value">@(Model.item_active ? "Activo" : "Inactivo")</div>
+                </div>
+            }
+        </div>
 
-        <dt>Álbum</dt>
-        <dd>@Html.DisplayFor(model => model.Albums.album_name)</dd>
+    </div>
 
+    <div class="details-actions">
         @if (canManage)
         {
-            <dt>Estado</dt>
-            <dd>@(Model.item_active ? "Activo" : "Inactivo")</dd>
-        }
-    </dl>
+            @Html.ActionLink("Editar", "Edit", new { id = Model.item_id }, new { @class = "btn-system btn-system-filter" })
+        }        
+    </div>
 </div>
-<p>
-    @if (canManage)
-    {
-        @Html.ActionLink("Editar", "Edit", new { id = Model.item_id }) 
-        @: |
-    }    
-    @Html.ActionLink("Atrás", "Details", "Albums", new { id = Model.album_id }, null)
-</p>
+
+<div class="back-only-row">
+    @Html.ActionLink("Atrás", "Details", "Albums", new { id = Model.album_id }, new { @class = "btn-system btn-system-neutral" })
+</div>
+
+<div id="imageZoomOverlay" class="image-zoom-overlay">
+    <button type="button" class="image-zoom-close" id="btnCloseZoom" aria-label="Cerrar">
+        <i class="bi bi-x-lg"></i>
+    </button>
+    <img id="imageZoomFull" src="" alt="Imagen ampliada" class="image-zoom-full" />
+    <button type="button" class="image-zoom-shrink" id="btnShrinkImage" aria-label="Reducir imagen">
+        <i class="bi bi-fullscreen-exit"></i>
+    </button>
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/Items/ImageZoom.js"></script>
+}

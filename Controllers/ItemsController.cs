@@ -112,21 +112,22 @@ namespace SistemaGestionVentas.Controllers
                     return RedirectToAction("Index", "Albums");
                 }
 
-                if (imageFile == null || imageFile.ContentLength == 0)
+                string validationError;
+                if (!IsValidImageFile(imageFile, out validationError))
                 {
-                    ModelState.AddModelError("item_url", "Debe seleccionar una imagen.");
+                    ModelState.AddModelError("item_url", validationError);
                     return View(items);
                 }
 
                 items.item_name = items.item_name?.Trim();
-                items.item_description = items.item_description?.Trim();                
+                items.item_description = items.item_description?.Trim();
                 items.item_active = true;
 
                 string extension = Path.GetExtension(imageFile.FileName);
                 string fileName = Guid.NewGuid().ToString() + extension;
                 string path = Path.Combine(Server.MapPath("~/Images/Items"), fileName);
                 imageFile.SaveAs(path);
-                items.item_url = "/Images/Items/" + fileName;                
+                items.item_url = "/Images/Items/" + fileName;
 
                 db.Items.Add(items);
                 db.SaveChanges();
@@ -202,13 +203,26 @@ namespace SistemaGestionVentas.Controllers
                     return RedirectToAction("Index", "Albums");
                 }
 
+                bool fileWasSent = imageFile != null && imageFile.ContentLength > 0;
+
+                if (fileWasSent)
+                {
+                    string validationError;
+                    if (!IsValidImageFile(imageFile, out validationError))
+                    {
+                        ModelState.AddModelError("item_url", validationError);
+                        ViewBag.album_id = new SelectList(db.Albums, "album_id", "album_name", items.album_id);
+                        return View(items);
+                    }
+                }
+
                 items.item_name = items.item_name?.Trim();
                 items.item_description = items.item_description?.Trim();
                 originalItem.item_name = items.item_name;
                 originalItem.item_description = items.item_description;
                 originalItem.album_id = items.album_id;
 
-                if (imageFile != null && imageFile.ContentLength > 0)
+                if (fileWasSent)
                 {
                     if (!string.IsNullOrWhiteSpace(originalItem.item_url))
                     {
@@ -469,6 +483,43 @@ namespace SistemaGestionVentas.Controllers
             {
                 return Json(new { success = false }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".webp" };
+        private static readonly string[] AllowedContentTypes = { "image/jpeg", "image/png", "image/webp" };
+        private const int MaxFileSizeBytes = 5 * 1024 * 1024; // 5 MB
+
+        private bool IsValidImageFile(HttpPostedFileBase file, out string errorMessage)
+        {
+            errorMessage = null;
+
+            if (file == null || file.ContentLength == 0)
+            {
+                errorMessage = "Debe seleccionar una imagen.";
+                return false;
+            }
+
+            if (file.ContentLength > MaxFileSizeBytes)
+            {
+                errorMessage = "La imagen no puede superar los 5 MB.";
+                return false;
+            }
+
+            string extension = Path.GetExtension(file.FileName)?.ToLowerInvariant();
+
+            if (string.IsNullOrEmpty(extension) || !AllowedExtensions.Contains(extension))
+            {
+                errorMessage = "Formato no permitido. Solo se aceptan JPG, JPEG, PNG y WEBP.";
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(file.ContentType) || !AllowedContentTypes.Contains(file.ContentType.ToLowerInvariant()))
+            {
+                errorMessage = "El archivo no parece ser una imagen válida.";
+                return false;
+            }
+
+            return true;
         }
 
         protected override void Dispose(bool disposing)

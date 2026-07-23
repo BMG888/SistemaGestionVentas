@@ -2297,6 +2297,8 @@
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\Home\PeekCarousel.js" />
     <Content Include="Scripts\ImageSelector.js" />
+    <Content Include="Scripts\Items\ImageZoom.js" />
+    <Content Include="Scripts\Items\ItemImagePreview.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
